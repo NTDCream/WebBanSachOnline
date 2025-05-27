@@ -1,0 +1,24 @@
+﻿
+@model IEnumerable<WebBanSachOnline.Models.Category>
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white">
+        <h5 class="card-title mb-0">Danh mục</h5>
+    </div>
+    <div class="card-body">
+        <div class="list-group list-group-flush">
+            <a href="/Categories"
+               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                Tất cả
+            </a>
+            @foreach (var item in Model)
+            {
+                <a href="/Categories/@item.slug"
+                   class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    @item.title
+                </a>
+            }
+
+
+        </div>
+    </div>
+</div>

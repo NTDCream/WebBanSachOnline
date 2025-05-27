@@ -1,0 +1,156 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nhà Sách Online</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet" />
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="~/Content/style.css" rel="stylesheet" />
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @*<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.7/jquery.unobtrusive-ajax.min.js"></script>*@
+
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fas fa-book-open me-2"></i>Nhà Sách Online</a>
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="@Url.Action("Index", "Categories")">Danh mục sách</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="@Url.Action("Index", "Categories")">Tin tức</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="@Url.Action("Index", "Categories")">Liên hệ</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <a class="btn btn-light position-relative me-3"
+                       href="@Url.Action("Index", "CartItems")">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                              id="cart-count"></span>
+                    </a>
+
+
+
+                    <!-- User Dropdown (shown when logged in) -->
+                    @if (Session["user"] != null)
+                    {
+                        <div id="user-dropdown" class="dropdown">
+                            <button class="btn btn-light dropdown-toggle d-flex align-items-center"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="fas fa-user me-2"></i><span id="user-name">@Session["user"]</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Infor", "Users")">
+                                        <i class="fas fa-user-circle me-2"></i>Tài khoản của tôi
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Orders")">
+                                        <i class="fas fa-history me-2"></i>Đơn mua
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="@Url.Action("SignOut", "Users")">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    }
+                    else
+                    {
+                        <!-- Auth Buttons (shown when logged out) -->
+                        <div id="auth-buttons" class="d-flex">
+                            <a href="@Url.Action("SignIn", "Users")" class="btn btn-light me-2">Đăng nhập</a>
+                            <a href="@Url.Action("SignUp", "Users")" class="btn btn-outline-light">Đăng ký</a>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </nav>
+    @RenderBody()
+    <hr />
+    <!-- Footer -->
+    <footer class="bg-light text-center text-lg-start mt-5 border-top pt-4 pb-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Nhà Sách Online</h5>
+                    <p>
+                        Nơi khám phá tri thức và mua sắm những cuốn sách yêu thích của bạn
+                        một cách dễ dàng và tiện lợi nhất.
+                    </p>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Liên kết</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a href="#!" class="text-dark text-decoration-none">Về chúng tôi</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-dark text-decoration-none">Chính sách bảo mật</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-dark text-decoration-none">Điều khoản dịch vụ</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-dark text-decoration-none">Câu hỏi thường gặp</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Liên hệ</h5>
+                    <ul class="list-unstyled">
+                        <li>
+                            <i class="fas fa-envelope me-2"></i> info@nhasachonline.vn
+                        </li>
+                        <li><i class="fas fa-phone me-2"></i> + 01 234 567 89</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center p-3 border-top mt-4">
+                © 2025 Copyright:
+                <a class="text-dark text-decoration-none" href="/">NhaSachOnline.vn</a>
+            </div>
+        </div>
+    </footer>
+
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")*@
+    @RenderSection("scripts", required: false)
+</body>
+</html>

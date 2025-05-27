@@ -1,0 +1,237 @@
+﻿@model IEnumerable<WebBanSachOnline.Models.Category>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Danh Mục Sách - Admin</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet" />
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="~/Content/admin-style.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 admin-sidebar d-md-block">
+                <div class="admin-logo">
+                    <i class="fas fa-book-open"></i>
+                    <span>NhaSachOnline</span>
+                </div>
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/Admin/Home/Index">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Trang chủ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Users/Index">
+                                <i class="fas fa-users"></i>
+                                Quản lý tài khoản
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Orders/Index">
+                                <i class="fas fa-shopping-cart"></i>
+                                Đơn hàng
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Home/Statistic">
+                                <i class="fas fa-chart-bar"></i>
+                                Thống kê
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Categories/Index">
+                                <i class="fas fa-list"></i>
+                                Quản lý danh mục
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Books/Index">
+                                <i class="fas fa-book"></i>
+                                Quản lý sách
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin" id="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Đăng xuất
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <main class=" ms-sm-auto col-lg-10 px-md-4">
+                <div class="admin-topbar d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"></h5>
+                    <div class="user-info">
+                        <span>Xin chào, <strong id="admin-name">Admin</strong></span>
+                    </div>
+                </div>
+                <br />
+                <div class="admin-content">
+                    <h2 class="page-title">QUẢN LÝ DANH MỤC SÁCH</h2>
+                    <br />
+
+                    <div class="">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Quản lý danh mục sách</h5>
+                                <a href="@Url.Action("Create", "Categories")" class="btn btn-primary me-2"><i class="fas fa-plus-circle me-1"></i>Thêm mới</a>
+                                    
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered custom-table">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Tiêu đề</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model)
+                                            {
+                                                <tr>
+                                                    <td style="text-align:center">@item.title</td>
+                                                    <td style="width: 200px; text-align:center"  scope="col">
+                                                        <a class="btn btn-sm btn-outline-primary" href="@Url.Action("Edit", "Books", new { id = item.id })">
+                                                            Sửa
+                                                        </a>
+                                                        @using (Html.BeginForm("DeleteConfirmed", "Categories", FormMethod.Post, new { @class = "d-inline" }))
+                                                        {
+                                                            @Html.AntiForgeryToken()
+                                                            @Html.Hidden("slug", item.slug)
+                                                            <button type="submit" class="btn btn-danger btn-sm " onclick="return confirm('Bạn có chắc muốn xóa danh mục này?')"><i class="fas fa-trash"></i> Xóa</button>
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Category Form (hidden by default) -->
+                <div class="row" id="add-category-section" style="display: none">
+                    <div class="col-md-6 offset-md-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Thêm mới danh mục sách</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="add-category-form">
+                                    <div class="mb-3">
+                                        <label for="category-title" class="form-label">Tiêu đề</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               id="category-title"
+                                               required />
+                                    </div>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <button type="button"
+                                                class="btn btn-secondary"
+                                                onclick="hideAddCategoryForm()">
+                                            Quay lại
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            Lưu
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Category Form (hidden by default) -->
+                <div class="row" id="edit-category-section" style="display: none">
+                    <div class="col-md-6 offset-md-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Cập nhật danh mục sách</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="edit-category-form">
+                                    <input type="hidden" id="edit-category-id" />
+                                    <div class="mb-3">
+                                        <label for="edit-category-title" class="form-label">Tiêu đề</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               id="edit-category-title"
+                                               required />
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <button type="button"
+                                                class="btn btn-secondary"
+                                                onclick="hideEditCategoryForm()">
+                                            Quay lại
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            Lưu
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete Confirmation Modal -->
+                <!--<div class="row"
+                     id="delete-confirmation-section"
+                     style="display: none">
+                    <div class="col-md-6 offset-md-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Xác nhận xóa</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Bạn có muốn xóa danh mục này không?</p>
+                                <div class="d-flex justify-content-end gap-2">
+                                    <button class="btn btn-secondary"
+                                            onclick="hideDeleteConfirmation()">
+                                        Hủy bỏ
+                                    </button>
+                                    <button class="btn btn-danger" onclick="deleteCategory()">
+                                        Chấp nhận
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+        </div>
+        </main>
+    </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+</body>
+</html>

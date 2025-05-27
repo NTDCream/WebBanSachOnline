@@ -1,0 +1,322 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Nhà Sách Online</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome for icons -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Custom CSS -->
+    <link href="~/Content/admin-style.css" rel="stylesheet" />
+
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 admin-sidebar d-md-block">
+          <div class="admin-logo">
+            <i class="fas fa-book-open"></i>
+            <span>NhaSachOnline</span>
+          </div>
+          <div class="position-sticky pt-3">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link active" href="/Admin/Home/Index">
+                  <i class="fas fa-tachometer-alt"></i>
+                  Trang chủ
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/Admin/Users/Index">
+                  <i class="fas fa-users"></i>
+                  Quản lý tài khoản
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/Admin/Orders/Index">
+                  <i class="fas fa-shopping-cart"></i>
+                  Đơn hàng
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/Admin/Home/Statistic">
+                  <i class="fas fa-chart-bar"></i>
+                  Thống kê
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/Admin/Categories/Index">
+                  <i class="fas fa-list"></i>
+                  Quản lý danh mục
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/Admin/Books/Index">
+                  <i class="fas fa-book"></i>
+                  Quản lý sách
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/Admin" id="logout-btn">
+                  <i class="fas fa-sign-out-alt"></i>
+                  Đăng xuất
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="ms-sm-auto col-lg-10 px-md-4">
+          <div
+            class="admin-topbar d-flex justify-content-between align-items-center"
+          >
+            <h5 class="mb-0">Dashboard</h5>
+            <div class="user-info">
+              <span>Xin chào, <strong id="admin-name">Admin</strong></span>
+            </div>
+          </div>
+
+          <div class="admin-content">
+            <h2 class="page-title">Tổng quan</h2>
+
+            <!-- Dashboard Cards -->
+            <div
+              class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4 mb-5"
+            >
+              <!-- Users Card -->
+              <div class="col">
+                <div class="card dashboard-card">
+                  <div class="card-body text-center">
+                    <div class="dashboard-icon bg-primary text-white mx-auto">
+                      <i class="fas fa-users"></i>
+                    </div>
+                    <h5 class="card-title">Tài khoản</h5>
+                    <h3 class="card-text fw-bold">15</h3>
+                    <p class="card-text text-muted">Tổng số người dùng</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Orders Card -->
+              <div class="col">
+                <div class="card dashboard-card">
+                  <div class="card-body text-center">
+                    <div class="dashboard-icon bg-success text-white mx-auto">
+                      <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h5 class="card-title">Đơn hàng</h5>
+                    <h3 class="card-text fw-bold">28</h3>
+                    <p class="card-text text-muted">Tổng số đơn hàng</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Books Card -->
+              <div class="col">
+                <div class="card dashboard-card">
+                  <div class="card-body text-center">
+                    <div class="dashboard-icon bg-info text-white mx-auto">
+                      <i class="fas fa-book"></i>
+                    </div>
+                    <h5 class="card-title">Sách</h5>
+                    <h3 class="card-text fw-bold">120</h3>
+                    <p class="card-text text-muted">Tổng số sách</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Revenue Card -->
+              <div class="col">
+                <div class="card dashboard-card">
+                  <div class="card-body text-center">
+                    <div class="dashboard-icon bg-warning text-white mx-auto">
+                      <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h5 class="card-title">Doanh thu</h5>
+                    <h3 class="card-text fw-bold">12.5M</h3>
+                    <p class="card-text text-muted">Tổng doanh thu (VNĐ)</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Orders -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h5 class="mb-0">Đơn hàng gần đây</h5>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover custom-table">
+                    <thead>
+                      <tr>
+                        <th>Mã đơn hàng</th>
+                        <th>Khách hàng</th>
+                        <th>Ngày</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>#DH001</td>
+                        <td>Nguyễn Thế Đoàn</td>
+                        <td>01/04/2023</td>
+                        <td>1,200,000₫</td>
+                        <td>
+                          <span class="badge bg-success">Đã thanh toán</span>
+                        </td>
+                        <td>
+                          <a
+                            href="/admin/orders.html"
+                            class="btn btn-sm btn-outline-primary"
+                            >Xem</a
+                          >
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>#DH002</td>
+                        <td>Nguyễn Thế Đoàn</td>
+                        <td>01/04/2023</td>
+                        <td>2,000,000₫</td>
+                        <td>
+                          <span class="badge bg-warning text-dark"
+                            >Chờ thanh toán</span
+                          >
+                        </td>
+                        <td>
+                          <a
+                            href="/admin/orders.html"
+                            class="btn btn-sm btn-outline-primary"
+                            >Xem</a
+                          >
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>#DH003</td>
+                        <td>Nguyễn Việt Hưng</td>
+                        <td>01/04/2023</td>
+                        <td>1,600,000₫</td>
+                        <td>
+                          <span class="badge bg-warning text-dark"
+                            >Chờ thanh toán</span
+                          >
+                        </td>
+                        <td>
+                          <a
+                            href="/admin/orders.html"
+                            class="btn btn-sm btn-outline-primary"
+                            >Xem</a
+                          >
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Users -->
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Tài khoản mới</h5>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover custom-table">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Tên</th>
+                        <th>Email</th>
+                        <th>Ngày đăng ký</th>
+                        <th>Quyền</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>Nguyễn Thế Đoàn</td>
+                        <td>ntdoan@gmail.com</td>
+                        <td>01/04/2023</td>
+                        <td>Customer</td>
+                        <td>
+                          <a
+                            href="/admin/users.html"
+                            class="btn btn-sm btn-outline-primary"
+                            >Xem</a
+                          >
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>Nguyễn Việt Hưng</td>
+                        <td>abc@gmail.com</td>
+                        <td>01/04/2023</td>
+                        <td>Customer</td>
+                        <td>
+                          <a
+                            href="/admin/users.html"
+                            class="btn btn-sm btn-outline-primary"
+                            >Xem</a
+                          >
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Check if admin is logged in
+      document.addEventListener("DOMContentLoaded", function () {
+        const isAdminLoggedIn = localStorage.getItem("adminLoggedIn");
+
+        if (!isAdminLoggedIn) {
+          window.location.href = "/admin/login.html";
+          return;
+        }
+
+        // Set admin name
+        const adminUser = JSON.parse(localStorage.getItem("adminUser") || "{}");
+        if (adminUser.name) {
+          document.getElementById("admin-name").textContent = adminUser.name;
+        }
+
+        // Logout functionality
+        document
+          .getElementById("logout-btn")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            localStorage.removeItem("adminLoggedIn");
+            localStorage.removeItem("adminUser");
+            window.location.href = "/admin/login.html";
+          });
+      });
+    </script>*@
+  </body>
+</html>

@@ -1,0 +1,379 @@
+﻿@model IEnumerable<WebBanSachOnline.Models.Book>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Sách - Admin</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet" />
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="~/Content/admin-style.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 admin-sidebar d-md-block">
+                <div class="admin-logo">
+                    <i class="fas fa-book-open"></i>
+                    <span>NhaSachOnline</span>
+                </div>
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/Admin/Home/Index">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Trang chủ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Users/Index">
+                                <i class="fas fa-users"></i>
+                                Quản lý tài khoản
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Orders/Index">
+                                <i class="fas fa-shopping-cart"></i>
+                                Đơn hàng
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Home/Statistic">
+                                <i class="fas fa-chart-bar"></i>
+                                Thống kê
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Categories/Index">
+                                <i class="fas fa-list"></i>
+                                Quản lý danh mục
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Books/Index">
+                                <i class="fas fa-book"></i>
+                                Quản lý sách
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin" id="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Đăng xuất
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <main class=" ms-sm-auto col-lg-10 px-md-4">
+                <div class="admin-topbar d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"></h5>
+                    <div class="user-info">
+                        <span>Xin chào, <strong id="admin-name">Admin</strong></span>
+                    </div>
+                </div>
+
+                <div class="admin-content">
+
+                    <h2 class="page-title">QUẢN LÝ SÁCH</h2>
+                    <div class="">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Quản lý sách</h5>
+                                <a href="@Url.Action("Create", "Books")" class="btn btn-primary me-2"><i class="fas fa-plus-circle me-1"></i>Thêm mới</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered custom-table">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Hình ảnh</th>
+                                                <th>Tên sách</th>
+                                                <th>Danh mục</th>
+                                                <th>Số lượng</th>
+                                                <th>Giá gốc</th>
+                                                <th>Giá bán</th>
+                                                <th>Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model)
+                                            {
+
+                                                string imagePath = "~/BookImages/" + item.image;
+                                                <tr>
+                                                    <td style="text-align: center"><img src="@Url.Content(imagePath)" class="card-img-top book-cover" style="height:100px; width:80px;" alt=@item.title></td>
+                                                    <td>@item.title</td>
+                                                    <td>@item.Category.title</td>
+                                                    <td>@item.quantity</td>
+                                                    <td>
+                                                        @string.Format("{0:N0} đ", item.originalPrice)
+                                                    </td>
+                                                    <td>
+                                                        @string.Format("{0:N0} đ", item.price)
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-sm btn-outline-primary" href="@Url.Action("Edit", "Books", new { id = item.id })">
+                                                            Sửa
+                                                        </a>
+
+                                                        @using (Html.BeginForm("DeleteConfirmed", "Books", FormMethod.Post, new { @class = "d-inline" }))
+                                                        {
+                                                            @Html.AntiForgeryToken()
+
+                                                            @Html.Hidden("id", item.id)
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger " onclick="return confirm('Bạn có chắc muốn xóa sách này khỏi giỏ hàng?')">Xóa</button>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+        </div>
+        </main>
+    </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>// Sample books data for demo
+      const books = [
+        {
+          id: 1,
+          title: "Nghĩ giàu & làm giàu",
+          author: "Napoleon Hill",
+          category: "Văn học",
+          originalPrice: 150000,
+          price: 110000,
+          quantity: 100,
+          isbn: "ISBN123456",
+          image:
+            "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1545314990i/10433999.jpg",
+          description: "Cuốn sách kinh điển về tư duy làm giàu.",
+          discount: 27,
+          active: true,
+        },
+        {
+          id: 2,
+          title: "Nhà giả kim",
+          author: "Paulo Coelho",
+          category: "Văn học",
+          originalPrice: 160000,
+          price: 110000,
+          quantity: 58,
+          isbn: "ISBN789012",
+          image:
+            "https://salt.tikicdn.com/cache/w1200/ts/product/ee/c9/e2/d933e0bb67bafa902426316786283aec.jpg",
+          description:
+            "Câu chuyện về hành trình tìm kiếm kho báu của một chàng trai trẻ.",
+          discount: 31,
+          active: true,
+        },
+        {
+          id: 3,
+          title: "Đắc nhân tâm",
+          author: "Dale Carnegie",
+          category: "Văn học",
+          originalPrice: 200000,
+          price: 110000,
+          quantity: 65,
+          isbn: "ISBN345678",
+          image:
+            "https://nhasachphuongnam.com/images/detailed/217/dac-nhan-tam-bc.jpg",
+          description:
+            "Cuốn sách bán chạy nhất mọi thời đại về kỹ năng giao tiếp.",
+          discount: 45,
+          active: true,
+        },
+      ];
+
+      let bookToDelete = null;
+
+      // Format currency
+      function formatCurrency(amount) {
+        return new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
+          minimumFractionDigits: 0,
+        }).format(amount);
+      }
+
+      // Show add book form
+      function showAddBookForm() {
+        document.getElementById("add-book-section").style.display = "block";
+        document.getElementById("edit-book-section").style.display = "none";
+        document.getElementById("delete-confirmation-section").style.display =
+          "none";
+
+        // Clear form fields
+        document.getElementById("book-title").value = "";
+        document.getElementById("book-category").value = "";
+        document.getElementById("book-author").value = "";
+        document.getElementById("book-image").value = "";
+        document.getElementById("book-isbn").value = "";
+        document.getElementById("book-quantity").value = 0;
+        document.getElementById("book-original-price").value = "";
+        document.getElementById("book-price").value = "";
+        document.getElementById("book-discount").value = 0;
+        document.getElementById("book-description").value = "";
+        document.getElementById("book-active").checked = true;
+
+        window.scrollTo({
+          top: document.getElementById("add-book-section").offsetTop,
+          behavior: "smooth",
+        });
+      }
+
+      // Hide add book form
+      function hideAddBookForm() {
+        document.getElementById("add-book-section").style.display = "none";
+      }
+
+      // Show edit book form
+      function editBook(id) {
+        const book = books.find((b) => b.id === id);
+        if (book) {
+          document.getElementById("edit-book-id").value = book.id;
+          document.getElementById("edit-book-title").value = book.title;
+          document.getElementById("edit-book-category").value = book.category;
+          document.getElementById("edit-book-author").value = book.author;
+          document.getElementById("edit-book-image-url").value = book.image;
+          document.getElementById("edit-book-isbn").value = book.isbn;
+          document.getElementById("edit-book-quantity").value = book.quantity;
+          document.getElementById("edit-book-original-price").value =
+            book.originalPrice;
+          document.getElementById("edit-book-price").value = book.price;
+          document.getElementById("edit-book-discount").value =
+            book.discount || 0;
+          document.getElementById("edit-book-description").value =
+            book.description || "";
+          document.getElementById("edit-book-active").checked = book.active;
+
+          document.getElementById("edit-book-section").style.display = "block";
+          document.getElementById("add-book-section").style.display = "none";
+          document.getElementById("delete-confirmation-section").style.display =
+            "none";
+
+          window.scrollTo({
+            top: document.getElementById("edit-book-section").offsetTop,
+            behavior: "smooth",
+          });
+        }
+      }
+
+      // Hide edit book form
+      function hideEditBookForm() {
+        document.getElementById("edit-book-section").style.display = "none";
+      }
+
+      // Show delete confirmation
+      function confirmDeleteBook(id) {
+        bookToDelete = id;
+        document.getElementById("delete-confirmation-section").style.display =
+          "block";
+        document.getElementById("edit-book-section").style.display = "none";
+        document.getElementById("add-book-section").style.display = "none";
+
+        window.scrollTo({
+          top: document.getElementById("delete-confirmation-section").offsetTop,
+          behavior: "smooth",
+        });
+      }
+
+      // Hide delete confirmation
+      function hideDeleteConfirmation() {
+        document.getElementById("delete-confirmation-section").style.display =
+          "none";
+        bookToDelete = null;
+      }
+
+      // Delete book
+      function deleteBook() {
+        if (bookToDelete !== null) {
+          // In a real app, you would send a request to the server to delete the book
+          // For demo purposes, we'll just show an alert
+          alert(`Đã xóa sách có ID: ${bookToDelete}`);
+          hideDeleteConfirmation();
+        }
+      }
+
+      // Add book form submit handler
+      document
+        .getElementById("add-book-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const bookTitle = document.getElementById("book-title").value;
+
+          // In a real app, you would send a request to the server to save the book
+          // For demo purposes, we'll just show an alert
+          alert(`Đã thêm sách: ${bookTitle}`);
+          hideAddBookForm();
+        });
+
+      // Edit book form submit handler
+      document
+        .getElementById("edit-book-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const bookId = document.getElementById("edit-book-id").value;
+          const bookTitle = document.getElementById("edit-book-title").value;
+
+          // In a real app, you would send a request to the server to update the book
+          // For demo purposes, we'll just show an alert
+          alert(`Đã cập nhật sách ID ${bookId}: ${bookTitle}`);
+          hideEditBookForm();
+        });
+
+      // Check if admin is logged in
+      document.addEventListener("DOMContentLoaded", function () {
+        const isAdminLoggedIn = localStorage.getItem("adminLoggedIn");
+
+        if (!isAdminLoggedIn) {
+          window.location.href = "/admin/login.html";
+          return;
+        }
+
+        // Set admin name
+        const adminUser = JSON.parse(localStorage.getItem("adminUser") || "{}");
+        if (adminUser.name) {
+          document.getElementById("admin-name").textContent = adminUser.name;
+        }
+
+        // Logout functionality
+        document
+          .getElementById("logout-btn")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            localStorage.removeItem("adminLoggedIn");
+            localStorage.removeItem("adminUser");
+            window.location.href = "/admin/login.html";
+          });
+      });</script>-->
+</body>
+</html>

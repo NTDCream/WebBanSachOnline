@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewBag.Title = "SignIn";
+}
+
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng Nhập - Nhà Sách Online</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet" />
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="~/Content/style.css" rel="stylesheet" />
+</head>
+<body>
+    
+
+    <!-- Login Form -->
+    <br />
+    <br />
+    <br />
+    <div class="container mt-5">
+        <div class="login-container">
+            <div class="text-center mb-4">
+                <h3><i class="fas fa-book-open me-2 text-primary"></i>Đăng Nhập</h3>
+            </div>
+            <form method="post" action="/Users/SignIn">
+                <div class="mb-3 position-relative">
+                    <input type="text"
+                           class="form-control"
+                           id="username"
+                           name="username"
+                           placeholder="Tên đăng nhập"
+                           required />
+                    <i class="fas fa-user position-absolute top-50 translate-middle-y ms-3"
+                       style="opacity: 0.5"></i>
+                    <div style="margin-left: 30px; width: calc(100% - 30px)"></div>
+                </div>
+                <div class="mb-3 position-relative">
+                    <input type="password"
+                           class="form-control"
+                           id="password"
+                           name="password"
+                           placeholder="Mật khẩu"
+                           required />
+                    <i class="fas fa-lock position-absolute top-50 translate-middle-y ms-3"
+                       style="opacity: 0.5"></i>
+                    <div style="margin-left: 30px; width: calc(100% - 30px)"></div>
+                </div>
+                @ViewBag.error
+                <div>
+                    <button type="submit"
+                            class="btn btn-primary mt-2">
+                        Đăng nhập
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <a href="" class="btn btn-link btn-sm">
+                        Quên mật khẩu?
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <br />
+    <br />
+    <br />
+
+    <!-- Toast Container -->
+    <div id="toast-container"
+         class="position-fixed bottom-0 end-0 p-3"
+         style="z-index: 1100">
+        <!-- Toasts will be appended here -->
+    </div>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+
+    <style>
+        .form-control {
+            padding-left: 45px !important;
+        }
+    </style>
+</body>
+</html>

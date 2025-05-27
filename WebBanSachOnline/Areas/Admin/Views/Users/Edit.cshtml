@@ -1,0 +1,145 @@
+﻿@model WebBanSachOnline.Models.User
+
+@{
+    ViewBag.Title = "Edit";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Tài Khoản - Admin</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet" />
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="~/Content/admin-style.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 admin-sidebar d-md-block">
+                <div class="admin-logo">
+                    <i class="fas fa-book-open"></i>
+                    <span>NhaSachOnline</span>
+                </div>
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/Admin/Home/Index">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Trang chủ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Users/Index">
+                                <i class="fas fa-users"></i>
+                                Quản lý tài khoản
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Orders/Index">
+                                <i class="fas fa-shopping-cart"></i>
+                                Đơn hàng
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Home/Statistic">
+                                <i class="fas fa-chart-bar"></i>
+                                Thống kê
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Categories/Index">
+                                <i class="fas fa-list"></i>
+                                Quản lý danh mục
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Books/Index">
+                                <i class="fas fa-book"></i>
+                                Quản lý sách
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin" id="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Đăng xuất
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <main class="ms-sm-auto col-lg-10 px-md-4">
+                <div class="row" id="edit-user-section">
+                    <div class="col-md-6 offset-md-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Sửa tài khoản</h5>
+                            </div>
+                            <div class="card-body">
+                                @using (Html.BeginForm())
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    <div class="form-horizontal">
+                                        <h4>@Model.username</h4>
+                                        <hr />
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                        @Html.HiddenFor(model => model.id)
+                                        @Html.HiddenFor(model => model.fullName)
+                                        @Html.HiddenFor(model => model.username)
+                                        @Html.HiddenFor(model => model.email)
+                                        @Html.HiddenFor(model => model.phone)
+                                        @Html.HiddenFor(model => model.address)
+                                        @Html.HiddenFor(model => model.password)
+
+
+
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.role,"Quyền", htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.role,  new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.role, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.isActive, "Hoạt động", htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                <div class="checkbox">
+                                                    @Html.EditorFor(model => model.isActive)
+                                                    @Html.ValidationMessageFor(model => model.isActive, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="form-group">
+                                            <div class="col-md-offset-2 col-md-10">
+                                                <input type="submit" value="Lưu" class="btn btn-primary" />
+                                                <a href="@Url.Action("Index", "Users")" class="btn btn-danger me-2">Quay lại</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <br />
+
+        
+</body>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

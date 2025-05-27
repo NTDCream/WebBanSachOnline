@@ -1,0 +1,502 @@
+﻿@model IEnumerable<WebBanSachOnline.Models.Order>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Đơn Hàng - Admin</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet" />
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="~/Content/admin-style.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 admin-sidebar d-md-block">
+                <div class="admin-logo">
+                    <i class="fas fa-book-open"></i>
+                    <span>NhaSachOnline</span>
+                </div>
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/Admin/Home/Index">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Trang chủ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Users/Index">
+                                <i class="fas fa-users"></i>
+                                Quản lý tài khoản
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Orders/Index">
+                                <i class="fas fa-shopping-cart"></i>
+                                Đơn hàng
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Home/Statistic">
+                                <i class="fas fa-chart-bar"></i>
+                                Thống kê
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Categories/Index">
+                                <i class="fas fa-list"></i>
+                                Quản lý danh mục
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Books/Index">
+                                <i class="fas fa-book"></i>
+                                Quản lý sách
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin" id="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Đăng xuất
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <main class=" ms-sm-auto col-lg-10 px-md-4">
+                <div class="admin-topbar d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"></h5>
+                    <div class="user-info">
+                        <span>Xin chào, <strong id="admin-name">Admin</strong></span>
+                    </div>
+                </div>
+
+                <div class="admin-content">
+                    <h2 class="page-title">QUẢN LÝ ĐƠN HÀNG</h2>
+
+                    <div class="">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Quản lý đơn hàng</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered custom-table">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>STT</th>
+                                                <th>Mã đơn hàng</th>
+                                                <th>Tên khách hàng</th>
+                                                <th>SĐT</th>
+                                                <th>Tiền</th>
+                                                <th>Trạng thái</th>
+                                                <th>Ngày tạo</th>
+                                                <th>Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model)
+                                            {
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>@item.slug</td>
+                                                    <td>@item.customerName</td>
+                                                    <td>@item.phone</td>
+                                                    <td>@item.totalAmount</td>
+                                                    <td>
+                                                        @if (item.status.ToLower() == "paid")
+                                                        {
+
+                                                            <span class="badge bg-success">Đã thanh toán</span>
+                                                        }
+                                                        else if (item.status.ToLower() == "pending")
+                                                        {
+                                                            <span class="badge bg-warning text-dark">Chờ thanh toán</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-danger">Đã hủy</span>
+
+                                                        }
+                                                    </td>
+                                                    <td>@item.createdDate</td>
+                                                    <td>
+                                                        <a class="btn btn-sm btn-outline-primary" href="@Url.Action("Details", "Orders", new { id = item.id })">
+                                                            Xem
+                                                        </a>
+                                                        <a class="btn btn-sm btn-outline-success" href="@Url.Action("Edit", "Orders", new { id = item.id })">
+                                                            Cập nhật
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Detail Section (hidden by default) -->
+                <div class="row" id="order-detail-section" style="display: none">
+                    <div class="col-md-8 offset-md-2">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Xem chi tiết đơn hàng</h5>
+                                <button class="btn btn-sm btn-outline-secondary"
+                                        onclick="hideOrderDetail()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Mã đơn hàng</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="detail-order-id"
+                                                   readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Họ tên khách hàng</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="detail-customer-name"
+                                                   readonly />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Số điện thoại</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="detail-phone"
+                                                   readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Email</label>
+                                            <input type="email"
+                                                   class="form-control"
+                                                   id="detail-email"
+                                                   readonly />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Ngày tạo</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="detail-date"
+                                                   readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Trạng thái</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="detail-status"
+                                                   readonly />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Tạo bởi</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               id="detail-creator"
+                                               readonly />
+                                    </div>
+                                </div>
+
+                                <h6 class="mt-4 mb-3">Danh sách sách</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-sm">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>STT</th>
+                                                <th>Tên sách</th>
+                                                <th>Giá</th>
+                                                <th>Số lượng</th>
+                                                <th>Thành tiền</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="detail-book-list">
+                                            <!-- Books will be populated via JavaScript -->
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="4" class="text-end fw-bold">
+                                                    Tổng tiền:
+                                                </td>
+                                                <td class="fw-bold" id="detail-total"></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Order Status (hidden by default) -->
+                <div class="row" id="update-order-section" style="display: none">
+                    <div class="col-md-6 offset-md-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Cập nhật đơn hàng</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="update-order-form">
+                                    <input type="hidden" id="update-order-id" />
+                                    <div class="mb-3">
+                                        <label for="order-status" class="form-label">Trạng thái</label>
+                                        <select class="form-select" id="order-status">
+                                            <option value="Đã thanh toán">Đã thanh toán</option>
+                                            <option value="Chờ thanh toán">Chờ thanh toán</option>
+                                            <option value="Đã hủy">Đã hủy</option>
+                                        </select>
+                                    </div>
+                                    <div class="d-grid mt-4">
+                                        <button type="submit" class="btn btn-primary">
+                                            Lưu
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        </main>
+    </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    @*<script>// Sample order data for demo
+        const orders = [
+          {
+            id: "DH001",
+            customerName: "Nguyễn Thế Đoàn",
+            phone: "0123456789",
+            email: "ntdoan@gmail.com",
+            total: 1200000,
+            status: "Đã thanh toán",
+            date: "01/04/2025 10:00:25",
+            creator: "NTD",
+            items: [
+              {
+                id: 1,
+                name: "Nghĩ giàu & làm giàu",
+                price: 110000,
+                quantity: 1,
+                subtotal: 110000,
+              },
+              {
+                id: 2,
+                name: "Nhà giả kim",
+                price: 110000,
+                quantity: 1,
+                subtotal: 110000,
+              },
+            ],
+          },
+          {
+            id: "DH002",
+            customerName: "Nguyễn Thế Đoàn",
+            phone: "0123456789",
+            email: "ntdoan@gmail.com",
+            total: 2000000,
+            status: "Chờ thanh toán",
+            date: "01/04/2025 20:01:00",
+            creator: "NTD",
+            items: [
+              {
+                id: 1,
+                name: "Đắc nhân tâm",
+                price: 200000,
+                quantity: 2,
+                subtotal: 400000,
+              },
+              {
+                id: 2,
+                name: "Nhà giả kim",
+                price: 150000,
+                quantity: 1,
+                subtotal: 150000,
+              },
+            ],
+          },
+          {
+            id: "DH003",
+            customerName: "Nguyễn Việt Hưng",
+            phone: "0123123123",
+            email: "abc@gmail.com",
+            total: 1600000,
+            status: "Chờ thanh toán",
+            date: "01/04/2025 10:05:40",
+            creator: "NTD",
+            items: [
+              {
+                id: 1,
+                name: "Tôi thấy hoa vàng trên cỏ xanh",
+                price: 120000,
+                quantity: 2,
+                subtotal: 240000,
+              },
+              {
+                id: 2,
+                name: "Tuổi trẻ đáng giá bao nhiêu",
+                price: 95000,
+                quantity: 1,
+                subtotal: 95000,
+              },
+              {
+                id: 3,
+                name: "Đắc nhân tâm",
+                price: 90000,
+                quantity: 3,
+                subtotal: 270000,
+              },
+            ],
+          },
+        ];
+
+        // Format currency for display
+        function formatCurrency(amount) {
+          return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+            minimumFractionDigits: 0,
+          }).format(amount);
+        }
+
+        // View order details function
+        function viewOrder(orderId) {
+          const order = orders.find((o) => o.id === orderId);
+          if (order) {
+            document.getElementById("detail-order-id").value = order.id;
+            document.getElementById("detail-customer-name").value =
+              order.customerName;
+            document.getElementById("detail-phone").value = order.phone;
+            document.getElementById("detail-email").value = order.email;
+            document.getElementById("detail-date").value = order.date;
+            document.getElementById("detail-status").value = order.status;
+            document.getElementById("detail-creator").value = order.creator;
+
+            // Populate book list
+            const bookListContainer = document.getElementById("detail-book-list");
+            bookListContainer.innerHTML = "";
+
+            order.items.forEach((item, index) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+              <td>${index + 1}</td>
+              <td>${item.name}</td>
+              <td>${formatCurrency(item.price)}</td>
+              <td>${item.quantity}</td>
+              <td>${formatCurrency(item.subtotal)}</td>
+            `;
+              bookListContainer.appendChild(row);
+            });
+
+            document.getElementById("detail-total").textContent = formatCurrency(
+              order.total
+            );
+            document.getElementById("order-detail-section").style.display =
+              "block";
+            document.getElementById("update-order-section").style.display =
+              "none";
+
+            window.scrollTo({
+              top: document.getElementById("order-detail-section").offsetTop,
+              behavior: "smooth",
+            });
+          }
+        }
+
+        // Update order status function
+        function updateOrder(orderId) {
+          const order = orders.find((o) => o.id === orderId);
+          if (order) {
+            document.getElementById("update-order-id").value = order.id;
+            document.getElementById("order-status").value = order.status;
+
+            document.getElementById("update-order-section").style.display =
+              "block";
+            document.getElementById("order-detail-section").style.display =
+              "none";
+
+            window.scrollTo({
+              top: document.getElementById("update-order-section").offsetTop,
+              behavior: "smooth",
+            });
+          }
+        }
+
+        // Hide order detail section
+        function hideOrderDetail() {
+          document.getElementById("order-detail-section").style.display = "none";
+        }
+
+        // Form submit handler for order update
+        document
+          .getElementById("update-order-form")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const orderId = document.getElementById("update-order-id").value;
+            const orderIndex = orders.findIndex((o) => o.id === orderId);
+
+            if (orderIndex !== -1) {
+              // Update order status
+              orders[orderIndex].status =
+                document.getElementById("order-status").value;
+
+              alert("Cập nhật đơn hàng thành công!");
+              document.getElementById("update-order-section").style.display =
+                "none";
+            }
+          });*@
+
+    //// Check if admin is logged in
+    //document.addEventListener("DOMContentLoaded", function () {
+    //  const isAdminLoggedIn = localStorage.getItem("adminLoggedIn");
+
+    //  if (!isAdminLoggedIn) {
+    //    window.location.href = "/admin/login.html";
+    //    return;
+    //  }
+
+
+
+    });</script>
+</body>
+</html>

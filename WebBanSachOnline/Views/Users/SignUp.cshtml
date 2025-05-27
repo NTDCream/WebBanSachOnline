@@ -1,0 +1,322 @@
+﻿@model WebBanSachOnline.Models.User
+
+@{
+    ViewBag.Title = "Create";
+}
+
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng Ký - Nhà Sách Online</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet" />
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="~/Content/style.css" rel="stylesheet" />
+</head>
+<body>
+
+
+    <!-- Register Form -->
+    <div class="container">
+        <div class="login-container">
+            <div class="text-center mb-4">
+                <h3><i class="fas fa-user-plus me-2 text-primary"></i>Đăng Ký</h3>
+            </div>
+            @using (Html.BeginForm("SignUp", "Users", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="mb-2 position-relative">
+                    <input type="text"
+                           class="form-control"
+                           id="username"
+                           name="username"
+                           placeholder="Tên đăng nhập"
+                           required />
+                    <i class="fas fa-user position-absolute top-50 translate-middle-y ms-3"
+                       style="opacity: 0.5"></i>
+                </div>
+                <div class="mb-2 position-relative">
+                    <input type="text"
+                           class="form-control"
+                           id="fullName"
+                           name="fullName"
+                           placeholder="Họ và tên"
+                           required />
+                    <i class="fas fa-id-card position-absolute top-50 translate-middle-y ms-3"
+                       style="opacity: 0.5"></i>
+                </div>
+                <div class="mb-2 position-relative">
+                    <input type="email"
+                           class="form-control"
+                           id="email"
+                           name="email"
+                           placeholder="nguyenvana@gmail.com"
+                           required />
+                    <i class="fas fa-envelope position-absolute top-50 translate-middle-y ms-3"
+                       style="opacity: 0.5"></i>
+                </div>
+                <div class="mb-2 position-relative">
+                    <input type="tel"
+                           class="form-control"
+                           id="phone"
+                           name="phone"
+                           placeholder="Số điện thoại"
+                           required />
+                    <i class="fas fa-phone position-absolute top-50 translate-middle-y ms-3"
+                       style="opacity: 0.5"></i>
+                </div>
+                <div class="mb-2 position-relative">
+                    <input type="text"
+                           class="form-control"
+                           id="address"
+                           name="address"
+                           placeholder="Địa chỉ"
+                           required />
+                    <i class="fas fa-map-marker-alt position-absolute top-50 translate-middle-y ms-3"
+                       style="opacity: 0.5"></i>
+                </div>
+                <div class="mb-2 position-relative">
+                    <input type="password"
+                           class="form-control"
+                           id="password"
+                           name="password"
+                           placeholder="Mật khẩu (Ít nhất 6 kí tự)"
+                           required />
+                    <i class="fas fa-lock position-absolute top-50 translate-middle-y ms-3"
+                       style="opacity: 0.5"></i>
+                </div>
+                <div class="mb-3 position-relative">
+                    <input type="password"
+                           class="form-control"
+                           id="confirmPassword"
+                           name="confirmPassword"
+                           placeholder="Xác nhận mật khẩu"
+                           required />
+                    <i class="fas fa-lock position-absolute top-50 translate-middle-y ms-3"
+                       style="opacity: 0.5"></i>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Đăng ký
+                    </button>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="@Url.Action("SignIn", "Users")" class="btn btn-link">
+                        Đã có tài khoản? Đăng nhập
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+
+
+    <!-- Toast Container -->
+    <div id="toast-container"
+         class="position-fixed bottom-0 end-0 p-3"
+         style="z-index: 1100">
+        <!-- Toasts will be appended here -->
+    </div>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function handleRegister() {
+            const fullname = document.getElementById("reg-fullname").value;
+            const username = document.getElementById("reg-username").value;
+            const email = document.getElementById("reg-email").value;
+            const password = document.getElementById("reg-password").value;
+            const confirmPassword = document.getElementById(
+                " confirm-password"
+            ).value;
+            const address = document.getElementById("reg-address").value;
+            const phone = document.getElementById("reg-phone").value;
+
+            // Clear previous error messages
+            clearErrorMessages();
+
+            // Validation flag
+            let isValid = true;
+
+            // Basic validation
+            if (!fullname) {
+                showError("reg-fullname", "Vui lòng nhập họ và tên.");
+                isValid = false;
+            }
+
+            if (!username) {
+                showError("reg-username", "Vui lòng nhập tên đăng nhập.");
+                isValid = false;
+            } else if (username.length < 4) {
+                showError("reg-username", "Tên đăng nhập phải có ít nhất 4 ký tự.");
+                isValid = false;
+            }
+
+
+
+            if (!phone) {
+                showError("reg-phone", "Vui lòng nhập số điện thoại.");
+                isValid = false;
+            } else {
+                const phoneRegex = /^[0-9]{10,11}$/;
+                if (!phoneRegex.test(phone)) {
+                    showError(
+                        "reg-phone",
+                        "Số điện thoại không hợp lệ. Vui lòng nhập 10-11 chữ số."
+                    );
+                    isValid = false;
+                }
+            }
+
+            if (!address) {
+                showError("reg-address", "Vui lòng nhập địa chỉ.");
+                isValid = false;
+            }
+
+            if (!password) {
+                showError("reg-password", "Vui lòng nhập mật khẩu.");
+                isValid = false;
+            } else if (password.length < 6) {
+                showError("reg-password", "Mật khẩu phải có ít nhất 6 ký tự.");
+                isValid = false;
+            }
+
+            if (!confirmPassword) {
+                showError("reg-confirm-password", "Vui lòng xác nhận mật khẩu.");
+                isValid = false;
+            } else if (password !== confirmPassword) {
+                showError("reg-confirm-password", "Mật khẩu xác nhận không khớp!");
+                isValid = false;
+            }
+
+            // If validation fails, stop execution
+            if (!isValid) return;
+
+            // In a real app, this would be an API call
+            fetch("/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    fullname,
+                    username,
+                    email,
+                    password,
+                    address,
+                    phone,
+                }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Registration failed");
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    alert("Đăng ký thành công! Vui lòng đăng nhập.");
+                    window.location.href = "/pages/sign-in.html";
+                })
+                .catch((error) => {
+                    // For demo purposes, we'll simulate a successful registration
+                    // In a real app, you would check for existing username/email
+                    alert("Đăng ký thành công! Vui lòng đăng nhập.");
+                    window.location.href = "/pages/sign-in.html";
+                });
+        }
+
+        // Function to show error message
+        function showError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+
+            // Add error class to input
+            field.classList.add("is-invalid");
+
+            // Check if there's already a tooltip icon within this container
+            const container = field.closest(".position-relative");
+            let tooltipIcon = container.querySelector(".error-tooltip");
+
+            if (!tooltipIcon) {
+                // Create new tooltip icon
+                tooltipIcon = document.createElement("i");
+                tooltipIcon.className =
+                    "fas fa-exclamation-circle text-danger error-tooltip";
+                tooltipIcon.setAttribute("data-bs-toggle", "tooltip");
+                tooltipIcon.setAttribute("data-bs-placement", "right");
+
+                // Append to container
+                container.appendChild(tooltipIcon);
+            }
+
+            // Update tooltip message
+            tooltipIcon.setAttribute("title", message);
+            tooltipIcon.setAttribute("data-bs-original-title", message);
+
+            // Dispose existing tooltip if any
+            const existingTooltip = bootstrap.Tooltip.getInstance(tooltipIcon);
+            if (existingTooltip) {
+                existingTooltip.dispose();
+            }
+
+            // Initialize tooltip
+            new bootstrap.Tooltip(tooltipIcon).show();
+        }
+
+        // Function to clear all error messages
+        function clearErrorMessages() {
+            // Remove all tooltips
+            const tooltips = document.querySelectorAll(".error-tooltip");
+            tooltips.forEach((el) => {
+                const tooltip = bootstrap.Tooltip.getInstance(el);
+                if (tooltip) {
+                    tooltip.dispose();
+                }
+                el.remove();
+            });
+
+            // Remove is-invalid class from all inputs
+            document.querySelectorAll(".is-invalid").forEach((el) => {
+                el.classList.remove("is-invalid");
+            });
+        }
+
+        // Handle form submission
+        
+        
+    </script>
+
+    <style>
+        .form-control {
+            padding-left: 45px !important;
+        }
+
+        .is-invalid {
+            border-color: #dc3545;
+        }
+
+        .error-tooltip {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            z-index: 5;
+        }
+
+        /* Make sure icon is visible on top of other elements */
+        .position-relative {
+            position: relative;
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,389 @@
+body {
+  font-family: "Arial", sans-serif;
+}
+
+.book-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+  height: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.book-cover {
+  height: 250px;
+  object-fit: cover;
+  padding: 0;
+  width: 100%;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+  min-height: 2.6em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.card-text {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.card-text.fw-bold {
+  font-size: 1.1rem;
+  margin-top: auto;
+}
+
+.card-footer {
+  background-color: white;
+  border-top: 1px solid #e0e0e0;
+  padding: 0.75rem 1rem;
+}
+
+.card-footer .btn {
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+}
+
+.login-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.admin-sidebar {
+  min-height: calc(100vh - 56px);
+  background-color: #343a40;
+  padding-top: 1rem;
+}
+
+.admin-content {
+  padding: 20px;
+}
+
+.nav-link {
+  color: #adb5bd;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 0.25rem;
+}
+
+.nav-link:hover {
+  color: #fff;
+  background-color: #495057;
+}
+
+.active-nav {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+.active-nav:hover {
+  background-color: #0b5ed7;
+  color: #fff;
+}
+
+.table-book-image {
+  width: 50px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.cart-item {
+  border-bottom: 1px solid #dee2e6;
+  padding: 15px 0;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.navbar-brand {
+  font-weight: 600;
+}
+
+.user-info-nav .list-group-item {
+  border: none;
+  padding: 0.8rem 1.2rem;
+}
+
+.user-info-nav .list-group-item.active {
+  background-color: #0d6efd;
+  color: white;
+  border-radius: 5px;
+}
+
+.user-info-nav .list-group-item:not(.active):hover {
+  background-color: #f8f9fa;
+}
+
+#homeCarousel img {
+  max-height: 400px;
+  object-fit: cover;
+}
+
+.breadcrumb-item a {
+  text-decoration: none;
+}
+
+img[src^="/api/placeholder/"] {
+  background-color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 0.8rem;
+  border: 1px dashed #ccc;
+}
+
+img[src^="/api/placeholder/"]::after {
+  content: attr(alt);
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+/* Original price display */
+.original-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 0.8rem;
+  margin-right: 8px;
+}
+
+/* Stock display */
+.stock-info {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-bottom: 8px;
+}
+
+.book-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add to cart success modal */
+.cart-success-modal {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.modal-header {
+  background-color: #fff;
+  color: #212529;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.cart-success-message {
+  padding: 15px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  padding: 0.75rem;
+  display: flex;
+  justify-content: center;
+}
+
+.cart-confirm-btn {
+  width: 100%;
+  padding: 8px;
+  margin: 5px;
+}
+
+/* Price styling */
+.price-container {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.current-price {
+  color: #dc3545;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* Button adjustments */
+.add-to-cart-btn {
+  width: 100%;
+  font-weight: 500;
+}
+
+/* Cart page styles */
+.table th {
+  font-weight: 600;
+  color: #495057;
+}
+
+.table-bordered {
+  border-color: #dee2e6;
+}
+
+.table-bordered th,
+.table-bordered td {
+  border-color: #dee2e6;
+  vertical-align: middle;
+}
+
+.img-thumbnail {
+  object-fit: contain;
+  height: 80px;
+}
+
+.table .input-group {
+  width: 100px;
+  margin: 0 auto;
+}
+
+/* Checkout page styles */
+.form-floating label {
+  font-weight: 400;
+  color: #6c757d;
+}
+
+.form-floating input:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+#order-success {
+  transition: all 0.3s ease-in-out;
+}
+
+#order-success .fa-check-circle {
+  color: #28a745;
+}
+
+/* Delete confirmation modal */
+#deleteConfirmModal .modal-body {
+  padding: 2rem;
+  text-align: center;
+}
+
+#deleteConfirmModal p {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+#deleteConfirmModal .btn {
+  min-width: 100px;
+}
+
+/* Order Management Styles */
+.order-management-title {
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.order-menu-card,
+.order-list-card {
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.order-menu-card .card-header,
+.order-list-card .card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+  padding: 12px 15px;
+}
+
+.order-menu-card .list-group-item {
+  border: none;
+  border-radius: 0;
+  padding: 10px 15px;
+  margin-bottom: 5px;
+}
+
+.order-menu-card .list-group-item.active {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.order-row {
+  cursor: pointer;
+}
+
+.order-row:hover {
+  background-color: #f5f5f5;
+}
+
+.order-processing {
+  background-color: rgba(255, 243, 205, 0.3);
+}
+
+.order-cancelled {
+  background-color: rgba(248, 215, 218, 0.3);
+}
+
+.order-delivered {
+  background-color: rgba(209, 231, 221, 0.3);
+}
+
+.view-details-btn {
+  white-space: nowrap;
+}
+
+.detail-item-image {
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+#cancelOrderModal .modal-body {
+  padding: 25px;
+}
+
+#detail-order-status {
+  font-weight: 600;
+}
+
+#orderDetailsModal .table th {
+  font-weight: 600;
+  background-color: #f8f9fa;
+}
+
+#orderDetailsModal .modal-footer {
+  justify-content: space-between;
+}
+
+#orderDetailsModal .modal-body .table {
+  margin-top: 15px;
+}

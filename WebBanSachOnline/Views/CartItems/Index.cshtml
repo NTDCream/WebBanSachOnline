@@ -1,0 +1,288 @@
+﻿@model IEnumerable<WebBanSachOnline.Models.CartItem>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giỏ Hàng - Nhà Sách Online</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet" />
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="~/Content/style.css" rel="stylesheet" />
+</head>
+<body>
+
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <nav aria-label="breadcrumb" class="bg-light p-2 rounded mb-4 shadow-sm">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="/">Trang chủ</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Giỏ hàng</li>
+            </ol>
+        </nav>
+
+        <!-- Cart Items Table -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white py-3">
+                <h5 class="card-title mb-0">Giỏ hàng</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered" id="cart-table">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" style="width: 80px">Ảnh</th>
+                            <th scope="col">Sách</th>
+                            <th scope="col">Danh mục</th>
+                            <th scope="col">Giá</th>
+                            <th scope="col" style="width: 100px">Số lượng</th>
+                            <th scope="col">Thành tiền</th>
+                            <th scope="col" style="width: 100px"></th>
+                        </tr>
+                        @{
+                            int totalPrice = 0;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            int price = item.quantity * item.Book.price;
+                            totalPrice += price;
+                            string imagePath = "~/BookImages/" + item.Book.image;
+                            <tr>
+                                <td scope="col"><img src="@Url.Content(imagePath)" style="height: 150px; width: 100px;" alt=@item.Book.title></td>
+                                <td scope="col">@item.Book.title</td>
+                                <td scope="col">@item.Book.Category.title</td>
+                                <td scope="col">@string.Format("{0:N0} đ", item.Book.price)</td>
+                                <td scope="col">@item.quantity</td>
+                                <td scope="col">@string.Format("{0:N0} đ", price)</td>
+                                <td scope="col">
+                                    @using (Html.BeginForm("DeleteConfirmed", "CartItems", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("slug", item.Book.slug)
+                                        <button type="submit"  class="btn btn-danger btn-sm " onclick="return confirm('Bạn có chắc muốn xóa sách này khỏi giỏ hàng?')"><i class="fas fa-trash"></i> Xóa</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+
+                    </thead>
+                    <tbody id="cart-items">
+                        <!-- Cart items will be loaded here -->
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" class="text-end fw-bold">Tổng tiền:</td>
+                            <td colspan="3" class="fw-bold text-danger" id="cart-total">
+                                @string.Format("{0:N0} đ", totalPrice)
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div id="empty-cart" class="text-center py-5 d-none">
+                    <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                    <h5>Giỏ hàng trống</h5>
+                    <p class="text-muted">Hãy thêm sản phẩm vào giỏ hàng</p>
+                    <a href="/" class="btn btn-primary">Tiếp tục mua sắm</a>
+                </div>
+                <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-outline-danger me-2" id="clear-cart-btn">
+                        Xóa hết
+                    </button>
+                    <a href="/" class="btn btn-outline-primary me-2">Tiếp tục mua sắm</a>
+                    <a href="@Url.Action("ThanhToan", "CartItems")" class="btn btn-danger me-2">Đặt hàng</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+
+
+    <!-- Toast Container -->
+    <div id="toast-container"
+         class="position-fixed bottom-0 end-0 p-3"
+         style="z-index: 1100">
+        <!-- Toasts will be appended here -->
+    </div>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="~/Content/main..js"></script>
+    <script>
+        //let deleteItemId = null;
+        //const deleteModal = new bootstrap.Modal(
+        //    document.getElementById("deleteConfirmModal")
+        //);
+
+        // Use real cart data from localStorage instead of the sample data
+        //function loadCart() {
+        //    cart = getCart(); // Get real cart from localStorage
+        //    const cartItems = document.getElementById("cart-items");
+        //    const emptyCart = document.getElementById("empty-cart");
+        //    const cartTable = document.getElementById("cart-table");
+        //    const checkoutBtn = document.getElementById("checkout-btn");
+        //    const clearCartBtn = document.getElementById("clear-cart-btn");
+
+        //    if (cart.length === 0) {
+        //        cartTable.classList.add("d-none");
+        //        emptyCart.classList.remove("d-none");
+        //        checkoutBtn.disabled = true;
+        //        clearCartBtn.disabled = true;
+        //        return;
+        //    }
+
+        //    cartTable.classList.remove("d-none");
+        //    emptyCart.classList.add("d-none");
+        //    checkoutBtn.disabled = false;
+        //    clearCartBtn.disabled = false;
+
+        //    // Clear existing items
+        //    cartItems.innerHTML = "";
+
+        //    // Add items to table
+        //    cart.forEach((item, index) => {
+        //        const tr = document.createElement("tr");
+        //        tr.innerHTML = `
+        //            <td>${index + 1}</td>
+        //            <td><img src="${item.image || "/api/placeholder/100/150"}" alt="${item.title
+        //            }" class="img-thumbnail" width="60"></td>
+        //            <td>${item.title}</td>
+        //            <td>${item.category || "Văn học"}</td>
+        //            <td>${formatCurrency(item.price)}</td>
+        //            <td>
+        //              <div class="input-group input-group-sm">
+        //                <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(${item.id
+        //            }, ${item.quantity - 1})">-</button>
+        //                <input type="text" class="form-control text-center" value="${item.quantity
+        //            }" readonly>
+        //                <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(${item.id
+        //            }, ${item.quantity + 1})" ${item.quantity >= item.stock ? "disabled" : ""
+        //            }>+</button>
+        //              </div>
+        //            </td>
+        //            <td>${formatCurrency(item.price * item.quantity)}</td>
+        //            <td>
+        //              <button class="btn btn-sm btn-outline-danger" onclick="confirmRemoveItem(${item.id
+        //            })">
+        //                <i class="fas fa-trash"></i>
+        //              </button>
+        //            </td>
+        //          `;
+        //        cartItems.appendChild(tr);
+        //    });
+
+        //    // Update total
+        //    const total = cart.reduce(
+        //        (sum, item) => sum + item.price * item.quantity,
+        //        0
+        //    );
+        //    document.getElementById("cart-total").textContent =
+        //        formatCurrency(total);
+
+        //    // Update cart count in nav
+        //    updateCartCount();
+        //}
+
+        //// Confirm delete item
+        //function confirmRemoveItem(itemId) {
+        //    deleteItemId = itemId;
+        //    deleteModal.show();
+        //}
+
+        // Update item quantity
+        function updateQuantity(itemId, newQuantity) {
+            if (newQuantity < 1) {
+                confirmRemoveItem(itemId);
+                return;
+            }
+
+            const item = cart.find((i) => i.id === itemId);
+            if (item) {
+                // Check that new quantity doesn't exceed stock
+                if (newQuantity > item.stock) {
+                    showToast("Số lượng vượt quá hàng có sẵn trong kho", "error");
+                    return;
+                }
+
+                item.quantity = newQuantity;
+                saveCart(cart);
+                loadCart();
+                showToast("Đã cập nhật số lượng sản phẩm");
+            }
+        }
+
+        //// Remove item from cart
+        //function removeItem() {
+        //    if (deleteItemId === null) return;
+
+        //    cart = cart.filter((item) => item.id !== deleteItemId);
+        //    saveCart(cart);
+        //    loadCart();
+        //    showToast("Đã xóa sản phẩm khỏi giỏ hàng");
+        //    deleteItemId = null;
+        //    deleteModal.hide();
+        //}
+
+        //// Clear cart
+        //function clearCart() {
+        //    if (confirm("Bạn có chắc muốn xóa tất cả sản phẩm khỏi giỏ hàng?")) {
+        //        cart = [];
+        //        saveCart(cart);
+        //        loadCart();
+        //        showToast("Đã xóa tất cả sản phẩm khỏi giỏ hàng");
+        //    }
+        //}
+
+        //// Proceed to checkout
+        //function proceedToCheckout() {
+        //    if (!isLoggedIn()) {
+        //        if (
+        //            confirm(
+        //                "Bạn cần đăng nhập để tiếp tục. Chuyển đến trang đăng nhập?"
+        //            )
+        //        ) {
+        //            window.location.href = "/pages/sign-in.html";
+        //        }
+        //        return;
+        //    }
+
+        //    window.location.href = "/pages/checkout.html";
+        //}
+
+        // Initialize page
+        document.addEventListener("DOMContentLoaded", function () {
+            updateNavigation();
+
+            // Confirm delete button event
+            document
+                .getElementById("confirm-delete-btn")
+                .addEventListener("click", removeItem);
+
+            // Clear cart button event
+            document
+                .getElementById("clear-cart-btn")
+                .addEventListener("click", clearCart);
+
+            // Load cart from localStorage
+            loadCart();
+
+            // Update cart count
+            updateCartCount();
+        });</script>
+</body>
+</html>
