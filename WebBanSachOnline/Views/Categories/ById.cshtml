@@ -53,53 +53,53 @@
 
                 <!-- Price Range -->
                 <!--<div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white">
-                        <h5 class="card-title mb-0">Giá</h5>
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Giá</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input"
+                               type="radio"
+                               name="priceRange"
+                               id="price1"
+                               value="0-100000"
+                               checked />
+                        <label class="form-check-label" for="price1">
+                            Dưới 100.000₫
+                        </label>
                     </div>
-                    <div class="card-body">
-                        <div class="form-check mb-2">
-                            <input class="form-check-input"
-                                   type="radio"
-                                   name="priceRange"
-                                   id="price1"
-                                   value="0-100000"
-                                   checked />
-                            <label class="form-check-label" for="price1">
-                                Dưới 100.000₫
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input"
-                                   type="radio"
-                                   name="priceRange"
-                                   id="price2"
-                                   value="100000-200000" />
-                            <label class="form-check-label" for="price2">
-                                100.000₫ - 200.000₫
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input"
-                                   type="radio"
-                                   name="priceRange"
-                                   id="price3"
-                                   value="200000-500000" />
-                            <label class="form-check-label" for="price3">
-                                200.000₫ - 500.000₫
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input"
-                                   type="radio"
-                                   name="priceRange"
-                                   id="price4"
-                                   value="500000-" />
-                            <label class="form-check-label" for="price4">
-                                Trên 500.000₫
-                            </label>
-                        </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input"
+                               type="radio"
+                               name="priceRange"
+                               id="price2"
+                               value="100000-200000" />
+                        <label class="form-check-label" for="price2">
+                            100.000₫ - 200.000₫
+                        </label>
                     </div>
-                </div>-->
+                    <div class="form-check mb-2">
+                        <input class="form-check-input"
+                               type="radio"
+                               name="priceRange"
+                               id="price3"
+                               value="200000-500000" />
+                        <label class="form-check-label" for="price3">
+                            200.000₫ - 500.000₫
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="radio"
+                               name="priceRange"
+                               id="price4"
+                               value="500000-" />
+                        <label class="form-check-label" for="price4">
+                            Trên 500.000₫
+                        </label>
+                    </div>
+                </div>
+            </div>-->
 
 
 
@@ -110,35 +110,34 @@
             <div class="col-lg-9">
                 <!-- Search and Sort Options -->
                 <!--<div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-6 mb-3 mb-md-0">
-                                <div class="input-group">
-                                    <input type="text"
-                                           class="form-control"
-                                           placeholder="Tìm kiếm sách..."
-                                           id="search-input" />
-                                    <button class="btn btn-primary"
-                                            type="button"
-                                            onclick="searchBooks()">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-md-6 text-md-end">
-                                <select class="form-select"
-                                        id="sort-select"
-                                        onchange="sortBooks(this.value)">
-                                    <option value="newest">Mới nhất</option>
-                                    <option value="bestseller">Bán chạy nhất</option>
-                                    <option value="price-asc">Giá tăng dần</option>
-                                    <option value="price-desc">Giá giảm dần</option>
-                                </select>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <div class="input-group">
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="Tìm kiếm sách..."
+                                       id="search-input" />
+                                <button class="btn btn-primary"
+                                        type="button"
+                                        onclick="searchBooks()">
+                                    <i class="fas fa-search"></i>
+                                </button>
                             </div>
                         </div>
+                        <div class="col-md-6 text-md-end">
+                            <select class="form-select"
+                                    id="sort-select"
+                                    onchange="sortBooks(this.value)">
+                                <option value="newest">Mới nhất</option>
+                                <option value="bestseller">Bán chạy nhất</option>
+                                <option value="price-asc">Giá tăng dần</option>
+                                <option value="price-desc">Giá giảm dần</option>
+                            </select>
+                        </div>
                     </div>
-                </div>-->
-
+                </div>
+            </div>-->
                 <!-- View Options -->
                 <!-- Books Grid -->
                 <div class="row g-4" id="books-container">
@@ -181,7 +180,7 @@
                                     </div>
                                     <div class="d-grid mt-2">
                                         <a href="@Url.Action("Details", "Books", new { slug = item.slug })" class="btn btn-primary w-100">Xem chi tiết</a>
-                                        <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" onclick="alert('Đã thêm vào giỏ hàng!')" class="AddToCartBtn btn btn-danger w-100">
+                                        <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" class="AddToCartBtn btn btn-danger w-100">
                                             Thêm vào giỏ
                                         </a>
                                     </div>
@@ -228,7 +227,20 @@
 
         <!-- Bootstrap JS Bundle (includes Popper) -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
+        <script>
+            document.querySelectorAll('.AddToCartBtn').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault(); // Ngăn tải trang
+                    fetch(this.href)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) alert('Đã thêm vào giỏ hàng!');
+                            else alert('Lỗi thêm giỏ hàng');
+                        })
+                        .catch(() => alert('Lỗi kết nối'));
+                });
+            });
+        </script>
 </body>
 </html>
 

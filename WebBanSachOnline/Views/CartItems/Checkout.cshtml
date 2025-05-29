@@ -1,7 +1,10 @@
-﻿<!--@model IEnumerable<WebBanSachOnline.Models.CartItem>
+﻿@model IEnumerable<WebBanSachOnline.Models.CartItem>
+
 @{
-    ViewBag.Title = "ThanhToan";
+    ViewBag.Title = "Checkout";
 }
+
+
 
 
 
@@ -12,19 +15,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Thanh Toán - Nhà Sách Online</title>
     <!-- Bootstrap CSS -->
-    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
-          rel="stylesheet" />-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet" />
     <!-- Font Awesome for icons -->
-    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-          rel="stylesheet" />-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet" />
     <!-- Custom CSS -->
-    <!--<link href="~/Content/style.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
 </head>
-<body>-->
+<body>
 
 
     <!-- Main Content -->
-    <!--<div class="container mt-4">
+    <div class="container mt-4">
         <nav aria-label="breadcrumb" class="bg-light p-2 rounded mb-4 shadow-sm">
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item">
@@ -39,10 +42,10 @@
 
 
         <form method="post" action="/CartItems/ThanhToan">
-            <div class="row">-->
+            <div class="row">
                 <!-- Order Summary -->
 
-                <!--<div class="col-lg-7 mb-4">
+                <div class="col-lg-7 mb-4">
                     <div class="card shadow-sm">
                         <div class="card-header bg-white py-3">
                             <h5 class="card-title mb-0">Thanh toán</h5>
@@ -100,23 +103,23 @@
                                                 <option value="COD" selected>
                                                     Thanh toán khi nhận hàng(COD)
                                                 </option>
-                                                <option value="Bank">Chuyển khoản ngân hàng</option>-->
+                                                <option value="Bank">Chuyển khoản ngân hàng</option>
 
-                                                <!-- Develop later -->-->
-                                                <!--@*<option value="CARD">Thẻ tín dụng/Ghi nợ</option>
+                                                <!-- Develop later -->
+                                                @*<option value="CARD">Thẻ tín dụng/Ghi nợ</option>
                                                     <option value="EWALLET">Ví điện tử</option>*@
-                                            <!--</select>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>-->
+                </div>
 
                 <!-- Checkout Summary -->
 
-                <!--<div class="col-lg-5">
+                <div class="col-lg-5">
                     <div class="card shadow-sm">
                         <div class="card-header bg-white py-3">
                             <h5 class="card-title mb-0">Đơn hàng</h5>
@@ -163,21 +166,21 @@
                 </div>
             </div>
         </form>
-    </div>-->
+    </div>
 
 
 
     <!-- Toast Container -->
-    <!--<div id="toast-container"
+    <div id="toast-container"
          class="position-fixed bottom-0 end-0 p-3"
-         style="z-index: 1100">-->
+         style="z-index: 1100">
         <!-- Toasts will be appended here -->
-    <!--</div>-->
+    </div>
 
     <!-- Bootstrap JS Bundle (includes Popper) -->
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>-->
-    <!-- Custom JS -->-->
-    <!--@*<script src="~/Content/main..js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    @*<script src="~/Content/main..js"></script>
         <script>
           // Load order items from cart
           function loadOrderItems() {
@@ -264,6 +267,8 @@
           });
         </script>*@
 </body>
-</html>-->
+</html>
+
+
 
 

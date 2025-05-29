@@ -33,11 +33,13 @@ namespace WebBanSachOnline.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             var order = db.Orders
-                  .Include(o => o.OrderDetails.Select(od => od.Book))
-                  .FirstOrDefault(o => o.slug == slug);
-
+                        .Include(o => o.OrderDetails.Select(od => od.Book.Category))
+                        .FirstOrDefault(o => o.slug == slug);
             if (order == null)
                 return HttpNotFound();
+            
+
+            
 
             return View(order);
         }

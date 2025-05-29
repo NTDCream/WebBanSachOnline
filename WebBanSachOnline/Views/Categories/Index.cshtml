@@ -191,7 +191,7 @@
                                         </div>
                                         <div class="d-grid mt-2">
                                             <a href="@Url.Action("Details", "Books", new { slug = item.slug })" class="btn btn-primary w-100">Xem chi tiết</a>
-                                            <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" onclick="alert('Đã thêm vào giỏ hàng!')" class="AddToCartBtn btn btn-danger w-100">
+                                            <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })"  class="AddToCartBtn btn btn-danger w-100">
                                                 Thêm vào giỏ
                                             </a>
                                         </div>
@@ -235,8 +235,22 @@
             <!-- Toasts will be appended here -->
         </div>
 
+
         <!-- Bootstrap JS Bundle (includes Popper) -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-        
+        <script>
+            document.querySelectorAll('.AddToCartBtn').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault(); // Ngăn tải trang
+                    fetch(this.href)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) alert('Đã thêm vào giỏ hàng!');
+                            else alert('Lỗi thêm giỏ hàng');
+                        })
+                        .catch(() => alert('Lỗi kết nối'));
+                });
+            });
+        </script>
 </body>
     </html>

@@ -78,48 +78,49 @@
                     </thead>
                     <tbody id="order-list">
                         <!-- Orders will be loaded here -->
+                        @{
+                            int stt = 1;
+                        }
                         @foreach (var item in Model.OrderDetails)
                         {
 
                             string imagePath = "~/BookImages/" + item.Book.image;
-
+                            int price = item.price * item.quantity;
                             <tr>
-                                <td><img src="@Url.Content(imagePath)" class="card-img-top " height="150px" alt=@item.Book.title></td>
+                                <td>@stt</td>
+                                <td><img src="@Url.Content(imagePath)" class="card-img-top " style="height: 150px; width: 100px;" alt=@item.Book.title></td>
                                 <td>@item.Book.title</td>
-                                <td></td>
-                                <td></td>
-                                <td>@string.Format("{0:N0} đ", Model.price)</td>
-                                <td>
-                                </td>
+                                <td>@item.Book.Category.title</td>
+                                <td>@string.Format("{0:N0} đ", item.price)</td>
+                                <td>@item.quantity</td>
+                                <td>@string.Format("{0:N0} đ", price)</td>
+                                
                             </tr>
+                            stt++;
                         }
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colspan="6" class="text-end">Tổng tiền:</td>
                             <td class="fw-bold text-danger"
-                                id="detail-order-total"></td>
+                                id="detail-order-total">
+                                @string.Format("{0:N0} đ", Model.totalAmount)
+                            </td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
         </div>
-        <div class="modal-footer">
+        <!--<div class="modal-footer">
             <button type="button"
                     class="btn btn-secondary"
                     data-bs-dismiss="modal">
                 Đóng
-            </button>
-            @*<button type="button" class="btn btn-danger" id="cancel-order-btn">
+            </button>-->
+        @*<button type="button" class="btn btn-danger" id="cancel-order-btn">
                 Hủy đơn
             </button>*@
-        </div>
-
-        
-
-        
-
-
+        <!--</div>-->
         <!-- Toast Container -->
         <div id="toast-container"
              class="position-fixed bottom-0 end-0 p-3"
@@ -133,86 +134,7 @@
         <script src="/assets/js/main.js"></script>
         <script>
             // Sample orders data (in a real app, this would come from an API)
-            const orders = [
-                {
-                    id: "ORD001",
-                    date: "01/04/2025 10:30:25",
-                    items: [
-                        {
-                            id: 1,
-                            title: "63 Kinh thành",
-                            price: 120000,
-                            quantity: 1,
-                            image: "/api/placeholder/50/75",
-                            category: "Văn học",
-                        },
-                        {
-                            id: 3,
-                            title: "Đắc Nhân Tâm",
-                            price: 90000,
-                            quantity: 1,
-                            image:
-                                "https://nhasachphuongnam.com/images/detailed/217/dac-nhan-tam-bc.jpg",
-                            category: "Văn học",
-                        },
-                    ],
-                    total: 400000,
-                    status: "delivered",
-                },
-                {
-                    id: "ORD002",
-                    date: "01/04/2025 15:05:12",
-                    items: [
-                        {
-                            id: 4,
-                            title: "Chú Ruột Nhân Trần",
-                            price: 150000,
-                            quantity: 1,
-                            image: "/api/placeholder/50/75",
-                            category: "Văn học",
-                        },
-                    ],
-                    total: 390000,
-                    status: "processing",
-                },
-            ];
 
-            let currentOrderId = null;
-
-            // Load orders
-            function loadOrders() {
-                const orderList = document.getElementById("order-list");
-                orderList.innerHTML = orders
-                    .map(
-                        (order, index) => `
-                                                                          <tr class="order-row ${order.status === "processing"
-                                ? "order-processing"
-                                : order.status === "cancelled"
-                                    ? "order-cancelled"
-                                    : "order-delivered"
-                            }" data-order-id="${order.id}">
-                                                                            <td class="text-center">${index + 1}</td>
-                                                                            <td>${order.id}</td>
-                                                                            <td>${order.date}</td>
-                                                                            <td>${getStatusText(order.status)}</td>
-                                                                            <td>${formatCurrency(order.total)}</td>
-                                                                            <td class="text-center">
-                                                                              <button class="btn btn-sm btn-outline-primary view-details-btn me-2" onclick="showOrderDetails('${order.id
-                            }')">
-                                                                                <i class="fas fa-eye me-1"></i>Xem chi tiết
-                                                                              </button>
-                                                                              ${order.status === "processing"
-                                ? `<button class="btn btn-sm btn-outline-danger" onclick="showCancelConfirmation('${order.id}')">
-                                                                                      <i class="fas fa-times me-1"></i>Hủy đơn
-                                                                                    </button>`
-                                : ""
-                            }
-                                                                            </td>
-                                                                          </tr>
-                                                                        `
-                    )
-                    .join("");
-            }
 
             // Show order details
             function showOrderDetails(orderId) {
@@ -240,19 +162,19 @@
                 orderItems.innerHTML = order.items
                     .map(
                         (item, index) => `
-                                                                          <tr>
-                                                                            <td class="text-center">${index + 1}</td>
-                                                                            <td>
-                                                                              <img src="${item.image}" alt="${item.title
+                                                                                  <tr>
+                                                                                    <td class="text-center">${index + 1}</td>
+                                                                                    <td>
+                                                                                      <img src="${item.image}" alt="${item.title
                             }" class="detail-item-image" width="40">
-                                                                            </td>
-                                                                            <td>${item.title}</td>
-                                                                            <td>${item.category}</td>
-                                                                            <td>${formatCurrency(item.price)}</td>
-                                                                            <td>${item.quantity}</td>
-                                                                            <td>${formatCurrency(item.price * item.quantity)}</td>
-                                                                          </tr>
-                                                                        `
+                                                                                    </td>
+                                                                                    <td>${item.title}</td>
+                                                                                    <td>${item.category}</td>
+                                                                                    <td>${formatCurrency(item.price)}</td>
+                                                                                    <td>${item.quantity}</td>
+                                                                                    <td>${formatCurrency(item.price * item.quantity)}</td>
+                                                                                  </tr>
+                                                                                `
                     )
                     .join("");
 

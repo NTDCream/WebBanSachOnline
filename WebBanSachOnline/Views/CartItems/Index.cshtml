@@ -51,6 +51,11 @@
                             <th scope="col">Thành tiền</th>
                             <th scope="col" style="width: 100px"></th>
                         </tr>
+                        
+
+                    </thead>
+                    <tbody id="cart-items">
+                        <!-- Cart items will be loaded here -->
                         @{
                             int totalPrice = 0;
                         }
@@ -71,16 +76,11 @@
                                     {
                                         @Html.AntiForgeryToken()
                                         @Html.Hidden("slug", item.Book.slug)
-                                        <button type="submit"  class="btn btn-danger btn-sm " onclick="return confirm('Bạn có chắc muốn xóa sách này khỏi giỏ hàng?')"><i class="fas fa-trash"></i> Xóa</button>
+                                        <button type="submit" class="btn btn-danger btn-sm " onclick="return confirm('Bạn có chắc muốn xóa sách này khỏi giỏ hàng?')"><i class="fas fa-trash"></i> Xóa</button>
                                     }
                                 </td>
                             </tr>
                         }
-
-                    </thead>
-                    <tbody id="cart-items">
-                        <!-- Cart items will be loaded here -->
-
                     </tbody>
                     <tfoot>
                         <tr>
@@ -98,11 +98,10 @@
                     <a href="/" class="btn btn-primary">Tiếp tục mua sắm</a>
                 </div>
                 <div class="d-flex justify-content-end mt-3">
-                    <button class="btn btn-outline-danger me-2" id="clear-cart-btn">
-                        Xóa hết
-                    </button>
+                    <a href="@Url.Action("DeleteAllItems", "CartItems")" class="btn btn-outline-danger me-2" id="clear-cart-btn">Xóa hết</a>
                     <a href="/" class="btn btn-outline-primary me-2">Tiếp tục mua sắm</a>
-                    <a href="@Url.Action("ThanhToan", "CartItems")" class="btn btn-danger me-2">Đặt hàng</a>
+                    <a href="@Url.Action("Checkout", "CartItems")" class="btn btn-danger me-2">Đặt hàng</a>
+                    @*<a href="@Url.Action("ThanhToan", "CartItems")" class="btn btn-danger me-2">Đặt hàng</a>*@
                 </div>
             </div>
         </div>

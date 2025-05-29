@@ -101,7 +101,7 @@
                     <a href="/">Trang chủ</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="/pages/category.html">Danh mục sách</a>
+                    <a href="/Categories">Danh mục sách</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">
                     Xem chi tiết sách
@@ -169,7 +169,7 @@
                         </div>
                     </div>
 
-                    <a href="@Url.Action("AddToCart", "CartItems", new { bookId = Model.id })" onclick="alert('Đã thêm vào giỏ hàng!')" class=" btn btn-danger ">
+                    <a href="@Url.Action("AddToCart", "CartItems", new { bookId = Model.id })" class="AddToCartBtn btn btn-danger">
                         Thêm vào giỏ
                     </a>
                 </div>
@@ -183,25 +183,7 @@
                 <div class="detail-section mb-4">
                     <h4 class="mb-3">Mô tả sản phẩm</h4>
                     <div id="book-description">
-                        <p>
-                            "Nhà giả kim" là một cuốn tiểu thuyết được viết bởi Paulo
-                            Coelho, lần đầu xuất bản bằng tiếng Bồ Đào Nha vào năm 1988.
-                            Cuốn sách kể về Santiago, một cậu bé chăn cừu ở Andalusia, người
-                            đã có một giấc mơ lặp đi lặp lại về việc tìm thấy kho báu ở Ai
-                            Cập.
-                        </p>
-                        <p>
-                            Được thúc đẩy bởi giấc mơ và lời khuyên của một vị vua già,
-                            Santiago bắt đầu cuộc hành trình đầy thách thức qua sa mạc
-                            Sahara để tìm kiếm kho báu. Trên hành trình của mình, cậu gặp gỡ
-                            nhiều nhân vật thú vị, học hỏi về tình yêu, lòng dũng cảm và
-                            theo đuổi "Ý nghĩa cuộc sống".
-                        </p>
-                        <p>
-                            "Nhà giả kim" là một câu chuyện mang tính biểu tượng về việc
-                            khám phá định mệnh cá nhân và hiểu rằng hạnh phúc thực sự đến từ
-                            việc theo đuổi ước mơ của chính mình.
-                        </p>
+                        @Model.description
                     </div>
                 </div>
 
@@ -346,7 +328,7 @@
     <!-- Custom JS -->
     <script src="~/Content/main..js"></script>
     <script>
-    let currentRating = 0;
+        let currentRating = 0;
         let selectedBook = null;
         let quantity = 1;
 
@@ -376,45 +358,7 @@
             loadBookDetails();
         });
 
-        function addMockReviewsIfEmpty() {
-            let reviews = localStorage.getItem("bookReviews");
-            reviews = reviews ? JSON.parse(reviews) : [];
-
-            // Only add mock reviews if none exist
-            if (reviews.length === 0) {
-                const mockReviews = [
-                    {
-                        id: Date.now() - 3000000,
-                        bookId: 2,
-                        userId: "mock1",
-                        userName: "NTD",
-                        rating: 4,
-                        text: "Đánh giá 1",
-                        date: "20/04/2023",
-                    },
-                    {
-                        id: Date.now() - 2000000,
-                        bookId: 2,
-                        userId: "mock2",
-                        userName: "NTD",
-                        rating: 4,
-                        text: "Đánh giá 2",
-                        date: "20/04/2023",
-                    },
-                    {
-                        id: Date.now() - 1000000,
-                        bookId: 2,
-                        userId: "mock3",
-                        userName: "NTD",
-                        rating: 3,
-                        text: "Đánh giá 3",
-                        date: "20/04/2023",
-                    },
-                ];
-
-                localStorage.setItem("bookReviews", JSON.stringify(mockReviews));
-            }
-        }
+        
 
         function loadBookDetails() {
             // Get book ID from URL
@@ -435,9 +379,9 @@
                     category: "Văn học",
                     description: `"Tôi thấy hoa vàng trên cỏ xanh" là tác phẩm được nhiều người bình chọn là hay nhất của nhà văn Nguyễn Nhật Ánh. Tác phẩm đã được dựng thành phim điện ảnh vào năm 2015.
 
-          Cuốn sách viết về tuổi thơ nghèo khó của hai anh em Thiều và Tường, cùng chuyện tình cảm của họ với cô bé Mận. Chuyện tình của họ hồn nhiên và trong sáng, nhưng cũng đầy những rung động đầu đời khó quên.
+              Cuốn sách viết về tuổi thơ nghèo khó của hai anh em Thiều và Tường, cùng chuyện tình cảm của họ với cô bé Mận. Chuyện tình của họ hồn nhiên và trong sáng, nhưng cũng đầy những rung động đầu đời khó quên.
 
-          Bối cảnh là một làng quê nghèo vào khoảng những năm 1980, khi mà người dân vẫn còn đang gặp nhiều khó khăn sau chiến tranh. Nhưng chính trong cái nghèo khó ấy, tình cảm gia đình, tình bạn, tình yêu của những đứa trẻ lại trở nên thật đẹp và đáng trân trọng.`,
+              Bối cảnh là một làng quê nghèo vào khoảng những năm 1980, khi mà người dân vẫn còn đang gặp nhiều khó khăn sau chiến tranh. Nhưng chính trong cái nghèo khó ấy, tình cảm gia đình, tình bạn, tình yêu của những đứa trẻ lại trở nên thật đẹp và đáng trân trọng.`,
                 },
                 {
                     id: 2,
@@ -451,9 +395,9 @@
                     category: "Văn học",
                     description: `"Nhà giả kim" là một cuốn tiểu thuyết được viết bởi Paulo Coelho, lần đầu xuất bản bằng tiếng Bồ Đào Nha vào năm 1988. Cuốn sách kể về Santiago, một cậu bé chăn cừu ở Andalusia, người đã có một giấc mơ lặp đi lặp lại về việc tìm thấy kho báu ở Ai Cập.
 
-          Được thúc đẩy bởi giấc mơ và lời khuyên của một vị vua già, Santiago bắt đầu cuộc hành trình đầy thách thức qua sa mạc Sahara để tìm kiếm kho báu. Trên hành trình của mình, cậu gặp gỡ nhiều nhân vật thú vị, học hỏi về tình yêu, lòng dũng cảm và theo đuổi "Ý nghĩa cuộc sống".
+              Được thúc đẩy bởi giấc mơ và lời khuyên của một vị vua già, Santiago bắt đầu cuộc hành trình đầy thách thức qua sa mạc Sahara để tìm kiếm kho báu. Trên hành trình của mình, cậu gặp gỡ nhiều nhân vật thú vị, học hỏi về tình yêu, lòng dũng cảm và theo đuổi "Ý nghĩa cuộc sống".
 
-          "Nhà giả kim" là một câu chuyện mang tính biểu tượng về việc khám phá định mệnh cá nhân và hiểu rằng hạnh phúc thực sự đến từ việc theo đuổi ước mơ của chính mình.`,
+              "Nhà giả kim" là một câu chuyện mang tính biểu tượng về việc khám phá định mệnh cá nhân và hiểu rằng hạnh phúc thực sự đến từ việc theo đuổi ước mơ của chính mình.`,
                 },
             ];
 
@@ -616,17 +560,17 @@
                 }
 
                 reviewElement.innerHTML = `
-                      <div class="d-flex justify-content-between mb-2">
-                        <div>
-                          <span class="fw-bold">${review.userName}</span>
-                        </div>
-                        <div class="review-date">${review.date}</div>
-                      </div>
-                      <div class="rating-stars mb-2">
-                        ${starsHtml}
-                      </div>
-                      <p class="mb-0">${review.text}</p>
-                    `;
+                          <div class="d-flex justify-content-between mb-2">
+                            <div>
+                              <span class="fw-bold">${review.userName}</span>
+                            </div>
+                            <div class="review-date">${review.date}</div>
+                          </div>
+                          <div class="rating-stars mb-2">
+                            ${starsHtml}
+                          </div>
+                          <p class="mb-0">${review.text}</p>
+                        `;
 
                 reviewsContainer.appendChild(reviewElement);
             });
@@ -728,13 +672,20 @@
                 currency: "VND",
             }).format(amount);
         }</script>
-
     <script>
-        $(document).ready(function () {
-            $('.AddToCartBtn').click(function () {
-                alert("Thêm thành công");
+        document.querySelectorAll('.AddToCartBtn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault(); // Ngăn tải trang
+                fetch(this.href)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) alert('Đã thêm vào giỏ hàng!');
+                        else alert('Lỗi thêm giỏ hàng');
+                    })
+                    .catch(() => alert('Lỗi kết nối'));
             });
         });
     </script>
+    
 </body>
 </html>

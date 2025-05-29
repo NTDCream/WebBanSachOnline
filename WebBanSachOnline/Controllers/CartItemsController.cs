@@ -25,37 +25,83 @@ namespace WebBanSachOnline.Controllers
 
             return View(cartItems);
         }
-
-        public ActionResult ThanhToan()
+        public ActionResult Checkout()
         {
-            return View();
+            int userId = 1; /*(int)Session["userId"];*/
+
+            var cartItems = db.CartItems
+                      .Include(ci => ci.Book)
+                      .Include(ci => ci.User)
+                      .Where(ci => ci.userId == userId)
+                      .ToList();
+
+            return View( cartItems);
+        }
+        
+        public ActionResult DeleteAllItems()
+        {
+            int userId = 1;
+            var cartItems = db.CartItems
+                              .Include(ci => ci.Book)
+                              .Where(ci => ci.userId == userId)
+                              .ToList();
+            db.CartItems.RemoveRange(cartItems);
+            db.SaveChanges();
+            return RedirectToAction("Index", "CartItems");
         }
 
+        public ActionResult ThanhToan(string fullName, string phone, string address, string paymentMethod)
+        {
+            int userId = 1; // giả lập
+            var cartItems = db.CartItems
+                              .Include(ci => ci.Book)
+                              .Where(ci => ci.userId == userId)
+                              .ToList();
+
+            decimal total = cartItems.Sum(ci => ci.Book.price * ci.quantity);
+
+            var order = new Order
+            {
+                userId = userId,
+                slug = "DH",
+                status = paymentMethod == "COD" ? "pending" : "paid",
+                totalAmount = total,
+                customerName = fullName,
+                phone = phone,
+                address = address,
+                paymentMethod = paymentMethod,
+                createdDate = DateTime.Now
+            };
+            db.Orders.Add(order);
+            db.SaveChanges();
+
+            // Cập nhật slug sau khi có id
+            order.slug = "DH" + order.id;
+            //db.Entry(order).Property(o => o.slug).IsModified = true;
+            db.SaveChanges();
+
+            // Tạo chi tiết đơn hàng
+            foreach (var item in cartItems)
+            {
+                var detail = new OrderDetail
+                {
+                    orderId = order.id,
+                    bookId = item.bookId,
+                    quantity = item.quantity,
+                    price = item.Book.price
+                };
+                db.OrderDetails.Add(detail);
+            }
+
+            //Xóa sách trong giỏ hàng
+            db.CartItems.RemoveRange(cartItems);
+            db.SaveChanges();
+
+            return RedirectToAction("OrderNotification","Orders");
+        }
+
+
         [HttpGet]
-        //public ActionResult AddToCart(int bookId)
-        //{
-        //    int userId = 1;/*GetCurrentUserId()*/; // Nếu có hệ thống đăng nhập
-
-        //    var cartItem = db.CartItems.FirstOrDefault(x => x.userId == userId && x.bookId == bookId);
-        //    if (cartItem != null)
-        //    {
-        //        cartItem.quantity += 1;
-        //    }
-        //    else
-        //    {
-        //        db.CartItems.Add(new CartItem
-        //        {
-        //            userId = userId,
-        //            bookId = bookId,
-        //            quantity = 1
-        //        });
-        //    }
-
-        //    db.SaveChanges();
-
-        //    return Redirect(Request.UrlReferrer?.ToString() ?? "/");
-        //}
-
         public JsonResult AddToCart(int bookId)
         {
             int userId = 1; // GetCurrentUserId();
@@ -78,7 +124,7 @@ namespace WebBanSachOnline.Controllers
             db.SaveChanges();
             //return Json(new { success = true }, JsonRequestBehavior.AllowGet);
 
-            return Json(new { success = true });
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
 
         //private int GetCurrentUserId()
