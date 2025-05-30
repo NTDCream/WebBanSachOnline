@@ -102,11 +102,11 @@
                 string imagePath = "~/BookImages/" + item.image;
                 <div class="card book-card h-100 shadow-sm">
                     <div class="book-image-container">
-                            <img src="@Url.Content(imagePath)" class="card-img-top " height="350px" alt=@item.title>
-                        
+                        <img src="@Url.Content(imagePath)" class="card-img-top " height="350px" alt=@item.title>
+
                     </div>
 
-                    
+
                     <div class="card-body">
                         <h5>@item.title</h5>
                         <div>
@@ -133,10 +133,19 @@
                     </div>
                     <div class="card-footer d-grid">
                         <a href="@Url.Action("Details", "Books", new { slug = item.slug })" class="btn btn-primary w-100">Xem chi tiết</a>
-                        <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" class="AddToCartBtn btn btn-danger w-100">
-                            Thêm vào giỏ
-                        </a>
 
+                        @if (item.quantity - item.soldQuantity > 0)
+                        {
+                            <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" class="AddToCartBtn btn btn-danger w-100">
+                                Thêm vào giỏ
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" class="AddToCartBtn btn btn-danger w-100 disabled">
+                                Thêm vào giỏ
+                            </a>
+                        }
 
                     </div>
                 </div>
@@ -159,12 +168,11 @@
     <!--<div id="toast-container"
          class="position-fixed bottom-0 end-0 p-3"
          style="z-index: 1100">-->
-        <!-- Toasts will be appended here -->
+    <!-- Toasts will be appended here -->
     <!--</div>-->
-
     <!-- Bootstrap JS Bundle (includes Popper) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    
+
 
     <script>
         document.querySelectorAll('.AddToCartBtn').forEach(btn => {

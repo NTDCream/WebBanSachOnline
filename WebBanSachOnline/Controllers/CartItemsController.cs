@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Services.Description;
 using WebBanSachOnline.Models;
 
 namespace WebBanSachOnline.Controllers
@@ -52,12 +53,13 @@ namespace WebBanSachOnline.Controllers
 
         public ActionResult ThanhToan(string fullName, string phone, string address, string paymentMethod)
         {
+            
             int userId = 1; // giả lập
             var cartItems = db.CartItems
                               .Include(ci => ci.Book)
                               .Where(ci => ci.userId == userId)
                               .ToList();
-
+            
             decimal total = cartItems.Sum(ci => ci.Book.price * ci.quantity);
 
             var order = new Order
@@ -97,8 +99,11 @@ namespace WebBanSachOnline.Controllers
             db.CartItems.RemoveRange(cartItems);
             db.SaveChanges();
 
-            return RedirectToAction("OrderNotification","Orders");
+            return RedirectToAction("OrderNotification","Orders", new { slug = order.slug });
         }
+
+        //VNPay
+
 
 
         [HttpGet]

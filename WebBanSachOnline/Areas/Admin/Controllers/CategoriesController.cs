@@ -11,7 +11,6 @@ using WebBanSachOnline.Models;
 
 namespace WebBanSachOnline.Areas.Admin.Controllers
 {
-
     public class CategoriesController : Controller
     {
         public string GenerateSlug(string title)

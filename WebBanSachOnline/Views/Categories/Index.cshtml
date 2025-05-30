@@ -191,9 +191,18 @@
                                         </div>
                                         <div class="d-grid mt-2">
                                             <a href="@Url.Action("Details", "Books", new { slug = item.slug })" class="btn btn-primary w-100">Xem chi tiết</a>
-                                            <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })"  class="AddToCartBtn btn btn-danger w-100">
-                                                Thêm vào giỏ
-                                            </a>
+                                            @if (item.quantity - item.soldQuantity > 0)
+                                            {
+                                                <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" class="AddToCartBtn btn btn-danger w-100">
+                                                    Thêm vào giỏ
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" class="AddToCartBtn btn btn-danger w-100 disabled">
+                                                    Thêm vào giỏ
+                                                </a>
+                                            }
                                         </div>
                                     </div>
                                 </div>

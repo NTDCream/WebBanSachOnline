@@ -21,7 +21,13 @@
     <link href="~/Content/style.css" rel="stylesheet" />
 </head>
 <body>
-
+    <style>
+        .disabled-link {
+            pointer-events: none;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    </style>
 
     <!-- Main Content -->
     <div class="container mt-4">
@@ -51,7 +57,7 @@
                             <th scope="col">Thành tiền</th>
                             <th scope="col" style="width: 100px"></th>
                         </tr>
-                        
+
 
                     </thead>
                     <tbody id="cart-items">
@@ -100,14 +106,22 @@
                 <div class="d-flex justify-content-end mt-3">
                     <a href="@Url.Action("DeleteAllItems", "CartItems")" class="btn btn-outline-danger me-2" id="clear-cart-btn">Xóa hết</a>
                     <a href="/" class="btn btn-outline-primary me-2">Tiếp tục mua sắm</a>
-                    <a href="@Url.Action("Checkout", "CartItems")" class="btn btn-danger me-2">Đặt hàng</a>
+                    @if (Model == null || !Model.Any())
+                    {
+                        <a href="@Url.Action("Checkout", "CartItems")" class="btn btn-danger me-2 disabled">Đặt hàng</a>
+                    }
+                    else
+                    {
+
+                        <a href="@Url.Action("Checkout", "CartItems")" class="btn btn-danger me-2">Đặt hàng</a>
+                    }
                     @*<a href="@Url.Action("ThanhToan", "CartItems")" class="btn btn-danger me-2">Đặt hàng</a>*@
                 </div>
             </div>
         </div>
     </div>
 
-    
+
 
 
 
@@ -121,7 +135,7 @@
     <!-- Bootstrap JS Bundle (includes Popper) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
-    <script src="~/Content/main..js"></script>
+    @*<script src="~/Content/main.js"></script>*@
     <script>
         //let deleteItemId = null;
         //const deleteModal = new bootstrap.Modal(
@@ -129,79 +143,7 @@
         //);
 
         // Use real cart data from localStorage instead of the sample data
-        //function loadCart() {
-        //    cart = getCart(); // Get real cart from localStorage
-        //    const cartItems = document.getElementById("cart-items");
-        //    const emptyCart = document.getElementById("empty-cart");
-        //    const cartTable = document.getElementById("cart-table");
-        //    const checkoutBtn = document.getElementById("checkout-btn");
-        //    const clearCartBtn = document.getElementById("clear-cart-btn");
-
-        //    if (cart.length === 0) {
-        //        cartTable.classList.add("d-none");
-        //        emptyCart.classList.remove("d-none");
-        //        checkoutBtn.disabled = true;
-        //        clearCartBtn.disabled = true;
-        //        return;
-        //    }
-
-        //    cartTable.classList.remove("d-none");
-        //    emptyCart.classList.add("d-none");
-        //    checkoutBtn.disabled = false;
-        //    clearCartBtn.disabled = false;
-
-        //    // Clear existing items
-        //    cartItems.innerHTML = "";
-
-        //    // Add items to table
-        //    cart.forEach((item, index) => {
-        //        const tr = document.createElement("tr");
-        //        tr.innerHTML = `
-        //            <td>${index + 1}</td>
-        //            <td><img src="${item.image || "/api/placeholder/100/150"}" alt="${item.title
-        //            }" class="img-thumbnail" width="60"></td>
-        //            <td>${item.title}</td>
-        //            <td>${item.category || "Văn học"}</td>
-        //            <td>${formatCurrency(item.price)}</td>
-        //            <td>
-        //              <div class="input-group input-group-sm">
-        //                <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(${item.id
-        //            }, ${item.quantity - 1})">-</button>
-        //                <input type="text" class="form-control text-center" value="${item.quantity
-        //            }" readonly>
-        //                <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(${item.id
-        //            }, ${item.quantity + 1})" ${item.quantity >= item.stock ? "disabled" : ""
-        //            }>+</button>
-        //              </div>
-        //            </td>
-        //            <td>${formatCurrency(item.price * item.quantity)}</td>
-        //            <td>
-        //              <button class="btn btn-sm btn-outline-danger" onclick="confirmRemoveItem(${item.id
-        //            })">
-        //                <i class="fas fa-trash"></i>
-        //              </button>
-        //            </td>
-        //          `;
-        //        cartItems.appendChild(tr);
-        //    });
-
-        //    // Update total
-        //    const total = cart.reduce(
-        //        (sum, item) => sum + item.price * item.quantity,
-        //        0
-        //    );
-        //    document.getElementById("cart-total").textContent =
-        //        formatCurrency(total);
-
-        //    // Update cart count in nav
-        //    updateCartCount();
-        //}
-
-        //// Confirm delete item
-        //function confirmRemoveItem(itemId) {
-        //    deleteItemId = itemId;
-        //    deleteModal.show();
-        //}
+        
 
         // Update item quantity
         function updateQuantity(itemId, newQuantity) {
@@ -225,43 +167,7 @@
             }
         }
 
-        //// Remove item from cart
-        //function removeItem() {
-        //    if (deleteItemId === null) return;
-
-        //    cart = cart.filter((item) => item.id !== deleteItemId);
-        //    saveCart(cart);
-        //    loadCart();
-        //    showToast("Đã xóa sản phẩm khỏi giỏ hàng");
-        //    deleteItemId = null;
-        //    deleteModal.hide();
-        //}
-
-        //// Clear cart
-        //function clearCart() {
-        //    if (confirm("Bạn có chắc muốn xóa tất cả sản phẩm khỏi giỏ hàng?")) {
-        //        cart = [];
-        //        saveCart(cart);
-        //        loadCart();
-        //        showToast("Đã xóa tất cả sản phẩm khỏi giỏ hàng");
-        //    }
-        //}
-
-        //// Proceed to checkout
-        //function proceedToCheckout() {
-        //    if (!isLoggedIn()) {
-        //        if (
-        //            confirm(
-        //                "Bạn cần đăng nhập để tiếp tục. Chuyển đến trang đăng nhập?"
-        //            )
-        //        ) {
-        //            window.location.href = "/pages/sign-in.html";
-        //        }
-        //        return;
-        //    }
-
-        //    window.location.href = "/pages/checkout.html";
-        //}
+        
 
         // Initialize page
         document.addEventListener("DOMContentLoaded", function () {

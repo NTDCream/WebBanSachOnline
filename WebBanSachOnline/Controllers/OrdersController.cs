@@ -21,8 +21,9 @@ namespace WebBanSachOnline.Controllers
             return View(orders.ToList());
         }
 
-        public ActionResult OrderNotification()
+        public ActionResult OrderNotification(string slug)
         {
+            ViewBag.OrderSlug = slug;
             return View();
 
         }

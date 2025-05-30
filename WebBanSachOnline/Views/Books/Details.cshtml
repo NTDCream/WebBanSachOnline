@@ -169,9 +169,18 @@
                         </div>
                     </div>
 
-                    <a href="@Url.Action("AddToCart", "CartItems", new { bookId = Model.id })" class="AddToCartBtn btn btn-danger">
-                        Thêm vào giỏ
-                    </a>
+                    @if (Model.quantity - Model.soldQuantity > 0)
+                    {
+                        <a href="@Url.Action("AddToCart", "CartItems", new { bookId = Model.id })" class="AddToCartBtn btn btn-danger w-100">
+                            Thêm vào giỏ
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("AddToCart", "CartItems", new { bookId = Model.id })" class="AddToCartBtn btn btn-danger w-100 disabled">
+                            Thêm vào giỏ
+                        </a>
+                    }
                 </div>
             </div>
         </div>
