@@ -15,10 +15,16 @@ namespace WebBanSachOnline.Controllers
         private Model1 db = new Model1();
 
         // GET: Categories
-        public ActionResult Index()
+        public ActionResult Index(string title)
         {
             var categories = db.Categories.ToList();
+
             var books = db.Books.ToList();
+
+            if (!String.IsNullOrEmpty(title))
+            {
+                books = books.Where(x => x.title.ToLower().Contains(title.ToLower())).ToList();
+            }
 
             ViewBag.Categories = categories;
             ViewBag.Books = books;
@@ -32,7 +38,7 @@ namespace WebBanSachOnline.Controllers
         }
 
         [Route("Categories/{slug}")]
-        public ActionResult BySlug(string slug)
+        public ActionResult BySlug(string slug, string title)
         {
             var category = db.Categories.FirstOrDefault(c => c.slug == slug);
             if (category == null)
@@ -41,6 +47,10 @@ namespace WebBanSachOnline.Controllers
             }
 
             var books = db.Books.Where(x => x.categoryId == category.id).ToList();
+            if (!String.IsNullOrEmpty(title))
+            {
+                books = books.Where(x => x.title.ToLower().Contains(title.ToLower())).ToList();
+            }
             ViewBag.CategoryId = category.id;
 
             return View("ById", books);

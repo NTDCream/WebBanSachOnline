@@ -109,35 +109,37 @@
             <!-- Book List -->
             <div class="col-lg-9">
                 <!-- Search and Sort Options -->
-                <!--<div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-6 mb-3 mb-md-0">
-                            <div class="input-group">
-                                <input type="text"
-                                       class="form-control"
-                                       placeholder="Tìm kiếm sách..."
-                                       id="search-input" />
-                                <button class="btn btn-primary"
-                                        type="button"
-                                        onclick="searchBooks()">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col-md-6 text-md-end">
+                @using (Html.BeginForm())
+                {
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <div class="input-group">
+                                        <input type="text"
+                                               class="form-control"
+                                               placeholder="Tìm kiếm sách..."
+                                               name="title"
+                                               id="search-input" />
+                                        <button class="btn btn-primary"
+                                                type="submit">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                @*<div class="col-md-6 text-md-end">
                             <select class="form-select"
-                                    id="sort-select"
-                                    onchange="sortBooks(this.value)">
+                                    id="sort-select">
                                 <option value="newest">Mới nhất</option>
                                 <option value="bestseller">Bán chạy nhất</option>
                                 <option value="price-asc">Giá tăng dần</option>
                                 <option value="price-desc">Giá giảm dần</option>
                             </select>
+                        </div>*@
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>-->
+                }
                 <!-- View Options -->
                 <!-- Books Grid -->
                 <div class="row g-4" id="books-container">
