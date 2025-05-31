@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
@@ -7,7 +8,11 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Services.Description;
+using WebBanSachOnline.Models.Payments;
 using WebBanSachOnline.Models;
+using System.Collections.Specialized;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace WebBanSachOnline.Controllers
 {
@@ -59,14 +64,24 @@ namespace WebBanSachOnline.Controllers
                               .Include(ci => ci.Book)
                               .Where(ci => ci.userId == userId)
                               .ToList();
-            
-            decimal total = cartItems.Sum(ci => ci.Book.price * ci.quantity);
 
+            
+
+            decimal total = cartItems.Sum(ci => ci.Book.price * ci.quantity);
+            string status ="";
+            if(paymentMethod == "COD")
+            {
+                status = "pending";
+            }
+            else
+            {
+                status = "paid";
+            }
             var order = new Order
             {
                 userId = userId,
                 slug = "DH",
-                status = paymentMethod == "COD" ? "pending" : "paid",
+                status = status,
                 totalAmount = total,
                 customerName = fullName,
                 phone = phone,
@@ -99,12 +114,69 @@ namespace WebBanSachOnline.Controllers
             db.CartItems.RemoveRange(cartItems);
             db.SaveChanges();
 
-            return RedirectToAction("OrderNotification","Orders", new { slug = order.slug });
+            if (paymentMethod == "BANK")
+            {
+                
+                return RedirectToAction("CreatePayment");
+            }
+
+            return RedirectToAction("OrderNotification", new { slug = order.slug });
         }
 
+
         //VNPay
+        public ActionResult CreatePayment()
+        {
+            var vnPay = new VnPayLibrary();
 
+            vnPay.AddRequestData("vnp_Version", "2.1.0");
+            vnPay.AddRequestData("vnp_Command", "pay");
+            vnPay.AddRequestData("vnp_TmnCode", VnPayConfig.vnp_TmnCode);
+            vnPay.AddRequestData("vnp_Amount", (100000 * 100).ToString()); // số tiền * 100
+            vnPay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            vnPay.AddRequestData("vnp_CurrCode", "VND");
+            vnPay.AddRequestData("vnp_IpAddr", Request.UserHostAddress);
+            vnPay.AddRequestData("vnp_Locale", "vn");
+            vnPay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang");
+            vnPay.AddRequestData("vnp_OrderType", "other");
+            vnPay.AddRequestData("vnp_ReturnUrl", VnPayConfig.vnp_Returnurl);
+            vnPay.AddRequestData("vnp_TxnRef", DateTime.Now.Ticks.ToString());
 
+            string paymentUrl = vnPay.CreateRequestUrl(VnPayConfig.vnp_Url, VnPayConfig.vnp_HashSecret);
+
+            return Redirect(paymentUrl);
+        }
+
+        public ActionResult OrderNotification(string slug)
+        {
+            var vnp_ResponseCode = Request.QueryString["vnp_ResponseCode"];
+
+            if (vnp_ResponseCode == "00")
+            {
+                ViewBag.Message = "Giao dịch thành công!";
+            }
+            else
+            {
+                ViewBag.Message = "Giao dịch thất bại!";
+            }
+            ViewBag.OrderSlug = slug;
+            return View();
+
+        }
+
+        //public ActionResult Return()
+        //{
+        //    var vnp_ResponseCode = Request.QueryString["vnp_ResponseCode"];
+        //    if (vnp_ResponseCode == "00")
+        //    {
+        //        ViewBag.Message = "Giao dịch thành công!";
+        //    }
+        //    else
+        //    {
+        //        ViewBag.Message = "Giao dịch thất bại!";
+        //    }
+        //    return View();
+        //}
 
         [HttpGet]
         public JsonResult AddToCart(int bookId)

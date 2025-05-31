@@ -103,7 +103,7 @@
                                                 <option value="COD" selected>
                                                     Thanh toán khi nhận hàng(COD)
                                                 </option>
-                                                <option value="Bank">Chuyển khoản ngân hàng</option>
+                                                <option value="BANK">Chuyển khoản ngân hàng</option>
 
                                                 <!-- Develop later -->
                                                 @*<option value="CARD">Thẻ tín dụng/Ghi nợ</option>
@@ -179,93 +179,8 @@
 
     <!-- Bootstrap JS Bundle (includes Popper) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
-    @*<script src="~/Content/main..js"></script>
-        <script>
-          // Load order items from cart
-          function loadOrderItems() {
-            const cart = getCart();
-            const checkoutItems = document.getElementById("checkout-items");
-
-            // Display items in the summary section
-            let summaryHtml = "";
-            cart.forEach((item) => {
-              summaryHtml += `
-                <div class="d-flex justify-content-between mb-2">
-                  <div>${item.title} <span class="text-muted">× ${
-                item.quantity
-              }</span></div>
-                  <div>${formatCurrency(item.price * item.quantity)}</div>
-                </div>
-              `;
-            });
-            checkoutItems.innerHTML = summaryHtml;
-
-            // Update summary
-            const subtotal = cart.reduce(
-              (sum, item) => sum + item.price * item.quantity,
-              0
-            );
-            const shipping = 30000;
-            const total = subtotal + shipping;
-
-            document.getElementById("subtotal").textContent =
-              formatCurrency(subtotal);
-            document.getElementById("shipping").textContent =
-              formatCurrency(shipping);
-            document.getElementById("total").textContent = formatCurrency(total);
-          }
-
-          // Handle form submission
-          function placeOrder() {
-            const fullName = document.getElementById("fullName").value;
-            const phone = document.getElementById("phone").value;
-            const address = document.getElementById("address").value;
-            const email = document.getElementById("email").value;
-            const paymentMethod = document.getElementById("paymentMethod").value;
-
-            // Form validation
-            if (!fullName || !phone || !address) {
-              showToast("Vui lòng điền đầy đủ thông tin", "error");
-              return;
-            }
-
-            // Hide checkout form and show success message
-            document.getElementById("order-summary").classList.add("d-none");
-            document.getElementById("order-success").classList.remove("d-none");
-
-            // Clear cart
-            localStorage.removeItem("cart");
-            updateCartCount();
-
-            // In a real app, we would send the order data to the server here
-          }
-
-          // Load user data into form
-          function loadUserData() {
-            const user = getLoggedInUser();
-            if (user) {
-              document.getElementById("fullName").value = user.name || "";
-              document.getElementById("email").value = user.email || "";
-              document.getElementById("phone").value = user.phone || "";
-              document.getElementById("address").value = user.address || "";
-              // Update user name in nav
-              document.getElementById("user-name").textContent =
-                "Xin chào, " + user.name;
-            }
-          }
-
-          // Initialize page
-          document.addEventListener("DOMContentLoaded", function () {
-            if (!isLoggedIn()) {
-              window.location.href = "/pages/sign-in.html";
-              return;
-            }
-            loadOrderItems();
-            loadUserData();
-            updateCartCount();
-          });
-        </script>*@
+    
+        
 </body>
 </html>
 

@@ -156,6 +156,8 @@
     <Compile Include="Models\Model1.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderDetail.cs" />
+    <Compile Include="Models\Payments\VnPayConfig.cs" />
+    <Compile Include="Models\Payments\VnPayLibrary.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -305,6 +307,7 @@
     <Content Include="Views\CartItems\ThanhToan.cshtml" />
     <Content Include="Views\Orders\OrderNotification.cshtml" />
     <Content Include="Views\CartItems\Checkout.cshtml" />
+    <Content Include="Views\CartItems\OrderNotification.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

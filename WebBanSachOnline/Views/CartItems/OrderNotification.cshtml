@@ -49,7 +49,7 @@
                     </p>
                     <div class="alert alert-info mb-4">
                         <p class="mb-0">
-                            Mã đơn hàng của bạn là: <strong id="order-id">@ViewBag.OrderSlug</strong><br />
+                            Mã đơn hàng của bạn là: <strong id="order-id">@ViewBag.OrderSlug @ViewBag.method</strong><br />
                             @*Chúng tôi sẽ gửi email xác nhận đơn hàng đến địa chỉ email của
                                 bạn.*@
                         </p>
@@ -64,14 +64,14 @@
                     </div>
                 </div>
 
-                
+
             </div>
         </div>
     </div>
 
     <!-- Bootstrap JS Bundle (includes Popper) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    
+
 </body>
 </html>
 
