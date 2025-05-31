@@ -48,6 +48,9 @@ namespace WebBanSachOnline.Models
 
         public int? reviewCount { get; set; }
 
+        [StringLength(255)]
+        public string author { get; set; }
+
         public virtual Category Category { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

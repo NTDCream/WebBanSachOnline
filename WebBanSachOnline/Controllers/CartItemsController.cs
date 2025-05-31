@@ -58,6 +58,15 @@ namespace WebBanSachOnline.Controllers
 
         public ActionResult ThanhToan(string fullName, string phone, string address, string paymentMethod)
         {
+            string slug;
+            do
+            {
+                slug = "DH" + Guid.NewGuid().ToString("N").Substring(0, 6);
+            }
+            while (db.Orders.Any(o => o.slug == slug));
+
+
+            // Sau đó thêm đơn hàng với slug này
 
             int userId = 1; // giả lập
             var cartItems = db.CartItems
@@ -67,20 +76,14 @@ namespace WebBanSachOnline.Controllers
 
 
 
-            decimal total = cartItems.Sum(ci => ci.Book.price * ci.quantity);
+            int total = cartItems.Sum(ci => ci.Book.price * ci.quantity);
             string status = "";
-            if (paymentMethod == "COD")
-            {
-                status = "pending";
-            }
-            else
-            {
-                status = "paid";
-            }
+            status = "pending";
+
             var order = new Order
             {
                 userId = userId,
-                slug = "DH",
+                slug = slug,
                 status = status,
                 totalAmount = total,
                 customerName = fullName,
@@ -92,10 +95,9 @@ namespace WebBanSachOnline.Controllers
             db.Orders.Add(order);
             db.SaveChanges();
 
-            // Cập nhật slug sau khi có id
-            order.slug = "DH" + order.id;
+
             //db.Entry(order).Property(o => o.slug).IsModified = true;
-            db.SaveChanges();
+            //db.SaveChanges();
 
             // Tạo chi tiết đơn hàng
             foreach (var item in cartItems)
@@ -114,18 +116,12 @@ namespace WebBanSachOnline.Controllers
                 {
                     // Cập nhật số lượng đã bán
                     book.soldQuantity += item.quantity;
-
-
                     if (book.quantity < 0)
                     {
                         book.quantity = 0;
                     }
-
-
                 }
             }
-
-
             //Xóa sách trong giỏ hàng
             db.CartItems.RemoveRange(cartItems);
             db.SaveChanges();
@@ -133,7 +129,7 @@ namespace WebBanSachOnline.Controllers
             if (paymentMethod == "BANK")
             {
 
-                return RedirectToAction("CreatePayment", new { slug = order.slug });
+                return RedirectToAction("CreatePayment", new { slug = slug, total = total });
             }
 
             return RedirectToAction("OrderSuccess", new { slug = order.slug });
@@ -141,16 +137,10 @@ namespace WebBanSachOnline.Controllers
 
 
         //VNPay
-        public ActionResult CreatePayment(string slug)
+        public ActionResult CreatePayment(string slug, int total)
         {
-            int userId = 1;
-            var cartItems = db.CartItems
-                              .Include(ci => ci.Book)
-                              .Where(ci => ci.userId == userId)
-                              .ToList();
 
-            decimal total = cartItems.Sum(ci => ci.Book.price * ci.quantity);
-            long amount = (long)(total * 100);
+
             string returnUrl = VnPayConfig.vnp_Returnurl + "?slug=" + slug;
 
             var vnPay = new VnPayLibrary();
@@ -158,7 +148,7 @@ namespace WebBanSachOnline.Controllers
             vnPay.AddRequestData("vnp_Version", "2.1.0");
             vnPay.AddRequestData("vnp_Command", "pay");
             vnPay.AddRequestData("vnp_TmnCode", VnPayConfig.vnp_TmnCode);
-            vnPay.AddRequestData("vnp_Amount", (amount).ToString()); // số tiền * 100
+            vnPay.AddRequestData("vnp_Amount", (total * 100).ToString()); // số tiền * 100
             vnPay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
             vnPay.AddRequestData("vnp_CurrCode", "VND");
             vnPay.AddRequestData("vnp_IpAddr", Request.UserHostAddress);
@@ -205,6 +195,9 @@ namespace WebBanSachOnline.Controllers
 
             if (vnp_ResponseCode == "00")
             {
+                var order = db.Orders.FirstOrDefault(o => o.slug == slug);
+                order.status = "paid";
+                db.SaveChanges();
                 return RedirectToAction("OrderSuccess", new { slug = slug });
             }
             return RedirectToAction("OrderFail");
@@ -257,7 +250,6 @@ namespace WebBanSachOnline.Controllers
             }
 
             db.SaveChanges();
-            //return Json(new { success = true }, JsonRequestBehavior.AllowGet);
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
