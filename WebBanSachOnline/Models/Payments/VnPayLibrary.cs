@@ -31,7 +31,7 @@ namespace WebBanSachOnline.Models.Payments
                 string value = kv.Value;
 
                 queryString.AppendFormat("{0}={1}&", WebUtility.UrlEncode(key), WebUtility.UrlEncode(value));
-                rawData.AppendFormat("{0}={1}&", key, WebUtility.UrlEncode(value)); // ✅ Sửa tại đây
+                rawData.AppendFormat("{0}={1}&", key, WebUtility.UrlEncode(value));
             }
 
             string rawHash = rawData.ToString().TrimEnd('&');

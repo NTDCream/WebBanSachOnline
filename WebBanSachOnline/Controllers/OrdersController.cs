@@ -21,22 +21,7 @@ namespace WebBanSachOnline.Controllers
             return View(orders.ToList());
         }
 
-        //public ActionResult OrderNotification(string slug)
-        //{
-        //    var vnp_ResponseCode = Request.QueryString["vnp_ResponseCode"];
-
-        //    if (vnp_ResponseCode == "00")
-        //    {
-        //        ViewBag.Message = "Giao dịch thành công!";
-        //    }
-        //    else
-        //    {
-        //        ViewBag.Message = "Giao dịch thất bại!";
-        //    }
-        //    ViewBag.OrderSlug = slug;
-        //    return View();
-
-        //}
+        
         // GET: Orders/Details/5
         public ActionResult Details(string slug)
         {

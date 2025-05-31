@@ -41,9 +41,9 @@ namespace WebBanSachOnline.Controllers
                       .Where(ci => ci.userId == userId)
                       .ToList();
 
-            return View( cartItems);
+            return View(cartItems);
         }
-        
+
         public ActionResult DeleteAllItems()
         {
             int userId = 1;
@@ -58,18 +58,18 @@ namespace WebBanSachOnline.Controllers
 
         public ActionResult ThanhToan(string fullName, string phone, string address, string paymentMethod)
         {
-            
+
             int userId = 1; // giả lập
             var cartItems = db.CartItems
                               .Include(ci => ci.Book)
                               .Where(ci => ci.userId == userId)
                               .ToList();
 
-            
+
 
             decimal total = cartItems.Sum(ci => ci.Book.price * ci.quantity);
-            string status ="";
-            if(paymentMethod == "COD")
+            string status = "";
+            if (paymentMethod == "COD")
             {
                 status = "pending";
             }
@@ -108,7 +108,23 @@ namespace WebBanSachOnline.Controllers
                     price = item.Book.price
                 };
                 db.OrderDetails.Add(detail);
+
+                var book = db.Books.FirstOrDefault(b => b.id == item.bookId);
+                if (book != null)
+                {
+                    // Cập nhật số lượng đã bán
+                    book.soldQuantity += item.quantity;
+
+
+                    if (book.quantity < 0)
+                    {
+                        book.quantity = 0;
+                    }
+
+
+                }
             }
+
 
             //Xóa sách trong giỏ hàng
             db.CartItems.RemoveRange(cartItems);
@@ -116,30 +132,40 @@ namespace WebBanSachOnline.Controllers
 
             if (paymentMethod == "BANK")
             {
-                
-                return RedirectToAction("CreatePayment");
+
+                return RedirectToAction("CreatePayment", new { slug = order.slug });
             }
 
-            return RedirectToAction("OrderNotification", new { slug = order.slug });
+            return RedirectToAction("OrderSuccess", new { slug = order.slug });
         }
 
 
         //VNPay
-        public ActionResult CreatePayment()
+        public ActionResult CreatePayment(string slug)
         {
+            int userId = 1;
+            var cartItems = db.CartItems
+                              .Include(ci => ci.Book)
+                              .Where(ci => ci.userId == userId)
+                              .ToList();
+
+            decimal total = cartItems.Sum(ci => ci.Book.price * ci.quantity);
+            long amount = (long)(total * 100);
+            string returnUrl = VnPayConfig.vnp_Returnurl + "?slug=" + slug;
+
             var vnPay = new VnPayLibrary();
 
             vnPay.AddRequestData("vnp_Version", "2.1.0");
             vnPay.AddRequestData("vnp_Command", "pay");
             vnPay.AddRequestData("vnp_TmnCode", VnPayConfig.vnp_TmnCode);
-            vnPay.AddRequestData("vnp_Amount", (100000 * 100).ToString()); // số tiền * 100
+            vnPay.AddRequestData("vnp_Amount", (amount).ToString()); // số tiền * 100
             vnPay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
             vnPay.AddRequestData("vnp_CurrCode", "VND");
             vnPay.AddRequestData("vnp_IpAddr", Request.UserHostAddress);
             vnPay.AddRequestData("vnp_Locale", "vn");
             vnPay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang");
             vnPay.AddRequestData("vnp_OrderType", "other");
-            vnPay.AddRequestData("vnp_ReturnUrl", VnPayConfig.vnp_Returnurl);
+            vnPay.AddRequestData("vnp_ReturnUrl", returnUrl);
             vnPay.AddRequestData("vnp_TxnRef", DateTime.Now.Ticks.ToString());
 
             string paymentUrl = vnPay.CreateRequestUrl(VnPayConfig.vnp_Url, VnPayConfig.vnp_HashSecret);
@@ -147,21 +173,53 @@ namespace WebBanSachOnline.Controllers
             return Redirect(paymentUrl);
         }
 
-        public ActionResult OrderNotification(string slug)
+        //public ActionResult CreatePayment(string slug)
+        //{
+
+        //    var vnPay = new VnPayLibrary();
+
+
+        //    vnPay.AddRequestData("vnp_Version", "2.1.0");
+        //    vnPay.AddRequestData("vnp_Command", "pay");
+        //    vnPay.AddRequestData("vnp_TmnCode", VnPayConfig.vnp_TmnCode);
+        //    vnPay.AddRequestData("vnp_Amount", (100000 * 100).ToString()); // số tiền * 100
+        //    vnPay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+        //    vnPay.AddRequestData("vnp_CurrCode", "VND");
+        //    vnPay.AddRequestData("vnp_IpAddr", Request.UserHostAddress);
+        //    vnPay.AddRequestData("vnp_Locale", "vn");
+        //    vnPay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang");
+        //    vnPay.AddRequestData("vnp_OrderType", "other");
+        //    vnPay.AddRequestData("vnp_ReturnUrl", VnPayConfig.vnp_Returnurl);
+        //    vnPay.AddRequestData("vnp_TxnRef", DateTime.Now.Ticks.ToString());
+
+        //    string paymentUrl = vnPay.CreateRequestUrl(VnPayConfig.vnp_Url, VnPayConfig.vnp_HashSecret);
+
+        //    return Redirect(paymentUrl);
+        //}
+
+        public ActionResult VNPayReturn()
         {
+
             var vnp_ResponseCode = Request.QueryString["vnp_ResponseCode"];
+            var slug = Request.QueryString["slug"];
 
             if (vnp_ResponseCode == "00")
             {
-                ViewBag.Message = "Giao dịch thành công!";
+                return RedirectToAction("OrderSuccess", new { slug = slug });
             }
-            else
-            {
-                ViewBag.Message = "Giao dịch thất bại!";
-            }
+            return RedirectToAction("OrderFail");
+        }
+
+        public ActionResult OrderSuccess(string slug)
+        {
             ViewBag.OrderSlug = slug;
             return View();
 
+        }
+
+        public ActionResult OrderFail()
+        {
+            return View();
         }
 
         //public ActionResult Return()

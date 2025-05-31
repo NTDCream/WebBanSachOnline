@@ -305,9 +305,9 @@
     <Content Include="Views\Users\SignIn.cshtml" />
     <Content Include="Views\Users\SignUp.cshtml" />
     <Content Include="Views\CartItems\ThanhToan.cshtml" />
-    <Content Include="Views\Orders\OrderNotification.cshtml" />
     <Content Include="Views\CartItems\Checkout.cshtml" />
-    <Content Include="Views\CartItems\OrderNotification.cshtml" />
+    <Content Include="Views\CartItems\OrderSuccess.cshtml" />
+    <Content Include="Views\CartItems\OrderFail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
