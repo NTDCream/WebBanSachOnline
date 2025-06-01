@@ -36,32 +36,69 @@ namespace WebBanSachOnline.Controllers
             return View(review);
         }
 
-        // GET: Reviews/Create
-        public ActionResult Create()
+        //GET: Reviews/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "bookId,rate,comment")] Review review)
         {
-            ViewBag.bookId = new SelectList(db.Books, "id", "title");
-            ViewBag.userId = new SelectList(db.Users, "id", "fullName");
-            return View();
+            if (Session["userId"] == null)
+                return RedirectToAction("SignIn", "Users");
+
+            review.userId = (int)Session["userId"];
+            review.createdDate = DateTime.Now;
+
+            if (ModelState.IsValid)
+            {
+                db.Reviews.Add(review);
+                db.SaveChanges();
+
+                // Lấy slug theo bookId để redirect
+                var book = db.Books.Find(review.bookId);
+                return RedirectToAction("Details", "Books", new { slug = book.slug });
+                
+            }
+
+            // Nếu ModelState có lỗi, trả lại view
+            ViewBag.bookId = review.bookId;
+            ViewBag.userId = review.userId;
+            return View(review);
         }
 
         // POST: Reviews/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,userId,bookId,rate,comment,createdDate")] Review review)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Reviews.Add(review);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create([Bind(Include = "id,userId,bookId,rate,comment,createdDate")] Review review)
+        //{
 
-            ViewBag.bookId = new SelectList(db.Books, "id", "title", review.bookId);
-            ViewBag.userId = new SelectList(db.Users, "id", "fullName", review.userId);
-            return View(review);
-        }
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Reviews.Add(review);
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    ViewBag.bookId = new SelectList(db.Books, "id", "title", review.bookId);
+        //    ViewBag.userId = new SelectList(db.Users, "id", "fullName", review.userId);
+        //    return View(review);
+        //}
+
+        //[HttpPost]
+        //public JsonResult CreateReview(Review review)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        review.createdDate = DateTime.Now;
+        //        review.userId = (int)Session["userId"];
+        //        db.Reviews.Add(review);
+        //        db.SaveChanges();
+        //        return Json(new { success = true });
+        //    }
+        //    return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
+        //}
+
+
 
         // GET: Reviews/Edit/5
         public ActionResult Edit(int? id)

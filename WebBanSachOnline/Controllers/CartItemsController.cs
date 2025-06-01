@@ -65,9 +65,6 @@ namespace WebBanSachOnline.Controllers
             }
             while (db.Orders.Any(o => o.slug == slug));
 
-
-            // Sau đó thêm đơn hàng với slug này
-
             int userId = 1; // giả lập
             var cartItems = db.CartItems
                               .Include(ci => ci.Book)

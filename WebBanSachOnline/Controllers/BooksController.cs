@@ -42,7 +42,29 @@ namespace WebBanSachOnline.Controllers
             if (book == null)
                 return HttpNotFound();
 
+            var reviews = db.Reviews.Where(r => r.bookId == book.id)
+                                    .OrderByDescending(r => r.createdDate)
+                                    .ToList();
+            ViewBag.Reviews = reviews;
+
             return View(book);
+
+            //if (string.IsNullOrEmpty(slug))
+            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            //var book = db.Books.FirstOrDefault(b => b.slug == slug);
+            //if (book == null)
+            //    return HttpNotFound();
+
+            //var reviews = db.Reviews
+            //            .Where(r => r.bookId == book.id)
+            //            .OrderByDescending(r => r.createdDate)
+            //            .Include("User")
+            //            .ToList();
+
+            //ViewBag.Reviews = reviews;
+
+            //return View(book);
         }
         //public ActionResult Details(int? id)
         //{

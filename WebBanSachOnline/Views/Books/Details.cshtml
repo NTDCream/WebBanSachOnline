@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Details";
+    var reviews = ViewBag.Reviews as List<WebBanSachOnline.Models.Review>;
 }
 
 
@@ -74,19 +75,19 @@
             align-items: center;
         }
 
-        .quantity-controls button {
-            width: 30px;
-            height: 30px;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+            .quantity-controls button {
+                width: 30px;
+                height: 30px;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
 
-        .quantity-controls input {
-            width: 50px;
-            text-align: center;
-        }
+            .quantity-controls input {
+                width: 50px;
+                text-align: center;
+            }
     </style>
 </head>
 <body>
@@ -171,13 +172,13 @@
 
                     @if (Model.quantity - Model.soldQuantity > 0)
                     {
-                        <a href="@Url.Action("AddToCart", "CartItems", new { bookId = Model.id })" class="AddToCartBtn btn btn-danger w-100">
+                        <a href="@Url.Action("AddToCart", "CartItems", new { bookId = Model.id })" class="AddToCartBtn btn btn-danger">
                             Thêm vào giỏ
                         </a>
                     }
                     else
                     {
-                        <a href="@Url.Action("AddToCart", "CartItems", new { bookId = Model.id })" class="AddToCartBtn btn btn-danger w-100 disabled">
+                        <a href="@Url.Action("AddToCart", "CartItems", new { bookId = Model.id })" class="AddToCartBtn btn btn-danger disabled">
                             Thêm vào giỏ
                         </a>
                     }
@@ -198,130 +199,94 @@
 
                 <!-- Book Reviews -->
                 <div class="detail-section mb-4">
-                    <h4 class="mb-3">
-                        Chất lượng sản phẩm
-                        <span class="rating-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star empty"></i>
-                        </span>
-                    </h4>
+                    @*<h4 class="mb-3">
+                            Chất lượng sản phẩm
+                            <span class="rating-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star empty"></i>
+                            </span>
+                        </h4>*@
+                    @*<ul class="user_star_rating">
+                            <li><i class="fas fa-star" aria-hidden="true"></i></li>
+                            <li><i class="fas fa-star" aria-hidden="true"></i></li>
+                            <li><i class="fas fa-star" aria-hidden="true"></i></li>
+                            <li><i class="fas fa-star" aria-hidden="true"></i></li>
+                            <li><i class="fas fa-star-o" aria-hidden="true"></i></li>
+                        </ul>*@
 
-                    <div id="review-form" class="mb-4">
-                        <div class="mb-3">
-                            <label for="review-text" class="form-label">Đánh giá của bạn:</label>
-                            <textarea id="review-text"
-                                      class="form-control"
-                                      rows="3"
-                                      placeholder="Nhập đánh giá của bạn..."></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <span class="me-2">Đánh giá:</span>
-                            <div class="rating-stars d-inline-block" id="review-rating">
-                                <i class="fas fa-star empty" data-rating="1"></i>
-                                <i class="fas fa-star empty" data-rating="2"></i>
-                                <i class="fas fa-star empty" data-rating="3"></i>
-                                <i class="fas fa-star empty" data-rating="4"></i>
-                                <i class="fas fa-star empty" data-rating="5"></i>
+
+
+
+
+
+                    <form id="review-form" method="post" action="/Reviews/Create">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="bookId" value="@Model.id" />
+                        <input type="hidden" name="rate" id="rate" value="0" />
+                        <div id="review-form" class="mb-4">
+                            <div class="mb-3">
+                                <label for="review-text" class="form-label">Đánh giá của bạn:</label>
+                                <textarea id="review-text"
+                                          name="comment"
+                                          class="form-control"
+                                          rows="3"
+                                          placeholder="Nhập đánh giá của bạn..."></textarea>
                             </div>
+                            <div class="mb-3">
+                                <span class="me-2">Đánh giá:</span>
+                                <div class="rating-stars d-inline-block" id="review-rating">
+                                    <i class="far fa-star empty" data-rating="1"></i>
+                                    <i class="far fa-star empty" data-rating="2"></i>
+                                    <i class="far fa-star empty" data-rating="3"></i>
+                                    <i class="far fa-star empty" data-rating="4"></i>
+                                    <i class="far fa-star empty" data-rating="5"></i>
+
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Gửi</button>
                         </div>
-                        <button type="button"
-                                class="btn btn-primary"
-                                onclick="submitReview()">
-                            Gửi
-                        </button>
-                    </div>
+                    </form>
 
                     <!-- User Reviews -->
                     <div id="user-reviews">
                         <!-- Review 1 -->
-                        <div class="review-box">
-                            <div class="d-flex justify-content-between mb-2">
-                                <div>
-                                    <span class="fw-bold">NTD</span>
+                        @foreach (var review in reviews)
+                        {
+                            <div class="review-box">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <div>
+                                        <span class="fw-bold"></span>
+                                    </div>
+                                    <div class="review-date">@review.createdDate</div>
                                 </div>
-                                <div class="review-date">20/04/2025</div>
+                                <div class="rating-stars mb-2">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= review.rate)
+                                        {
+                                            <i class="fas fa-star"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-star empty"></i>
+                                        }
+                                    }
+                                </div>
+                                <p class="mb-0">@review.comment</p>
                             </div>
-                            <div class="rating-stars mb-2">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star empty"></i>
-                            </div>
-                            <p class="mb-0">Đánh giá 1</p>
-                        </div>
+                        }
 
-                        <!-- Review 2 -->
-                        <div class="review-box">
-                            <div class="d-flex justify-content-between mb-2">
-                                <div>
-                                    <span class="fw-bold">NTD</span>
-                                </div>
-                                <div class="review-date">20/04/2025</div>
-                            </div>
-                            <div class="rating-stars mb-2">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star empty"></i>
-                            </div>
-                            <p class="mb-0">Đánh giá 2</p>
-                        </div>
 
-                        <!-- Review 3 -->
-                        <div class="review-box">
-                            <div class="d-flex justify-content-between mb-2">
-                                <div>
-                                    <span class="fw-bold">NTD</span>
-                                </div>
-                                <div class="review-date">20/04/2025</div>
-                            </div>
-                            <div class="rating-stars mb-2">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star empty"></i>
-                                <i class="fas fa-star empty"></i>
-                            </div>
-                            <p class="mb-0">Đánh giá 3</p>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Already Rated Modal -->
-    <div class="modal fade"
-         id="alreadyRatedModal"
-         tabindex="-1"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-notification">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Thông báo</h5>
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <p class="mb-0">Cảm ơn bạn đã gửi lại đánh giá</p>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button"
-                            class="btn btn-primary px-4"
-                            data-bs-dismiss="modal">
-                        OK
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
 
 
@@ -334,8 +299,58 @@
 
     <!-- Bootstrap JS Bundle (includes Popper) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    
-        
+
+    <script>
+        // Rating star interaction
+        const stars = document.querySelectorAll("#review-rating .fa-star");
+        const rateInput = document.getElementById("rate");
+        let currentRating = 0;
+
+        stars.forEach(star => {
+            star.addEventListener("click", function () {
+                currentRating = parseInt(this.getAttribute("data-rating"));
+                rateInput.value = currentRating; // cập nhật vào input ẩn
+                highlightStars(currentRating);
+            });
+            star.addEventListener("mouseover", function () {
+                const rating = parseInt(this.getAttribute("data-rating"));
+                highlightStars(rating);
+            });
+
+            // Remove highlight on mouseout
+            star.addEventListener("mouseout", function () {
+                highlightStars(currentRating);
+            });
+
+        });
+
+        function highlightStars(rating) {
+            stars.forEach(star => {
+                if (parseInt(star.getAttribute("data-rating")) <= rating) {
+                    star.classList.remove("empty");
+                    star.classList.add("fas");
+                } else {
+                    star.classList.add("empty");
+                    star.classList.remove("fas");
+                }
+            });
+        }
+    </script>
+
+
+    <script>
+        document.querySelector("button.btn.btn-primary").addEventListener("click", function () {
+            const rating = currentRating;
+            const reviewText = document.getElementById("review-text").value.trim();
+
+            if (rating === 0 || reviewText === "") {
+                alert("Vui lòng nhập đầy đủ nội dung và chọn sao.");
+                return;
+            }
+        });
+
+    </script>
+
     <script>
         document.querySelectorAll('.AddToCartBtn').forEach(btn => {
             btn.addEventListener('click', function (e) {
@@ -350,6 +365,7 @@
             });
         });
     </script>
-    
+
+
 </body>
 </html>
