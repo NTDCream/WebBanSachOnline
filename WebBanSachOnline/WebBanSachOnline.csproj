@@ -157,6 +157,10 @@
     <Compile Include="Migrations\202505311532087_UpdateAttributeDb.Designer.cs">
       <DependentUpon>202505311532087_UpdateAttributeDb.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202506011148223_RemoveUniqueIndexOnReview.cs" />
+    <Compile Include="Migrations\202506011148223_RemoveUniqueIndexOnReview.Designer.cs">
+      <DependentUpon>202506011148223_RemoveUniqueIndexOnReview.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Book.cs" />
@@ -355,6 +359,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202505311532087_UpdateAttributeDb.resx">
       <DependentUpon>202505311532087_UpdateAttributeDb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506011148223_RemoveUniqueIndexOnReview.resx">
+      <DependentUpon>202506011148223_RemoveUniqueIndexOnReview.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
