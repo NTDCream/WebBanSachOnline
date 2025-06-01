@@ -229,7 +229,7 @@ namespace WebBanSachOnline.Controllers
         [HttpGet]
         public JsonResult AddToCart(int bookId)
         {
-            int userId = 1; // GetCurrentUserId();
+            int userId = 1;
 
             var cartItem = db.CartItems.FirstOrDefault(x => x.userId == userId && x.bookId == bookId);
             if (cartItem != null)

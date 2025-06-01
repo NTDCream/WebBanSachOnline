@@ -4,7 +4,9 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Security.Policy;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using WebBanSachOnline.Models;
 
@@ -73,7 +75,7 @@ namespace WebBanSachOnline.Controllers
 
             if (user == null)
             {
-                return HttpNotFound(); // hoặc xử lý khác nếu không tìm thấy user
+                return HttpNotFound();
             }
             return View(user);
         }
@@ -186,28 +188,28 @@ namespace WebBanSachOnline.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id, username,fullName,email,phone,address")] User user)
+        public ActionResult Edit(string fullName, string email, string phone, string address)
         {
-            if (ModelState.IsValid)
+            if (Session["userId"] == null)
             {
-                var existingUser = db.Users.FirstOrDefault(u => u.username == user.username);
-                if (existingUser == null)
-                {
-                    return HttpNotFound();
-                }
-
-                existingUser.fullName = user.fullName;
-                existingUser.phone = user.phone;
-                existingUser.email = user.email;
-                existingUser.address = user.address;
-
-                db.Entry(existingUser).State = EntityState.Modified; // thêm dòng này
-                db.SaveChanges();
-
-                return RedirectToAction("Infor");
+                return RedirectToAction("SignIn", "Users");
+            }
+            var userId = (int)Session["userId"];
+            var existingUser = db.Users.Find(userId);
+            if (existingUser == null)
+            {
+                return HttpNotFound();
             }
 
-            return View(user);
+            // Cập nhật các trường
+            existingUser.fullName = fullName;
+            existingUser.email = email;
+            existingUser.phone = phone;
+            existingUser.address = address;
+
+            db.SaveChanges();
+
+            return RedirectToAction("Infor");
         }
 
         // GET: Users/Delete/5
