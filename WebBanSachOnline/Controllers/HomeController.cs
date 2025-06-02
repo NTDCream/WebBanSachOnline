@@ -12,8 +12,21 @@ namespace WebBanSachOnline.Controllers
         private Model1 db = new Model1();
         public ActionResult Index()
         {
-            var books = db.Books.ToList();
-            return View(books);
+            //var books = db.Books.ToList();
+            var latestBooks = db.Books
+                                .OrderByDescending(b => b.id)
+                                .Take(8)
+                                .ToList();
+
+            var topSellingBooks = db.Books
+                                    .OrderByDescending(b => b.soldQuantity)
+                                    .Take(8)
+                                    .ToList();
+
+            ViewBag.LatestBooks = latestBooks;
+            ViewBag.TopSellingBooks = topSellingBooks;
+
+            return View();
         }
 
 

@@ -34,7 +34,7 @@ namespace WebBanSachOnline.Controllers
         public ActionResult SignIn(string username, string password)
         {
             var a = db.Users.FirstOrDefault(x => x.username == username && x.password == password);
-            if (a != null)
+            if (a != null && a.isActive == true)
             {
                 Session["userId"] = a.id;
                 Session["user"] = username;
@@ -43,6 +43,10 @@ namespace WebBanSachOnline.Controllers
             else
             {
                 ViewBag.error = "Sai tên đăng nhập hoặc mật khẩu";
+                if(a.isActive == false)
+                {
+                    ViewBag.error = "Tài khoản đã bị khóa";
+                } 
                 return View("SignIn");
             }
         }
@@ -50,6 +54,7 @@ namespace WebBanSachOnline.Controllers
         public ActionResult Signout()
         {
             Session.Remove("user");
+            Session.Remove("userId");
             return RedirectToAction("Index", "Home");
         }
 

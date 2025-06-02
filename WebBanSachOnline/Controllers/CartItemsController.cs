@@ -23,7 +23,11 @@ namespace WebBanSachOnline.Controllers
         // GET: CartItems
         public ActionResult Index()
         {
-            var userId = /*User.Identity.GetUserId()*/ 1;
+            if (Session["userId"] == null)
+            {
+                return RedirectToAction("SignIn", "Users");
+            }
+            var userId = (int)Session["userId"];
             var cartItems = db.CartItems
             .Include(c => c.Book.Category)
             .Where(c => c.userId == userId)
@@ -31,9 +35,30 @@ namespace WebBanSachOnline.Controllers
 
             return View(cartItems);
         }
+
+        public ActionResult CartSummary()
+        {
+            int count = 0;
+            if (Session["userId"] != null)
+            {
+                count = 0;
+            }
+                if (Session["userId"] != null)
+            {
+                var userId = (int)Session["userId"];
+
+                count = db.CartItems
+                          .Where(c => c.userId == userId)
+                          .Sum(c => (int?)c.quantity) ?? 0;
+
+            }
+
+            return Content(count.ToString()); 
+        }
+
         public ActionResult Checkout()
         {
-            int userId = 1; /*(int)Session["userId"];*/
+            int userId = (int)Session["userId"];
 
             var cartItems = db.CartItems
                       .Include(ci => ci.Book)
@@ -46,7 +71,7 @@ namespace WebBanSachOnline.Controllers
 
         public ActionResult DeleteAllItems()
         {
-            int userId = 1;
+            int userId = (int)Session["userId"];
             var cartItems = db.CartItems
                               .Include(ci => ci.Book)
                               .Where(ci => ci.userId == userId)
@@ -65,7 +90,7 @@ namespace WebBanSachOnline.Controllers
             }
             while (db.Orders.Any(o => o.slug == slug));
 
-            int userId = 1; // giả lập
+            int userId = (int)Session["userId"];
             var cartItems = db.CartItems
                               .Include(ci => ci.Book)
                               .Where(ci => ci.userId == userId)
@@ -229,7 +254,7 @@ namespace WebBanSachOnline.Controllers
         [HttpGet]
         public JsonResult AddToCart(int bookId)
         {
-            int userId = 1;
+            int userId = (int)Session["userId"];
 
             var cartItem = db.CartItems.FirstOrDefault(x => x.userId == userId && x.bookId == bookId);
             if (cartItem != null)
