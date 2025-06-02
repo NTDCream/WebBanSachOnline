@@ -13,11 +13,16 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
 {
     public class BooksController : Controller
     {
+
         private Model1 db = new Model1();
 
         // GET: Admin/Books
         public ActionResult Index()
         {
+            if (Session["role"] == null)
+            {
+                return Redirect("/Admin");
+            }
             var books = db.Books
             .Include(b => b.Category) // Eager loading Category
             .ToList(); // Thực hiện truy vấn
@@ -28,6 +33,10 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         // GET: Admin/Books/Details/5
         public ActionResult Details(int? id)
         {
+            if (Session["role"] == null)
+            {
+                return Redirect("/Admin");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -43,6 +52,10 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         // GET: Admin/Books/Create
         public ActionResult Create()
         {
+            if (Session["role"] == null)
+            {
+                return Redirect("/Admin");
+            }
             ViewBag.categoryId = new SelectList(db.Categories, "id", "title");
             return View();
         }
@@ -112,6 +125,10 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         // GET: Admin/Books/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (Session["role"] == null)
+            {
+                return Redirect("/Admin");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

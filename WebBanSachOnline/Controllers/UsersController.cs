@@ -34,21 +34,22 @@ namespace WebBanSachOnline.Controllers
         public ActionResult SignIn(string username, string password)
         {
             var a = db.Users.FirstOrDefault(x => x.username == username && x.password == password);
-            if (a != null && a.isActive == true)
+            if (a != null)
             {
-                Session["userId"] = a.id;
-                Session["user"] = username;
-                return RedirectToAction("Index", "Home");
+                if(a.isActive == true)
+                {
+                    Session["userId"] = a.id;
+                    Session["user"] = a.username;
+                    return RedirectToAction("Index", "Home");
+                }
+                ViewBag.error = "Tài khoản đã bị khóa";
             }
             else
             {
                 ViewBag.error = "Sai tên đăng nhập hoặc mật khẩu";
-                if(a.isActive == false)
-                {
-                    ViewBag.error = "Tài khoản đã bị khóa";
-                } 
-                return View("SignIn");
+                
             }
+            return View("SignIn");
         }
 
         public ActionResult Signout()

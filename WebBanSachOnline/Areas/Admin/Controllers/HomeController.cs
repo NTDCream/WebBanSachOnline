@@ -10,9 +10,14 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
     public class HomeController : Controller
     {
         private Model1 db = new Model1();
+
         // GET: Admin/Home
         public ActionResult Index()
         {
+            if(Session["role"] == null)
+            {
+                return Redirect("/Admin");
+            }
             return View();
         }
 
@@ -22,11 +27,13 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
             return View(db.Users.ToList());
         }
 
-        //public ActionResult Logout()
-        //{
-        //    Session.Remove("user");
-        //    return Redirect("/Admin");
-        //}
+        public ActionResult Logout()
+        {
+            Session.Remove("user");
+            Session.Remove("userId");
+            Session.Remove("role");
+            return Redirect("/Admin");
+        }
 
         public ActionResult Statistic()
         {
@@ -38,19 +45,29 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         public ActionResult LogIn(string username, string password)
         {
             var a = db.Users.FirstOrDefault(x => x.username == username && x.password == password);
-            if (a != null && a.role == "Admin")
+            if (a != null)
             {
-                Session["userId"] = a.id;
-                Session["user"] = username;
-                Session["role"] = a.role;
-
-                return Redirect("/Admin/Home/Index");
+                if (a.isActive == true)
+                {
+                    Session["userId"] = a.id;
+                    Session["user"] = a.username;
+                    if (a.role.Equals("admin", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Session["role"] = a.role;
+                        return Redirect("Index");
+                    }
+                    else
+                    {
+                        return Redirect("/");
+                    }
+                }
+                ViewBag.error = "Tài khoản đã bị khóa";
             }
             else
             {
                 ViewBag.error = "Sai tên đăng nhập hoặc mật khẩu";
-                return View("LogIn");
             }
+            return Redirect("/Admin");
         }
     }
 }

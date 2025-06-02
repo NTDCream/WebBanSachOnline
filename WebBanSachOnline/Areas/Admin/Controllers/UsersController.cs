@@ -17,12 +17,20 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         // GET: Admin/Users
         public ActionResult Index()
         {
+            if (Session["role"] == null)
+            {
+                return Redirect("/Admin");
+            }
             return View(db.Users.ToList());
         }
 
         // GET: Admin/Users/Details/5
         public ActionResult Details(int? id)
         {
+            if (Session["role"] == null)
+            {
+                return Redirect("/Admin");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -38,6 +46,10 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         // GET: Admin/Users/Create
         public ActionResult Create()
         {
+            if (Session["role"] == null)
+            {
+                return Redirect("/Admin");
+            }
             return View();
         }
 
@@ -61,6 +73,10 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         // GET: Admin/Users/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (Session["role"] == null)
+            {
+                return Redirect("/Admin");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

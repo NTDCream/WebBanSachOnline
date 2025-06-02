@@ -58,12 +58,17 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         // GET: Admin/Categories
         public ActionResult Index()
         {
+            if (Session["role"] == null)
+            {
+                return Redirect("/Admin");
+            }
             return View(db.Categories.ToList());
         }
 
         // GET: Admin/Categories/Details/5
         public ActionResult Details(int? id)
         {
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -79,6 +84,10 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         // GET: Admin/Categories/Create
         public ActionResult Create()
         {
+            if (Session["role"] == null)
+            {
+                return Redirect("/Admin");
+            }
             return View();
         }
 
@@ -105,6 +114,10 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         // GET: Admin/Categories/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (Session["role"] == null)
+            {
+                return Redirect("/Admin");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

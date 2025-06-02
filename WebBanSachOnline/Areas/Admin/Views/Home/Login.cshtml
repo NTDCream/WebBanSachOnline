@@ -30,7 +30,7 @@
                             <h3 class="mt-2">Admin Login</h3>
                             <p class="text-muted">Nhà Sách Online - Quản Trị Hệ Thống</p>
                         </div>
-                        <form method="post" action="Admin/Home/Index">
+                        <form method="post" action="Admin/Home/Login">
                             <div class="mb-3">
                                 <label for="username" class="form-label">Tên đăng nhập</label>
                                 <div class="input-group">
@@ -57,7 +57,10 @@
                                            placeholder="Mật khẩu" />
                                 </div>
                             </div>
+                            
                             <div class="d-grid">
+                                <span class="text-danger">@ViewBag.error</span>
+                                <br />
                                 <button type="submit" class="btn btn-primary">
                                     Đăng nhập
                                 </button>
