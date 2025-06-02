@@ -52,8 +52,15 @@ namespace WebBanSachOnline.Controllers
                 db.Reviews.Add(review);
                 db.SaveChanges();
 
+
                 // Lấy slug theo bookId để redirect
                 var book = db.Books.Find(review.bookId);
+                var reviews = db.Reviews.Where(r => r.bookId == review.bookId).ToList();
+                book.reviewCount = reviews.Count;
+                book.rate = reviews.Any() ? reviews.Average(r => r.rate) : 0;
+
+                db.Entry(book).State = EntityState.Modified;
+                db.SaveChanges();
                 return RedirectToAction("Details", "Books", new { slug = book.slug });
                 
             }

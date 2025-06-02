@@ -18,6 +18,15 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
             {
                 return Redirect("/Admin");
             }
+            var totalUsers = db.Users.Count();
+            var totalOrders = db.Orders.Count();
+            var totalBooks = db.Books.Count();
+            var totalRevenue = db.Orders.Sum(o => (decimal?)o.totalAmount) ?? 0;
+
+            ViewBag.TotalUsers = totalUsers;
+            ViewBag.TotalOrders = totalOrders;
+            ViewBag.TotalBooks = totalBooks;
+            ViewBag.TotalRevenue = totalRevenue;
             return View();
         }
 

@@ -1,6 +1,10 @@
 ﻿
 @{
     ViewBag.Title = "Index";
+    var totalUsers = ViewBag.TotalUsers as int? ?? 0;
+    var totalOrders = ViewBag.TotalOrders as int? ?? 0;
+    var totalBooks = ViewBag.TotalBooks as int? ?? 0;
+    var totalRevenue = ViewBag.TotalRevenue as decimal? ?? 0;
 }
 
 <!DOCTYPE html>
@@ -35,7 +39,7 @@
           <div class="position-sticky pt-3">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="/Admin/Home/Index">
+                <a class="nav-link" href="/Admin/Home/Index">
                   <i class="fas fa-tachometer-alt"></i>
                   Trang chủ
                 </a>
@@ -71,7 +75,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/Admin" id="logout-btn">
+                <a class="nav-link" href="@Url.Action("Logout", "Home")" id="logout-btn">
                   <i class="fas fa-sign-out-alt"></i>
                   Đăng xuất
                 </a>
@@ -106,7 +110,7 @@
                       <i class="fas fa-users"></i>
                     </div>
                     <h5 class="card-title">Tài khoản</h5>
-                    <h3 class="card-text fw-bold">15</h3>
+                    <h3 class="card-text fw-bold">@totalUsers</h3>
                     <p class="card-text text-muted">Tổng số người dùng</p>
                   </div>
                 </div>
@@ -120,7 +124,7 @@
                       <i class="fas fa-shopping-cart"></i>
                     </div>
                     <h5 class="card-title">Đơn hàng</h5>
-                    <h3 class="card-text fw-bold">28</h3>
+                    <h3 class="card-text fw-bold">@totalOrders</h3>
                     <p class="card-text text-muted">Tổng số đơn hàng</p>
                   </div>
                 </div>
@@ -134,7 +138,7 @@
                       <i class="fas fa-book"></i>
                     </div>
                     <h5 class="card-title">Sách</h5>
-                    <h3 class="card-text fw-bold">120</h3>
+                    <h3 class="card-text fw-bold">@totalBooks</h3>
                     <p class="card-text text-muted">Tổng số sách</p>
                   </div>
                 </div>
@@ -148,7 +152,7 @@
                       <i class="fas fa-money-bill-wave"></i>
                     </div>
                     <h5 class="card-title">Doanh thu</h5>
-                    <h3 class="card-text fw-bold">12.5M</h3>
+                    <h3 class="card-text fw-bold"> @string.Format("{0:N0} đ", totalRevenue)</h3>
                     <p class="card-text text-muted">Tổng doanh thu (VNĐ)</p>
                   </div>
                 </div>

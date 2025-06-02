@@ -136,7 +136,7 @@
                     </div>
                     <div class="mb-2">
                         <span>Danh mục: </span>
-                        <span id="book-category" class="fw-semibold">Văn học</span>
+                        <span id="book-category" class="fw-semibold">@Model.Category.title</span>
                     </div>
                     <div class="mb-2">
                         <span>Còn: </span>
@@ -147,13 +147,30 @@
                         <span class="book-price" id="book-price">@string.Format("{0:N0} đ", Model.price)</span>
                     </div>
 
+                    @{
+                        double rate = Model.rate ?? 0; // Model là Book
+                        int fullStars = (int)Math.Floor(rate);      // Số sao đầy
+                        bool hasHalfStar = (rate - fullStars) >= 0.5;
+                        int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                    }
+
                     <div class="rating-stars mb-3">
                         <span class="me-2">Đánh giá:</span>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star empty"></i>
+
+                        @for (int i = 0; i < fullStars; i++)
+                        {
+                            <i class="fas fa-star text-warning"></i>
+                        }
+                        @if (hasHalfStar)
+                        {
+                            <i class="fas fa-star-half-alt text-warning"></i>
+                        }
+                        @for (int i = 0; i < emptyStars; i++)
+                        {
+                            <i class="far fa-star text-warning"></i>
+                        }
+
+                        <span class="ms-2">(@Model.reviewCount đánh giá)</span>
                     </div>
 
                     <div class="mb-3">
