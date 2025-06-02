@@ -135,14 +135,27 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,title,slug")] Category category)
+        public ActionResult Edit([Bind(Include = "id,title")] Category category)
         {
+            // Nếu model có yêu cầu `slug` là Required thì phải xóa khỏi ModelState để tránh lỗi validate
+            ModelState.Remove("slug");
+
             if (ModelState.IsValid)
             {
-                db.Entry(category).State = EntityState.Modified;
+                var existingCategory = db.Categories.Find(category.id);
+                if (existingCategory == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // Cập nhật title và tạo slug mới
+                existingCategory.title = category.title;
+                existingCategory.slug = GenerateSlug(category.title);
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
             return View(category);
         }
 

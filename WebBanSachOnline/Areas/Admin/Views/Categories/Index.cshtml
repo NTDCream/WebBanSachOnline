@@ -32,7 +32,7 @@
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="/Admin/Home/Index">
+                            <a class="nav-link" href="/Admin/Home/Index">
                                 <i class="fas fa-tachometer-alt"></i>
                                 Trang chủ
                             </a>
@@ -49,12 +49,12 @@
                                 Đơn hàng
                             </a>
                         </li>
-                        <li class="nav-item">
+                        @*<li class="nav-item">
                             <a class="nav-link" href="/Admin/Home/Statistic">
                                 <i class="fas fa-chart-bar"></i>
                                 Thống kê
                             </a>
-                        </li>
+                        </li>*@
                         <li class="nav-item">
                             <a class="nav-link" href="/Admin/Categories/Index">
                                 <i class="fas fa-list"></i>
@@ -85,10 +85,8 @@
                         <span>Xin chào, <strong id="admin-name">Admin</strong></span>
                     </div>
                 </div>
-                <br />
                 <div class="admin-content">
                     <h2 class="page-title">QUẢN LÝ DANH MỤC SÁCH</h2>
-                    <br />
 
                     <div class="">
                         <div class="card">
@@ -100,19 +98,24 @@
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-bordered custom-table">
-                                        <thead class="table-light">
+                                        <thead class="table-light" style="text-align:center">
                                             <tr>
+                                                <th>STT</th>
                                                 <th>Tiêu đề</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @{
+                                                int i = 1;
+                                            }
                                             @foreach (var item in Model)
                                             {
                                                 <tr>
+                                                    <td style="text-align:center">@i</td>
                                                     <td style="text-align:center">@item.title</td>
-                                                    <td style="width: 200px; text-align:center"  scope="col">
-                                                        <a class="btn btn-sm btn-outline-primary" href="@Url.Action("Edit", "Books", new { id = item.id })">
+                                                    <td style="width: 200px; text-align:center" scope="col">
+                                                        <a class="btn btn-sm btn-outline-primary" href="@Url.Action("Edit", "Categories", new { id = item.id })">
                                                             Sửa
                                                         </a>
                                                         @using (Html.BeginForm("DeleteConfirmed", "Categories", FormMethod.Post, new { @class = "d-inline" }))
@@ -124,6 +127,7 @@
 
                                                     </td>
                                                 </tr>
+                                                i++;
                                             }
                                         </tbody>
 
@@ -135,37 +139,7 @@
                     </div>
                 </div>
 
-                <!-- Add Category Form (hidden by default) -->
-                <div class="row" id="add-category-section" style="display: none">
-                    <div class="col-md-6 offset-md-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Thêm mới danh mục sách</h5>
-                            </div>
-                            <div class="card-body">
-                                <form id="add-category-form">
-                                    <div class="mb-3">
-                                        <label for="category-title" class="form-label">Tiêu đề</label>
-                                        <input type="text"
-                                               class="form-control"
-                                               id="category-title"
-                                               required />
-                                    </div>
-                                    <div class="d-flex justify-content-end gap-2">
-                                        <button type="button"
-                                                class="btn btn-secondary"
-                                                onclick="hideAddCategoryForm()">
-                                            Quay lại
-                                        </button>
-                                        <button type="submit" class="btn btn-primary">
-                                            Lưu
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
 
                 <!-- Edit Category Form (hidden by default) -->
                 <div class="row" id="edit-category-section" style="display: none">
@@ -187,7 +161,7 @@
                                     <div class="d-flex justify-content-between">
                                         <button type="button"
                                                 class="btn btn-secondary"
-                                                onclick="hideEditCategoryForm()">
+                                                >
                                             Quay lại
                                         </button>
                                         <button type="submit" class="btn btn-primary">
@@ -200,30 +174,6 @@
                     </div>
                 </div>
 
-                <!-- Delete Confirmation Modal -->
-                <!--<div class="row"
-                     id="delete-confirmation-section"
-                     style="display: none">
-                    <div class="col-md-6 offset-md-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Xác nhận xóa</h5>
-                            </div>
-                            <div class="card-body">
-                                <p>Bạn có muốn xóa danh mục này không?</p>
-                                <div class="d-flex justify-content-end gap-2">
-                                    <button class="btn btn-secondary"
-                                            onclick="hideDeleteConfirmation()">
-                                        Hủy bỏ
-                                    </button>
-                                    <button class="btn btn-danger" onclick="deleteCategory()">
-                                        Chấp nhận
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
         </div>
         </main>
     </div>

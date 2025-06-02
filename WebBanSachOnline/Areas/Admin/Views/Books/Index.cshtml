@@ -31,7 +31,7 @@
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="/Admin/Home/Index">
+                            <a class="nav-link " href="/Admin/Home/Index">
                                 <i class="fas fa-tachometer-alt"></i>
                                 Trang chủ
                             </a>
@@ -48,12 +48,12 @@
                                 Đơn hàng
                             </a>
                         </li>
-                        <li class="nav-item">
+                        @*<li class="nav-item">
                             <a class="nav-link" href="/Admin/Home/Statistic">
                                 <i class="fas fa-chart-bar"></i>
                                 Thống kê
                             </a>
-                        </li>
+                        </li>*@
                         <li class="nav-item">
                             <a class="nav-link" href="/Admin/Categories/Index">
                                 <i class="fas fa-list"></i>
@@ -96,24 +96,29 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered custom-table">
-                                        <thead class="table-light">
+                                    <table class="table table-bordered custom-table" style="text-align:center">
+                                        <thead class="table-light" style="text-align:center">
                                             <tr>
+                                                <th>STT</th>
                                                 <th>Hình ảnh</th>
                                                 <th>Tên sách</th>
                                                 <th>Danh mục</th>
                                                 <th>Số lượng</th>
                                                 <th>Giá gốc</th>
                                                 <th>Giá bán</th>
-                                                <th>Thao tác</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @{
+                                                int i = 1;
+                                            }
                                             @foreach (var item in Model)
                                             {
 
                                                 string imagePath = "~/BookImages/" + item.image;
                                                 <tr>
+                                                    <td style="text-align:center">@i</td>
                                                     <td style="text-align: center"><img src="@Url.Content(imagePath)" class="card-img-top book-cover" style="height:100px; width:80px;" alt=@item.title></td>
                                                     <td>@item.title</td>
                                                     <td>@item.Category.title</td>
@@ -134,10 +139,11 @@
                                                             @Html.AntiForgeryToken()
 
                                                             @Html.Hidden("id", item.id)
-                                                            <button type="submit" class="btn btn-sm btn-outline-danger " onclick="return confirm('Bạn có chắc muốn xóa sách này khỏi giỏ hàng?')">Xóa</button>
+                                                            <button type="submit" class="btn btn-sm btn-danger " onclick="return confirm('Bạn có chắc muốn xóa sách này khỏi giỏ hàng?')"><i class="fas fa-trash"></i>Xóa</button>
                                                         }
                                                     </td>
                                                 </tr>
+                                                i++;
                                             }
 
                                         </tbody>

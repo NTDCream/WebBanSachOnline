@@ -30,7 +30,7 @@
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="/Admin/Home/Index">
+                            <a class="nav-link " href="/Admin/Home/Index">
                                 <i class="fas fa-tachometer-alt"></i>
                                 Trang chủ
                             </a>
@@ -47,12 +47,12 @@
                                 Đơn hàng
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Admin/Home/Statistic">
-                                <i class="fas fa-chart-bar"></i>
-                                Thống kê
-                            </a>
-                        </li>
+                        @*<li class="nav-item">
+                                <a class="nav-link" href="/Admin/Home/Statistic">
+                                    <i class="fas fa-chart-bar"></i>
+                                    Thống kê
+                                </a>
+                            </li>*@
                         <li class="nav-item">
                             <a class="nav-link" href="/Admin/Categories/Index">
                                 <i class="fas fa-list"></i>
@@ -76,7 +76,7 @@
             </div>
 
             <!-- Main Content -->
-            <main class="ms-sm-auto col-lg-10 px-md-4">
+            <main class="ms-sm-auto col-lg-10 px-md-4" style="padding: 50px">
                 <div class="row" id="edit-user-section">
                     <div class="col-md-6 offset-md-3">
                         <div class="card">
@@ -104,21 +104,19 @@
 
 
                                         <div class="form-group">
-                                            @Html.LabelFor(model => model.role,"Quyền", htmlAttributes: new { @class = "control-label col-md-2" })
-                                            <div class="col-md-10">
-                                                @Html.EditorFor(model => model.role,  new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.role, "", new { @class = "text-danger" })
-                                            </div>
+                                            <label for="order-status" class="form-label">Quyền</label>
+                                            <select class="form-select" id="order-status" name="role">
+                                                <option value="Admin">Admin</option>
+                                                <option value="Customer">Customer</option>
+                                            </select>
                                         </div>
                                         <br />
                                         <div class="form-group">
-                                            @Html.LabelFor(model => model.isActive, "Hoạt động", htmlAttributes: new { @class = "control-label col-md-2" })
-                                            <div class="col-md-10">
-                                                <div class="checkbox">
-                                                    @Html.EditorFor(model => model.isActive)
-                                                    @Html.ValidationMessageFor(model => model.isActive, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
+                                            <label for="order-status" class="form-label">Hoạt động</label>
+                                            <select class="form-select" id="order-status" name="isActive">
+                                                <option value="true">Hoạt động</option>
+                                                <option value="false">Khóa</option>
+                                            </select>
                                         </div>
                                         <hr />
                                         <div class="form-group">
@@ -137,7 +135,7 @@
         </div>
         <br />
 
-        
+
 </body>
 
 @section Scripts {

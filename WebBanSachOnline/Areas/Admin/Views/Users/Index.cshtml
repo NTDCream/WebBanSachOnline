@@ -32,7 +32,7 @@
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="/Admin/Home/Index">
+                            <a class="nav-link" href="/Admin/Home/Index">
                                 <i class="fas fa-tachometer-alt"></i>
                                 Trang chủ
                             </a>
@@ -49,12 +49,12 @@
                                 Đơn hàng
                             </a>
                         </li>
-                        <li class="nav-item">
+                        @*<li class="nav-item">
                             <a class="nav-link" href="/Admin/Home/Statistic">
                                 <i class="fas fa-chart-bar"></i>
                                 Thống kê
                             </a>
-                        </li>
+                        </li>*@
                         <li class="nav-item">
                             <a class="nav-link" href="/Admin/Categories/Index">
                                 <i class="fas fa-list"></i>
@@ -85,10 +85,8 @@
                         <span>Xin chào, <strong id="admin-name">Admin</strong></span>
                     </div>
                 </div>
-                <br />
                 <div class="admin-content">
                     <h2 class="page-title">QUẢN LÝ TÀI KHOẢN</h2>
-                    <br />
                     <div class="">
                         <div class="card">
                             <div class="card-header">
@@ -96,22 +94,27 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered custom-table">
-                                        <thead class="table-light">
+                                    <table class="table table-bordered custom-table" style="text-align:center">
+                                        <thead class="table-light" >
                                             <tr>
+                                                <th>STT</th>
                                                 <th>Tên đăng nhập</th>
                                                 <th>Email</th>
                                                 <th>Họ tên</th>
                                                 <th>Số điện thoại</th>
                                                 <th>Quyền</th>
                                                 <th>Hoạt động</th>
-                                                <th>Thao tác</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @{
+                                                int i = 1;
+                                            }
                                             @foreach (var item in Model)
                                             {
                                                 <tr>
+                                                    <td>@i</td>
                                                     <td>@item.username</td>
                                                     <td>@item.email</td>
                                                     <td>@item.fullName</td>
@@ -136,6 +139,7 @@
                                                         </a>
                                                     </td>
                                                 </tr>
+                                                i++;
                                             }
 
                                         </tbody>

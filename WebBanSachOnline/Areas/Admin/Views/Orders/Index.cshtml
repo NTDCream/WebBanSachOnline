@@ -32,7 +32,7 @@
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="/Admin/Home/Index">
+                            <a class="nav-link" href="/Admin/Home/Index">
                                 <i class="fas fa-tachometer-alt"></i>
                                 Trang chủ
                             </a>
@@ -49,12 +49,12 @@
                                 Đơn hàng
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Admin/Home/Statistic">
-                                <i class="fas fa-chart-bar"></i>
-                                Thống kê
-                            </a>
-                        </li>
+                        @*<li class="nav-item">
+                                <a class="nav-link" href="/Admin/Home/Statistic">
+                                    <i class="fas fa-chart-bar"></i>
+                                    Thống kê
+                                </a>
+                            </li>*@
                         <li class="nav-item">
                             <a class="nav-link" href="/Admin/Categories/Index">
                                 <i class="fas fa-list"></i>
@@ -96,8 +96,8 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered custom-table">
-                                        <thead class="table-light">
+                                    <table class="table table-bordered custom-table" style="text-align:center">
+                                        <thead class="table-light" style="text-align:center">
                                             <tr>
                                                 <th>STT</th>
                                                 <th>Mã đơn hàng</th>
@@ -106,18 +106,22 @@
                                                 <th>Tiền</th>
                                                 <th>Trạng thái</th>
                                                 <th>Ngày tạo</th>
-                                                <th>Thao tác</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @{
+                                                int i = 1;
+                                            }
                                             @foreach (var item in Model)
                                             {
+
                                                 <tr>
-                                                    <td>1</td>
+                                                    <td>@i</td>
                                                     <td>@item.slug</td>
                                                     <td>@item.customerName</td>
                                                     <td>@item.phone</td>
-                                                    <td>@item.totalAmount</td>
+                                                    <td>@string.Format("{0:N0} đ", item.totalAmount)</td>
                                                     <td>
                                                         @if (item.status.ToLower() == "paid")
                                                         {
@@ -136,14 +140,12 @@
                                                     </td>
                                                     <td>@item.createdDate</td>
                                                     <td>
-                                                        <a class="btn btn-sm btn-outline-primary" href="@Url.Action("Details", "Orders", new { id = item.id })">
-                                                            Xem
-                                                        </a>
-                                                        <a class="btn btn-sm btn-outline-success" href="@Url.Action("Edit", "Orders", new { id = item.id })">
+                                                        <a class="btn btn-sm btn-outline-primary" href="@Url.Action("Edit", "Orders", new { id = item.id })">
                                                             Cập nhật
                                                         </a>
                                                     </td>
                                                 </tr>
+                                                i++;
                                             }
                                         </tbody>
                                     </table>
@@ -265,34 +267,6 @@
                     </div>
                 </div>
 
-                <!-- Update Order Status (hidden by default) -->
-                <div class="row" id="update-order-section" style="display: none">
-                    <div class="col-md-6 offset-md-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Cập nhật đơn hàng</h5>
-                            </div>
-                            <div class="card-body">
-                                <form id="update-order-form">
-                                    <input type="hidden" id="update-order-id" />
-                                    <div class="mb-3">
-                                        <label for="order-status" class="form-label">Trạng thái</label>
-                                        <select class="form-select" id="order-status">
-                                            <option value="Đã thanh toán">Đã thanh toán</option>
-                                            <option value="Chờ thanh toán">Chờ thanh toán</option>
-                                            <option value="Đã hủy">Đã hủy</option>
-                                        </select>
-                                    </div>
-                                    <div class="d-grid mt-4">
-                                        <button type="submit" class="btn btn-primary">
-                                            Lưu
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
         </div>
         </main>
     </div>
@@ -300,203 +274,8 @@
 
     <!-- Bootstrap JS Bundle (includes Popper) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    @*<script>// Sample order data for demo
-        const orders = [
-          {
-            id: "DH001",
-            customerName: "Nguyễn Thế Đoàn",
-            phone: "0123456789",
-            email: "ntdoan@gmail.com",
-            total: 1200000,
-            status: "Đã thanh toán",
-            date: "01/04/2025 10:00:25",
-            creator: "NTD",
-            items: [
-              {
-                id: 1,
-                name: "Nghĩ giàu & làm giàu",
-                price: 110000,
-                quantity: 1,
-                subtotal: 110000,
-              },
-              {
-                id: 2,
-                name: "Nhà giả kim",
-                price: 110000,
-                quantity: 1,
-                subtotal: 110000,
-              },
-            ],
-          },
-          {
-            id: "DH002",
-            customerName: "Nguyễn Thế Đoàn",
-            phone: "0123456789",
-            email: "ntdoan@gmail.com",
-            total: 2000000,
-            status: "Chờ thanh toán",
-            date: "01/04/2025 20:01:00",
-            creator: "NTD",
-            items: [
-              {
-                id: 1,
-                name: "Đắc nhân tâm",
-                price: 200000,
-                quantity: 2,
-                subtotal: 400000,
-              },
-              {
-                id: 2,
-                name: "Nhà giả kim",
-                price: 150000,
-                quantity: 1,
-                subtotal: 150000,
-              },
-            ],
-          },
-          {
-            id: "DH003",
-            customerName: "Nguyễn Việt Hưng",
-            phone: "0123123123",
-            email: "abc@gmail.com",
-            total: 1600000,
-            status: "Chờ thanh toán",
-            date: "01/04/2025 10:05:40",
-            creator: "NTD",
-            items: [
-              {
-                id: 1,
-                name: "Tôi thấy hoa vàng trên cỏ xanh",
-                price: 120000,
-                quantity: 2,
-                subtotal: 240000,
-              },
-              {
-                id: 2,
-                name: "Tuổi trẻ đáng giá bao nhiêu",
-                price: 95000,
-                quantity: 1,
-                subtotal: 95000,
-              },
-              {
-                id: 3,
-                name: "Đắc nhân tâm",
-                price: 90000,
-                quantity: 3,
-                subtotal: 270000,
-              },
-            ],
-          },
-        ];
-
-        // Format currency for display
-        function formatCurrency(amount) {
-          return new Intl.NumberFormat("vi-VN", {
-            style: "currency",
-            currency: "VND",
-            minimumFractionDigits: 0,
-          }).format(amount);
-        }
-
-        // View order details function
-        function viewOrder(orderId) {
-          const order = orders.find((o) => o.id === orderId);
-          if (order) {
-            document.getElementById("detail-order-id").value = order.id;
-            document.getElementById("detail-customer-name").value =
-              order.customerName;
-            document.getElementById("detail-phone").value = order.phone;
-            document.getElementById("detail-email").value = order.email;
-            document.getElementById("detail-date").value = order.date;
-            document.getElementById("detail-status").value = order.status;
-            document.getElementById("detail-creator").value = order.creator;
-
-            // Populate book list
-            const bookListContainer = document.getElementById("detail-book-list");
-            bookListContainer.innerHTML = "";
-
-            order.items.forEach((item, index) => {
-              const row = document.createElement("tr");
-              row.innerHTML = `
-              <td>${index + 1}</td>
-              <td>${item.name}</td>
-              <td>${formatCurrency(item.price)}</td>
-              <td>${item.quantity}</td>
-              <td>${formatCurrency(item.subtotal)}</td>
-            `;
-              bookListContainer.appendChild(row);
-            });
-
-            document.getElementById("detail-total").textContent = formatCurrency(
-              order.total
-            );
-            document.getElementById("order-detail-section").style.display =
-              "block";
-            document.getElementById("update-order-section").style.display =
-              "none";
-
-            window.scrollTo({
-              top: document.getElementById("order-detail-section").offsetTop,
-              behavior: "smooth",
-            });
-          }
-        }
-
-        // Update order status function
-        function updateOrder(orderId) {
-          const order = orders.find((o) => o.id === orderId);
-          if (order) {
-            document.getElementById("update-order-id").value = order.id;
-            document.getElementById("order-status").value = order.status;
-
-            document.getElementById("update-order-section").style.display =
-              "block";
-            document.getElementById("order-detail-section").style.display =
-              "none";
-
-            window.scrollTo({
-              top: document.getElementById("update-order-section").offsetTop,
-              behavior: "smooth",
-            });
-          }
-        }
-
-        // Hide order detail section
-        function hideOrderDetail() {
-          document.getElementById("order-detail-section").style.display = "none";
-        }
-
-        // Form submit handler for order update
-        document
-          .getElementById("update-order-form")
-          .addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            const orderId = document.getElementById("update-order-id").value;
-            const orderIndex = orders.findIndex((o) => o.id === orderId);
-
-            if (orderIndex !== -1) {
-              // Update order status
-              orders[orderIndex].status =
-                document.getElementById("order-status").value;
-
-              alert("Cập nhật đơn hàng thành công!");
-              document.getElementById("update-order-section").style.display =
-                "none";
-            }
-          });*@
-
-    //// Check if admin is logged in
-    //document.addEventListener("DOMContentLoaded", function () {
-    //  const isAdminLoggedIn = localStorage.getItem("adminLoggedIn");
-
-    //  if (!isAdminLoggedIn) {
-    //    window.location.href = "/admin/login.html";
-    //    return;
-    //  }
+    
 
 
-
-    });</script>
 </body>
 </html>

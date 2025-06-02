@@ -98,15 +98,31 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,userId,slug,status,totalAmount,customerName,phone,address,price,paymentMethod,createdDate")] Order order)
+        public ActionResult Edit([Bind(Include = "id,status")] Order order)
         {
+            ModelState.Remove("slug");
+            ModelState.Remove("userId");
+            ModelState.Remove("totalAmount");
+            ModelState.Remove("customerName");
+            ModelState.Remove("phone");
+            ModelState.Remove("address");
+            ModelState.Remove("price");
+            ModelState.Remove("paymentMethod");
+            ModelState.Remove("createdDate");
+
             if (ModelState.IsValid)
             {
-                db.Entry(order).State = EntityState.Modified;
+                var existingOrder = db.Orders.Find(order.id);
+                if (existingOrder == null)
+                    return HttpNotFound();
+
+                // Chỉ cập nhật status
+                existingOrder.status = order.status;
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.userId = new SelectList(db.Users, "id", "fullName", order.userId);
+
             return View(order);
         }
 
