@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -105,16 +106,24 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,title,categoryId,description,image,price,quantity,soldQuantity,originalPrice")] Book book)
+        public ActionResult Create([Bind(Include = "id,title,categoryId,author,description,image,price,quantity,soldQuantity,originalPrice")] Book book)
         {
 
             book.slug = GenerateSlug(book.title);
             book.rate = 0;
             book.reviewCount = 0;
             ModelState.Remove("slug");
+            
 
             if (ModelState.IsValid)
             {
+                var f = Request.Files["image"];
+                if (f.ContentLength > 0)
+                {
+                    string tenfile = Path.GetFileName(f.FileName);
+                    string duongdan = Path.Combine(Server.MapPath("~/BookImages/"), tenfile);
+                    book.image = tenfile;
+                }
                 db.Books.Add(book);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -147,12 +156,19 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,title,categoryId,description,image,price,quantity,soldQuantity,originalPrice")] Book book)
+        public ActionResult Edit([Bind(Include = "id,title,categoryId,author,description,image,price,quantity,soldQuantity,originalPrice")] Book book)
         {
 
             ModelState.Remove("slug");
             if (ModelState.IsValid)
             {
+                var f = Request.Files["image"];
+                if (f.ContentLength >= 0)
+                {
+                    string tenfile = Path.GetFileName(f.FileName);
+                    string duongdan = Path.Combine(Server.MapPath("~/BookImages/"), tenfile);
+                    book.image = tenfile;
+                }
                 var existingBook = db.Books.Find(book.id);
                 if (existingBook == null)
                     return HttpNotFound();
@@ -168,6 +184,7 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
                 existingBook.rate = book.rate;
                 existingBook.reviewCount = book.reviewCount;
                 existingBook.slug = GenerateSlug(book.title);
+                existingBook.author = book.author;
 
                 db.SaveChanges();
                 return RedirectToAction("Index");
