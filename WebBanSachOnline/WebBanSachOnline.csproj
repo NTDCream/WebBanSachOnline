@@ -171,6 +171,7 @@
     <Compile Include="Models\Payments\VnPayConfig.cs" />
     <Compile Include="Models\Payments\VnPayLibrary.cs" />
     <Compile Include="Models\Review.cs" />
+    <Compile Include="Models\Tokens\Token.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -312,7 +313,7 @@
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Categories\ById.cshtml" />
     <Content Include="Views\Categories\Menu2.cshtml" />
-    <Content Include="Views\Users\ForgetPassword.cshtml" />
+    <Content Include="Views\Users\ResetPassword.cshtml" />
     <Content Include="Views\Users\Infor.cshtml" />
     <Content Include="Views\Users\SignIn.cshtml" />
     <Content Include="Views\Users\SignUp.cshtml" />
@@ -320,6 +321,8 @@
     <Content Include="Views\CartItems\Checkout.cshtml" />
     <Content Include="Views\CartItems\OrderSuccess.cshtml" />
     <Content Include="Views\CartItems\OrderFail.cshtml" />
+    <Content Include="Views\Users\ForgetPassword.cshtml" />
+    <Content Include="Views\Users\ConfirmReset.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

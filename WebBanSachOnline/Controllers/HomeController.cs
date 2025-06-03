@@ -12,6 +12,7 @@ namespace WebBanSachOnline.Controllers
         private Model1 db = new Model1();
         public ActionResult Index()
         {
+            
             //var books = db.Books.ToList();
             var latestBooks = db.Books
                                 .OrderByDescending(b => b.id)

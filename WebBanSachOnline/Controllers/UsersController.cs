@@ -4,11 +4,13 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Security.Policy;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using WebBanSachOnline.Models;
+using WebBanSachOnline.Models.Tokens;
 
 namespace WebBanSachOnline.Controllers
 {
@@ -36,7 +38,7 @@ namespace WebBanSachOnline.Controllers
             var a = db.Users.FirstOrDefault(x => x.username == username && x.password == password);
             if (a != null)
             {
-                if(a.isActive == true)
+                if (a.isActive == true)
                 {
                     Session["userId"] = a.id;
                     Session["user"] = a.username;
@@ -47,7 +49,7 @@ namespace WebBanSachOnline.Controllers
             else
             {
                 ViewBag.error = "Sai tên đăng nhập hoặc mật khẩu";
-                
+
             }
             return View("SignIn");
         }
@@ -170,11 +172,117 @@ namespace WebBanSachOnline.Controllers
             return View(user);
         }
 
-
+        
         public ActionResult ForgetPassword()
         {
             return View();
         }
+
+        [HttpGet]
+        public ActionResult ConfirmReset()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ConfirmReset(string email)
+        {
+            var user = db.Users.FirstOrDefault(u => u.email == email);
+            if (user == null)
+            {
+                ViewBag.Message = "Email không tồn tại.";
+                return View();
+            }
+            ViewBag.email = email;
+            string code = GenerateUniqueCode();
+            var token = new Token(email, code);
+            Session["Reset_" + code] = token;
+
+            string resetLink = Url.Action("ResetPassword", "Users", new { slug = code }, protocol: Request.Url.Scheme);
+            string subject = "Đặt lại mật khẩu";
+            string body = $@"
+                        <h2>Quên mật khẩu</h2>
+                        <p><strong>Nhà Sách Online</strong><br /></p>
+                        <p>Truy cập <a href='{resetLink}'>liên kết này</a> để đặt lại mật khẩu</p>
+                    ";
+            SendEmail(email, subject, body);
+            return View();
+        }
+
+        private void SendEmail(string toEmail, string subject, string body)
+        {
+            MailMessage mail = new MailMessage();
+            mail.To.Add(toEmail);
+            mail.Subject = subject;
+            mail.Body = body;
+            mail.IsBodyHtml = true;
+
+            using (SmtpClient smtp = new SmtpClient())
+            {
+                smtp.Send(mail);
+            }
+        }
+
+        private string GenerateUniqueCode()
+        {
+            string code;
+            do
+            {
+                code = new Random().Next(100000, 999999).ToString();
+            } while (Session["Reset_" + code] != null);
+            return code;
+        }
+
+        [HttpGet]
+        public ActionResult ResetPassword(string slug)
+        {
+            var sessionKey = "Reset_" + slug;
+            var tokenObj = Session[sessionKey] as Token;
+
+            if (tokenObj == null)
+            {
+                ViewBag.Message = "Link không hợp lệ.";
+                return View();
+            }
+
+            // Truyền slug để dùng cho form post
+            ViewBag.Token = slug;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ResetPassword(string password, string confirmPassword, string slug)
+        {
+            var sessionKey = "Reset_" + slug;
+            var tokenObj = Session[sessionKey] as Token;
+
+            if (tokenObj == null)
+            {
+                ViewBag.Message = "Link đặt lại mật khẩu không hợp lệ.";
+                ViewBag.Token = slug;
+                return View();
+            }
+
+            if (password != confirmPassword)
+            {
+                ViewBag.Message = "Mật khẩu nhập lại không khớp.";
+                ViewBag.Token = slug;
+                return View();
+            }
+
+            var user = db.Users.FirstOrDefault(u => u.email == tokenObj.Email);
+            if (user != null)
+            {
+                user.password = password; // Nên hash trước khi lưu
+                db.SaveChanges();
+            }
+
+            Session.Remove(sessionKey);
+
+            ViewBag.Message = "Đổi mật khẩu thành công. Bạn có thể đăng nhập lại.";
+            return View();
+        }
+
 
         //GET: Users/Edit/5
         public ActionResult Edit(string slug)

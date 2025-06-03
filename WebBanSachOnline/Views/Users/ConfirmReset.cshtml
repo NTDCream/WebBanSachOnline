@@ -1,5 +1,10 @@
 ﻿
 @{
+    ViewBag.Title = "ConfirmReset";
+}
+
+
+@{
     ViewBag.Title = "ForgetPassword";
 }
 
@@ -25,35 +30,30 @@
     <!-- Forgot Password Form -->
     <div class="container mt-5">
         <div class="login-container">
-            <!-- Email Form View -->
-            <div id="email-form-view">
+            @*Confirmation View*@
+            <div id="confirmation-view">
                 <div class="text-center mb-4">
-                    <h3>Quên Mật Khẩu</h3>
+                    <h3>
+                        <i class="fas fa-check-circle me-2 text-primary"></i>Xác Nhận Quên Mật Khẩu
+                    </h3>
                 </div>
-                <form method="post" action="/Users/ConfirmReset">
-                    <div class="mb-3 position-relative">
-                        <input type="email"
-                               class="form-control"
-                               id="email"
-                               name="email"
-                               placeholder="Email"
-                               required />
-                        <i class="fas fa-envelope position-absolute top-50 translate-middle-y ms-3"
-                           style="opacity: 0.5"></i>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="text-center">
+                            Hãy kiểm tra email của bạn để đặt lại mật khẩu
+                        </p>
+                        <p class="text-center" id="user-email-display">
+                            <a href="https://accounts.google.com/v3/signin/identifier?btmpl=mobile_tier2&hl=vi&ifkv=AdBytiO0zMPb6KYWohM3K2_T_VFzL6Sn1DR55GSmk1JF0vrCPHSuNBw8lBW9qVhn4KztkUsM58EW&service=mail&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S-1993834641%3A1748951243145834">
+                            @ViewBag.email
+                            </a>
+                        </p>
+                        <p class="text-center">
+                            <i class="fas fa-info-circle me-2"></i>Thư có thể xuất hiện
+                            trong thư mục spam, vui lòng kiểm tra kỹ
+                        </p>
+                        
                     </div>
-                    <div class="">
-                        <button type="submit"
-                                class="btn btn-primary">
-                            Gửi xác nhận
-                        </button>
-                    </div>
-                    <div class="text-center mt-3 d-flex justify-content-between">
-                        <a href="@Url.Action("SignIn", "Users")" class="btn btn-link">
-                            <i class="fas fa-arrow-left me-1"></i> Quay lại
-                        </a>
-                    </div>
-                </form>
-                <br />
+                </div>
             </div>
         </div>
     </div>
@@ -79,5 +79,6 @@
     </style>
 </body>
 </html>
+
 
 
