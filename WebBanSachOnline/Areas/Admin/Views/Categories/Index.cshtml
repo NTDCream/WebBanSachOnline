@@ -1,5 +1,5 @@
-﻿@model IEnumerable<WebBanSachOnline.Models.Category>
-
+﻿@model PagedList.IPagedList<WebBanSachOnline.Models.Category>
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "Index";
 }
@@ -50,11 +50,11 @@
                             </a>
                         </li>
                         @*<li class="nav-item">
-                            <a class="nav-link" href="/Admin/Home/Statistic">
-                                <i class="fas fa-chart-bar"></i>
-                                Thống kê
-                            </a>
-                        </li>*@
+                                <a class="nav-link" href="/Admin/Home/Statistic">
+                                    <i class="fas fa-chart-bar"></i>
+                                    Thống kê
+                                </a>
+                            </li>*@
                         <li class="nav-item">
                             <a class="nav-link" href="/Admin/Categories/Index">
                                 <i class="fas fa-list"></i>
@@ -68,7 +68,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/Admin" id="logout-btn">
+                            <a class="nav-link" href="@Url.Action("Logout", "Home")" id="logout-btn">
                                 <i class="fas fa-sign-out-alt"></i>
                                 Đăng xuất
                             </a>
@@ -93,7 +93,7 @@
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0">Quản lý danh mục sách</h5>
                                 <a href="@Url.Action("Create", "Categories")" class="btn btn-primary me-2"><i class="fas fa-plus-circle me-1"></i>Thêm mới</a>
-                                    
+
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -107,7 +107,7 @@
                                         </thead>
                                         <tbody>
                                             @{
-                                                int i = 1;
+                                                int i = (Model.PageNumber - 1) * Model.PageSize + 1;
                                             }
                                             @foreach (var item in Model)
                                             {
@@ -133,46 +133,31 @@
 
 
                                     </table>
+                                    <div class="d-flex justify-content-center">
+                                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+                                        new PagedListRenderOptions
+                                        {
+                                            UlElementClasses = new[] { "pagination" },
+
+                                            DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                                            DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                                            DisplayLinkToPreviousPage = PagedListDisplayMode.Never,
+                                            DisplayLinkToNextPage = PagedListDisplayMode.Never,
+                                            DisplayLinkToIndividualPages = true,
+
+                                            Display = PagedListDisplayMode.Always,
+
+                                        })
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                
 
-                <!-- Edit Category Form (hidden by default) -->
-                <div class="row" id="edit-category-section" style="display: none">
-                    <div class="col-md-6 offset-md-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Cập nhật danh mục sách</h5>
-                            </div>
-                            <div class="card-body">
-                                <form id="edit-category-form">
-                                    <input type="hidden" id="edit-category-id" />
-                                    <div class="mb-3">
-                                        <label for="edit-category-title" class="form-label">Tiêu đề</label>
-                                        <input type="text"
-                                               class="form-control"
-                                               id="edit-category-title"
-                                               required />
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <button type="button"
-                                                class="btn btn-secondary"
-                                                >
-                                            Quay lại
-                                        </button>
-                                        <button type="submit" class="btn btn-primary">
-                                            Lưu
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
 
         </div>
         </main>
@@ -183,5 +168,55 @@
     <br />
     <br />
     <br />
+    <style>
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding-left: 0;
+        }
+
+            .pagination li {
+                margin: 0; 
+            }
+
+                .pagination li a,
+                .pagination li span {
+                    display: block;
+                    padding: 0.375rem 0.75rem; 
+                    margin-left: -1px; 
+                    border: 1px solid #dee2e6;
+                    color: #007bff;
+                    text-decoration: none;
+                    background-color: #fff;
+                    cursor: pointer;
+                    user-select: none;
+                    border-radius: 0; 
+                }
+
+                .pagination li:first-child a,
+                .pagination li:first-child span {
+                    border-top-left-radius: 0.25rem;
+                    border-bottom-left-radius: 0.25rem;
+                    margin-left: 0;
+                }
+
+                .pagination li:last-child a,
+                .pagination li:last-child span {
+                    border-top-right-radius: 0.25rem;
+                    border-bottom-right-radius: 0.25rem;
+                }
+
+                .pagination li a:hover {
+                    background-color: #e9ecef;
+                    border-color: #dee2e6;
+                    color: #0056b3;
+                }
+
+                .pagination li.active span {
+                    background-color: #007bff;
+                    border-color: #007bff;
+                    color: white;
+                }
+    </style>
 </body>
 </html>

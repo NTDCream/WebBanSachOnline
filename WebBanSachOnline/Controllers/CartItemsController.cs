@@ -13,6 +13,8 @@ using WebBanSachOnline.Models;
 using System.Collections.Specialized;
 using System.Security.Cryptography;
 using System.Text;
+using PagedList;
+using System.Web.UI;
 
 namespace WebBanSachOnline.Controllers
 {
@@ -21,18 +23,24 @@ namespace WebBanSachOnline.Controllers
         private Model1 db = new Model1();
 
         // GET: CartItems
-        public ActionResult Index()
+        public ActionResult Index(int ?page)
         {
             if (Session["userId"] == null)
             {
                 return RedirectToAction("SignIn", "Users");
             }
-            var userId = (int)Session["userId"];
-            var cartItems = db.CartItems
-            .Include(c => c.Book.Category)
-            .Where(c => c.userId == userId)
-            .ToList();
+            int userId = (int)Session["userId"];
 
+            int pageSize = 10;              
+            int pageNumber = page ?? 1;     
+
+            var cartItems = db.CartItems
+                .Include(c => c.Book.Category)
+                .Where(c => c.userId == userId)
+                .OrderBy(c => c.id)          
+                .ToPagedList(pageNumber, pageSize);
+            int total = cartItems.Sum(ci => ci.Book.price * ci.quantity);
+            ViewBag.Total = total;
             return View(cartItems);
         }
 

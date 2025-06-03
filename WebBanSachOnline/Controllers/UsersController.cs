@@ -279,7 +279,7 @@ namespace WebBanSachOnline.Controllers
 
             Session.Remove(sessionKey);
 
-            ViewBag.Message = "Đổi mật khẩu thành công. Bạn có thể đăng nhập lại.";
+            ViewBag.Success = "Đổi mật khẩu thành công. Bạn có thể đăng nhập lại.";
             return View();
         }
 

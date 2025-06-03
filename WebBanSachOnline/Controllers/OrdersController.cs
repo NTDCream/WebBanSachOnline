@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
+using PagedList;
 using WebBanSachOnline.Models;
 
 namespace WebBanSachOnline.Controllers
@@ -15,19 +17,24 @@ namespace WebBanSachOnline.Controllers
         private Model1 db = new Model1();
 
         // GET: Orders
-        public ActionResult Index()
+        public ActionResult Index(int ?page)
         {
             if (Session["userId"] == null)
             {
                 return RedirectToAction("SignIn", "Users");
             }
-            var orders = db.Orders.Include(o => o.User);
-            return View(orders.ToList());
+            int pageSize = 10;
+            int pageNumber = page ?? 1;
+
+            var orders = db.Orders.Include(o => o.User)
+                                  .OrderByDescending(o => o.id);
+
+            return View(orders.ToPagedList(pageNumber, pageSize));
         }
 
         
         // GET: Orders/Details/5
-        public ActionResult Details(string slug)
+        public ActionResult Details(string slug, int? page)
         {
             if (Session["userId"] == null)
             {
@@ -41,10 +48,11 @@ namespace WebBanSachOnline.Controllers
                         .FirstOrDefault(o => o.slug == slug);
             if (order == null)
                 return HttpNotFound();
-            
 
-            
+            int pageSize = 5;
+            int pageNumber = page ?? 1;
 
+            ViewBag.PagedOrderDetails = order.OrderDetails.ToPagedList(pageNumber, pageSize);
             return View(order);
         }
 

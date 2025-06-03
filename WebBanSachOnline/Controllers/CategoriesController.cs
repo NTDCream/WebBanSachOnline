@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
+using PagedList;
 using WebBanSachOnline.Models;
 
 namespace WebBanSachOnline.Controllers
@@ -15,7 +17,7 @@ namespace WebBanSachOnline.Controllers
         private Model1 db = new Model1();
 
         // GET: Categories
-        public ActionResult Index(string title)
+        public ActionResult Index(string title, int ?page)
         {
             var categories = db.Categories.ToList();
 
@@ -28,7 +30,11 @@ namespace WebBanSachOnline.Controllers
 
             ViewBag.Categories = categories;
             ViewBag.Books = books;
+            int pageSize = 9;
+            int pageNumber = (page ?? 1);
 
+            ViewBag.Categories = categories;
+            ViewBag.Books = books.ToPagedList(pageNumber, pageSize);
             return View();
         }
 
@@ -38,7 +44,7 @@ namespace WebBanSachOnline.Controllers
         }
 
         [Route("Categories/{slug}")]
-        public ActionResult BySlug(string slug, string title)
+        public ActionResult BySlug(string slug, string title, int ?page)
         {
             var category = db.Categories.FirstOrDefault(c => c.slug == slug);
             if (category == null)
@@ -51,9 +57,16 @@ namespace WebBanSachOnline.Controllers
             {
                 books = books.Where(x => x.title.ToLower().Contains(title.ToLower())).ToList();
             }
-            ViewBag.CategoryId = category.id;
+            int pageSize = 9; 
+            int pageNumber = page ?? 1;
 
-            return View("ById", books);
+            var pagedBooks = books.ToPagedList(pageNumber, pageSize);
+
+            ViewBag.CategoryId = category.id;
+            ViewBag.Slug = slug;
+            ViewBag.TitleSearch = title;
+
+            return View("ById", pagedBooks);
         }
 
         // GET: Categories/Details/5

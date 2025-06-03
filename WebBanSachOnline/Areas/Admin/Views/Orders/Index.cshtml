@@ -1,5 +1,5 @@
-﻿@model IEnumerable<WebBanSachOnline.Models.Order>
-
+﻿@model PagedList.IPagedList<WebBanSachOnline.Models.Order>
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "Index";
 }
@@ -68,7 +68,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/Admin" id="logout-btn">
+                            <a class="nav-link" href="@Url.Action("Logout", "Home")" id="logout-btn">
                                 <i class="fas fa-sign-out-alt"></i>
                                 Đăng xuất
                             </a>
@@ -111,7 +111,7 @@
                                         </thead>
                                         <tbody>
                                             @{
-                                                int i = 1;
+                                                int i = (Model.PageNumber - 1) * Model.PageSize + 1;
                                             }
                                             @foreach (var item in Model)
                                             {
@@ -149,123 +149,29 @@
                                             }
                                         </tbody>
                                     </table>
+                                    <div class="d-flex justify-content-center">
+                                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+                                        new PagedListRenderOptions
+                                        {
+                                            UlElementClasses = new[] { "pagination" },
+
+                                            DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                                            DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                                            DisplayLinkToPreviousPage = PagedListDisplayMode.Never,
+                                            DisplayLinkToNextPage = PagedListDisplayMode.Never,
+                                            DisplayLinkToIndividualPages = true,
+
+                                            Display = PagedListDisplayMode.Always,
+
+                                        })
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Order Detail Section (hidden by default) -->
-                <div class="row" id="order-detail-section" style="display: none">
-                    <div class="col-md-8 offset-md-2">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">Xem chi tiết đơn hàng</h5>
-                                <button class="btn btn-sm btn-outline-secondary"
-                                        onclick="hideOrderDetail()">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                            <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Mã đơn hàng</label>
-                                            <input type="text"
-                                                   class="form-control"
-                                                   id="detail-order-id"
-                                                   readonly />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Họ tên khách hàng</label>
-                                            <input type="text"
-                                                   class="form-control"
-                                                   id="detail-customer-name"
-                                                   readonly />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Số điện thoại</label>
-                                            <input type="text"
-                                                   class="form-control"
-                                                   id="detail-phone"
-                                                   readonly />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Email</label>
-                                            <input type="email"
-                                                   class="form-control"
-                                                   id="detail-email"
-                                                   readonly />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Ngày tạo</label>
-                                            <input type="text"
-                                                   class="form-control"
-                                                   id="detail-date"
-                                                   readonly />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Trạng thái</label>
-                                            <input type="text"
-                                                   class="form-control"
-                                                   id="detail-status"
-                                                   readonly />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label">Tạo bởi</label>
-                                        <input type="text"
-                                               class="form-control"
-                                               id="detail-creator"
-                                               readonly />
-                                    </div>
-                                </div>
 
-                                <h6 class="mt-4 mb-3">Danh sách sách</h6>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-sm">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>STT</th>
-                                                <th>Tên sách</th>
-                                                <th>Giá</th>
-                                                <th>Số lượng</th>
-                                                <th>Thành tiền</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="detail-book-list">
-                                            <!-- Books will be populated via JavaScript -->
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <td colspan="4" class="text-end fw-bold">
-                                                    Tổng tiền:
-                                                </td>
-                                                <td class="fw-bold" id="detail-total"></td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
         </div>
         </main>
@@ -274,8 +180,57 @@
 
     <!-- Bootstrap JS Bundle (includes Popper) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    
 
 
+    <style>
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding-left: 0;
+        }
+
+            .pagination li {
+                margin: 0;
+            }
+
+                .pagination li a,
+                .pagination li span {
+                    display: block;
+                    padding: 0.375rem 0.75rem;
+                    margin-left: -1px;
+                    border: 1px solid #dee2e6;
+                    color: #007bff;
+                    text-decoration: none;
+                    background-color: #fff;
+                    cursor: pointer;
+                    user-select: none;
+                    border-radius: 0;
+                }
+
+                .pagination li:first-child a,
+                .pagination li:first-child span {
+                    border-top-left-radius: 0.25rem;
+                    border-bottom-left-radius: 0.25rem;
+                    margin-left: 0;
+                }
+
+                .pagination li:last-child a,
+                .pagination li:last-child span {
+                    border-top-right-radius: 0.25rem;
+                    border-bottom-right-radius: 0.25rem;
+                }
+
+                .pagination li a:hover {
+                    background-color: #e9ecef;
+                    border-color: #dee2e6;
+                    color: #0056b3;
+                }
+
+                .pagination li.active span {
+                    background-color: #007bff;
+                    border-color: #007bff;
+                    color: white;
+                }
+    </style>
 </body>
 </html>

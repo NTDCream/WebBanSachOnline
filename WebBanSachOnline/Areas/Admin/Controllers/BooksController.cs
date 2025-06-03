@@ -8,6 +8,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
 using WebBanSachOnline.Models;
 
 namespace WebBanSachOnline.Areas.Admin.Controllers
@@ -18,15 +19,22 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         private Model1 db = new Model1();
 
         // GET: Admin/Books
-        public ActionResult Index()
+        public ActionResult Index(int ?page)
         {
             if (Session["role"] == null)
             {
                 return Redirect("/Admin");
             }
+
+            int pageSize = 10; 
+            int pageNumber = (page ?? 1);
             var books = db.Books
-            .Include(b => b.Category) // Eager loading Category
-            .ToList(); // Thực hiện truy vấn
+                   .Include(b => b.Category)
+                   .OrderBy(b => b.id)
+                   .ToPagedList(pageNumber, pageSize);
+            //var books = db.Books
+            //.Include(b => b.Category) // Eager loading Category
+            //.ToList(); // Thực hiện truy vấn
 
             return View(books);
         }

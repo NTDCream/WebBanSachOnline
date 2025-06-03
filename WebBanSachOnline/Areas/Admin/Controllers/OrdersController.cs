@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
 using WebBanSachOnline.Models;
 
 namespace WebBanSachOnline.Areas.Admin.Controllers
@@ -15,14 +16,20 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         private Model1 db = new Model1();
 
         // GET: Admin/Orders
-        public ActionResult Index()
+        public ActionResult Index(int ?page)
         {
             if (Session["role"] == null)
             {
                 return Redirect("/Admin");
             }
-            var orders = db.Orders.Include(o => o.User);
-            return View(orders.ToList());
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+
+            var orders = db.Orders
+                           .Include(o => o.User)
+                           .OrderByDescending(o => o.createdDate); 
+
+            return View(orders.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Admin/Orders/Details/5

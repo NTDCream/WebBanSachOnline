@@ -1,5 +1,5 @@
-﻿@model IEnumerable<WebBanSachOnline.Models.Book>
-
+﻿@model PagedList.IPagedList<WebBanSachOnline.Models.Book>
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "Index";
 }
@@ -49,11 +49,11 @@
                             </a>
                         </li>
                         @*<li class="nav-item">
-                            <a class="nav-link" href="/Admin/Home/Statistic">
-                                <i class="fas fa-chart-bar"></i>
-                                Thống kê
-                            </a>
-                        </li>*@
+                                <a class="nav-link" href="/Admin/Home/Statistic">
+                                    <i class="fas fa-chart-bar"></i>
+                                    Thống kê
+                                </a>
+                            </li>*@
                         <li class="nav-item">
                             <a class="nav-link" href="/Admin/Categories/Index">
                                 <i class="fas fa-list"></i>
@@ -67,7 +67,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/Admin" id="logout-btn">
+                            <a class="nav-link" href="@Url.Action("Logout", "Home")" id="logout-btn">
                                 <i class="fas fa-sign-out-alt"></i>
                                 Đăng xuất
                             </a>
@@ -112,7 +112,7 @@
                                         </thead>
                                         <tbody>
                                             @{
-                                                int i = 1;
+                                                int i = (Model.PageNumber - 1) * Model.PageSize + 1;
                                             }
                                             @foreach (var item in Model)
                                             {
@@ -150,6 +150,22 @@
 
                                         </tbody>
                                     </table>
+                                    <div class="d-flex justify-content-center">
+                                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+                                        new PagedListRenderOptions
+                                        {
+                                            UlElementClasses = new[] { "pagination" },
+
+                                            DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                                            DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                                            DisplayLinkToPreviousPage = PagedListDisplayMode.Never,
+                                            DisplayLinkToNextPage = PagedListDisplayMode.Never,
+                                            DisplayLinkToIndividualPages = true,
+
+                                            Display = PagedListDisplayMode.Always,
+
+                                        })
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -164,224 +180,63 @@
         </div>
         </main>
     </div>
+
+
     </div>
 
+
     <!-- Bootstrap JS Bundle (includes Popper) -->
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script>// Sample books data for demo
-      const books = [
-        {
-          id: 1,
-          title: "Nghĩ giàu & làm giàu",
-          author: "Napoleon Hill",
-          category: "Văn học",
-          originalPrice: 150000,
-          price: 110000,
-          quantity: 100,
-          isbn: "ISBN123456",
-          image:
-            "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1545314990i/10433999.jpg",
-          description: "Cuốn sách kinh điển về tư duy làm giàu.",
-          discount: 27,
-          active: true,
-        },
-        {
-          id: 2,
-          title: "Nhà giả kim",
-          author: "Paulo Coelho",
-          category: "Văn học",
-          originalPrice: 160000,
-          price: 110000,
-          quantity: 58,
-          isbn: "ISBN789012",
-          image:
-            "https://salt.tikicdn.com/cache/w1200/ts/product/ee/c9/e2/d933e0bb67bafa902426316786283aec.jpg",
-          description:
-            "Câu chuyện về hành trình tìm kiếm kho báu của một chàng trai trẻ.",
-          discount: 31,
-          active: true,
-        },
-        {
-          id: 3,
-          title: "Đắc nhân tâm",
-          author: "Dale Carnegie",
-          category: "Văn học",
-          originalPrice: 200000,
-          price: 110000,
-          quantity: 65,
-          isbn: "ISBN345678",
-          image:
-            "https://nhasachphuongnam.com/images/detailed/217/dac-nhan-tam-bc.jpg",
-          description:
-            "Cuốn sách bán chạy nhất mọi thời đại về kỹ năng giao tiếp.",
-          discount: 45,
-          active: true,
-        },
-      ];
-
-      let bookToDelete = null;
-
-      // Format currency
-      function formatCurrency(amount) {
-        return new Intl.NumberFormat("vi-VN", {
-          style: "currency",
-          currency: "VND",
-          minimumFractionDigits: 0,
-        }).format(amount);
-      }
-
-      // Show add book form
-      function showAddBookForm() {
-        document.getElementById("add-book-section").style.display = "block";
-        document.getElementById("edit-book-section").style.display = "none";
-        document.getElementById("delete-confirmation-section").style.display =
-          "none";
-
-        // Clear form fields
-        document.getElementById("book-title").value = "";
-        document.getElementById("book-category").value = "";
-        document.getElementById("book-author").value = "";
-        document.getElementById("book-image").value = "";
-        document.getElementById("book-isbn").value = "";
-        document.getElementById("book-quantity").value = 0;
-        document.getElementById("book-original-price").value = "";
-        document.getElementById("book-price").value = "";
-        document.getElementById("book-discount").value = 0;
-        document.getElementById("book-description").value = "";
-        document.getElementById("book-active").checked = true;
-
-        window.scrollTo({
-          top: document.getElementById("add-book-section").offsetTop,
-          behavior: "smooth",
-        });
-      }
-
-      // Hide add book form
-      function hideAddBookForm() {
-        document.getElementById("add-book-section").style.display = "none";
-      }
-
-      // Show edit book form
-      function editBook(id) {
-        const book = books.find((b) => b.id === id);
-        if (book) {
-          document.getElementById("edit-book-id").value = book.id;
-          document.getElementById("edit-book-title").value = book.title;
-          document.getElementById("edit-book-category").value = book.category;
-          document.getElementById("edit-book-author").value = book.author;
-          document.getElementById("edit-book-image-url").value = book.image;
-          document.getElementById("edit-book-isbn").value = book.isbn;
-          document.getElementById("edit-book-quantity").value = book.quantity;
-          document.getElementById("edit-book-original-price").value =
-            book.originalPrice;
-          document.getElementById("edit-book-price").value = book.price;
-          document.getElementById("edit-book-discount").value =
-            book.discount || 0;
-          document.getElementById("edit-book-description").value =
-            book.description || "";
-          document.getElementById("edit-book-active").checked = book.active;
-
-          document.getElementById("edit-book-section").style.display = "block";
-          document.getElementById("add-book-section").style.display = "none";
-          document.getElementById("delete-confirmation-section").style.display =
-            "none";
-
-          window.scrollTo({
-            top: document.getElementById("edit-book-section").offsetTop,
-            behavior: "smooth",
-          });
-        }
-      }
-
-      // Hide edit book form
-      function hideEditBookForm() {
-        document.getElementById("edit-book-section").style.display = "none";
-      }
-
-      // Show delete confirmation
-      function confirmDeleteBook(id) {
-        bookToDelete = id;
-        document.getElementById("delete-confirmation-section").style.display =
-          "block";
-        document.getElementById("edit-book-section").style.display = "none";
-        document.getElementById("add-book-section").style.display = "none";
-
-        window.scrollTo({
-          top: document.getElementById("delete-confirmation-section").offsetTop,
-          behavior: "smooth",
-        });
-      }
-
-      // Hide delete confirmation
-      function hideDeleteConfirmation() {
-        document.getElementById("delete-confirmation-section").style.display =
-          "none";
-        bookToDelete = null;
-      }
-
-      // Delete book
-      function deleteBook() {
-        if (bookToDelete !== null) {
-          // In a real app, you would send a request to the server to delete the book
-          // For demo purposes, we'll just show an alert
-          alert(`Đã xóa sách có ID: ${bookToDelete}`);
-          hideDeleteConfirmation();
-        }
-      }
-
-      // Add book form submit handler
-      document
-        .getElementById("add-book-form")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
-
-          const bookTitle = document.getElementById("book-title").value;
-
-          // In a real app, you would send a request to the server to save the book
-          // For demo purposes, we'll just show an alert
-          alert(`Đã thêm sách: ${bookTitle}`);
-          hideAddBookForm();
-        });
-
-      // Edit book form submit handler
-      document
-        .getElementById("edit-book-form")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
-
-          const bookId = document.getElementById("edit-book-id").value;
-          const bookTitle = document.getElementById("edit-book-title").value;
-
-          // In a real app, you would send a request to the server to update the book
-          // For demo purposes, we'll just show an alert
-          alert(`Đã cập nhật sách ID ${bookId}: ${bookTitle}`);
-          hideEditBookForm();
-        });
-
-      // Check if admin is logged in
-      document.addEventListener("DOMContentLoaded", function () {
-        const isAdminLoggedIn = localStorage.getItem("adminLoggedIn");
-
-        if (!isAdminLoggedIn) {
-          window.location.href = "/admin/login.html";
-          return;
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding-left: 0;
         }
 
-        // Set admin name
-        const adminUser = JSON.parse(localStorage.getItem("adminUser") || "{}");
-        if (adminUser.name) {
-          document.getElementById("admin-name").textContent = adminUser.name;
-        }
+            .pagination li {
+                margin: 0;
+            }
 
-        // Logout functionality
-        document
-          .getElementById("logout-btn")
-          .addEventListener("click", function (e) {
-            e.preventDefault();
-            localStorage.removeItem("adminLoggedIn");
-            localStorage.removeItem("adminUser");
-            window.location.href = "/admin/login.html";
-          });
-      });</script>-->
+                .pagination li a,
+                .pagination li span {
+                    display: block;
+                    padding: 0.375rem 0.75rem;
+                    margin-left: -1px;
+                    border: 1px solid #dee2e6;
+                    color: #007bff;
+                    text-decoration: none;
+                    background-color: #fff;
+                    cursor: pointer;
+                    user-select: none;
+                    border-radius: 0;
+                }
+
+                .pagination li:first-child a,
+                .pagination li:first-child span {
+                    border-top-left-radius: 0.25rem;
+                    border-bottom-left-radius: 0.25rem;
+                    margin-left: 0;
+                }
+
+                .pagination li:last-child a,
+                .pagination li:last-child span {
+                    border-top-right-radius: 0.25rem;
+                    border-bottom-right-radius: 0.25rem;
+                }
+
+                .pagination li a:hover {
+                    background-color: #e9ecef;
+                    border-color: #dee2e6;
+                    color: #0056b3;
+                }
+
+                .pagination li.active span {
+                    background-color: #007bff;
+                    border-color: #007bff;
+                    color: white;
+                }
+    </style>
 </body>
+
 </html>

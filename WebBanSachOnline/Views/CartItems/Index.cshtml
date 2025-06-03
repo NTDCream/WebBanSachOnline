@@ -1,4 +1,5 @@
-﻿@model IEnumerable<WebBanSachOnline.Models.CartItem>
+﻿@model PagedList.IPagedList<WebBanSachOnline.Models.CartItem>
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "Index";
@@ -46,9 +47,10 @@
                 <h5 class="card-title mb-0">Giỏ hàng</h5>
             </div>
             <div class="card-body">
-                <table class="table table-bordered" id="cart-table">
+                <table class="table table-bordered" id="cart-table" style="text-align:center">
                     <thead class="table-light">
                         <tr>
+                            <th style="width: 50px">STT</th>
                             <th scope="col" style="width: 80px">Ảnh</th>
                             <th scope="col">Sách</th>
                             <th scope="col">Danh mục</th>
@@ -63,14 +65,14 @@
                     <tbody id="cart-items">
                         <!-- Cart items will be loaded here -->
                         @{
-                            int totalPrice = 0;
+                            int i = (Model.PageNumber - 1) * Model.PageSize + 1;
                         }
                         @foreach (var item in Model)
                         {
                             int price = item.quantity * item.Book.price;
-                            totalPrice += price;
                             string imagePath = "~/BookImages/" + item.Book.image;
                             <tr>
+                                <td>@i</td>
                                 <td scope="col"><img src="@Url.Content(imagePath)" style="height: 150px; width: 100px;" alt=@item.Book.title></td>
                                 <td scope="col">@item.Book.title</td>
                                 <td scope="col">@item.Book.Category.title</td>
@@ -86,39 +88,52 @@
                                     }
                                 </td>
                             </tr>
+                            i++;
                         }
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colspan="5" class="text-end fw-bold">Tổng tiền:</td>
                             <td colspan="3" class="fw-bold text-danger" id="cart-total">
-                                @string.Format("{0:N0} đ", totalPrice)
+                                @string.Format("{0:N0} đ", ViewBag.Total)
                             </td>
                         </tr>
                     </tfoot>
                 </table>
-                <div id="empty-cart" class="text-center py-5 d-none">
-                    <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
-                    <h5>Giỏ hàng trống</h5>
-                    <p class="text-muted">Hãy thêm sản phẩm vào giỏ hàng</p>
-                    <a href="/" class="btn btn-primary">Tiếp tục mua sắm</a>
+                <div class="d-flex justify-content-center">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+                   new PagedListRenderOptions
+               {
+                   UlElementClasses = new[] { "pagination" },
+                   LiElementClasses = new[] { "page-item" },
+                   DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                   DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                   DisplayLinkToPreviousPage = PagedListDisplayMode.Never,
+                   DisplayLinkToNextPage = PagedListDisplayMode.Never
+               })
                 </div>
-                <div class="d-flex justify-content-end mt-3">
-                    <a href="@Url.Action("DeleteAllItems", "CartItems")" class="btn btn-outline-danger me-2" id="clear-cart-btn">Xóa hết</a>
-                    <a href="/" class="btn btn-outline-primary me-2">Tiếp tục mua sắm</a>
-                    @if (Model == null || !Model.Any())
-                    {
-                        <a href="@Url.Action("Checkout", "CartItems")" class="btn btn-danger me-2 disabled">Đặt hàng</a>
-                    }
-                    else
-                    {
+                    <div id="empty-cart" class="text-center py-5 d-none">
+                        <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                        <h5>Giỏ hàng trống</h5>
+                        <p class="text-muted">Hãy thêm sản phẩm vào giỏ hàng</p>
+                        <a href="/" class="btn btn-primary">Tiếp tục mua sắm</a>
+                    </div>
+                    <div class="d-flex justify-content-end mt-3">
+                        <a href="@Url.Action("DeleteAllItems", "CartItems")" class="btn btn-outline-danger me-2" id="clear-cart-btn">Xóa hết</a>
+                        <a href="/" class="btn btn-outline-primary me-2">Tiếp tục mua sắm</a>
+                        @if (Model == null || !Model.Any())
+                        {
+                            <a href="@Url.Action("Checkout", "CartItems")" class="btn btn-danger me-2 disabled">Đặt hàng</a>
+                        }
+                        else
+                        {
 
-                        <a href="@Url.Action("Checkout", "CartItems")" class="btn btn-danger me-2">Đặt hàng</a>
-                    }
-                    @*<a href="@Url.Action("ThanhToan", "CartItems")" class="btn btn-danger me-2">Đặt hàng</a>*@
+                            <a href="@Url.Action("Checkout", "CartItems")" class="btn btn-danger me-2">Đặt hàng</a>
+                        }
+                        @*<a href="@Url.Action("ThanhToan", "CartItems")" class="btn btn-danger me-2">Đặt hàng</a>*@
+                    </div>
                 </div>
             </div>
-        </div>
     </div>
 
 
@@ -136,58 +151,58 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     @*<script src="~/Content/main.js"></script>*@
-    <script>
-        //let deleteItemId = null;
-        //const deleteModal = new bootstrap.Modal(
-        //    document.getElementById("deleteConfirmModal")
-        //);
 
-        // Use real cart data from localStorage instead of the sample data
-        
 
-        // Update item quantity
-        function updateQuantity(itemId, newQuantity) {
-            if (newQuantity < 1) {
-                confirmRemoveItem(itemId);
-                return;
-            }
 
-            const item = cart.find((i) => i.id === itemId);
-            if (item) {
-                // Check that new quantity doesn't exceed stock
-                if (newQuantity > item.stock) {
-                    showToast("Số lượng vượt quá hàng có sẵn trong kho", "error");
-                    return;
-                }
-
-                item.quantity = newQuantity;
-                saveCart(cart);
-                loadCart();
-                showToast("Đã cập nhật số lượng sản phẩm");
-            }
+    <style>
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding-left: 0;
         }
 
-        
+            .pagination li {
+                margin: 0;
+            }
 
-        // Initialize page
-        document.addEventListener("DOMContentLoaded", function () {
-            updateNavigation();
+                .pagination li a,
+                .pagination li span {
+                    display: block;
+                    padding: 0.375rem 0.75rem;
+                    margin-left: -1px;
+                    border: 1px solid #dee2e6;
+                    color: #007bff;
+                    text-decoration: none;
+                    background-color: #fff;
+                    cursor: pointer;
+                    user-select: none;
+                    border-radius: 0;
+                }
 
-            // Confirm delete button event
-            document
-                .getElementById("confirm-delete-btn")
-                .addEventListener("click", removeItem);
+                .pagination li:first-child a,
+                .pagination li:first-child span {
+                    border - top - left - radius: 0.25rem;
+                    border-bottom-left-radius: 0.25rem;
+                    margin-left: 0;
+                }
 
-            // Clear cart button event
-            document
-                .getElementById("clear-cart-btn")
-                .addEventListener("click", clearCart);
+                .pagination li:last-child a,
+                .pagination li:last-child span {
+                    border - top - right - radius: 0.25rem;
+                    border-bottom-right-radius: 0.25rem;
+                }
 
-            // Load cart from localStorage
-            loadCart();
+                .pagination li a:hover {
+                    background - color: #e9ecef;
+                    border-color: #dee2e6;
+                    color: #0056b3;
+                }
 
-            // Update cart count
-            updateCartCount();
-        });</script>
+                .pagination li.active span {
+                    background - color: #007bff;
+                    border-color: #007bff;
+                    color: white;
+                }
+    </style>
 </body>
 </html>

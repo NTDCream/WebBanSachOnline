@@ -7,6 +7,8 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
+using PagedList;
 using WebBanSachOnline.Models;
 
 namespace WebBanSachOnline.Areas.Admin.Controllers
@@ -56,13 +58,19 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         private Model1 db = new Model1();
 
         // GET: Admin/Categories
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
             if (Session["role"] == null)
             {
                 return Redirect("/Admin");
             }
-            return View(db.Categories.ToList());
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+
+            // Lấy danh sách category theo trang (nếu không cần phân trang thì dùng ToList())
+            var categories = db.Categories.OrderBy(c => c.id).ToPagedList(pageNumber, pageSize);
+
+            return View(categories);
         }
 
         // GET: Admin/Categories/Details/5
