@@ -30,7 +30,7 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
             int pageNumber = (page ?? 1);
             var books = db.Books
                    .Include(b => b.Category)
-                   .OrderBy(b => b.id)
+                   .OrderByDescending(b => b.id)
                    .ToPagedList(pageNumber, pageSize);
             //var books = db.Books
             //.Include(b => b.Category) // Eager loading Category
@@ -114,17 +114,18 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,title,categoryId,author,description,image,price,quantity,soldQuantity,originalPrice")] Book book)
+        public ActionResult Create([Bind(Include = "id,title,categoryId,author,description,image,price,quantity,originalPrice")] Book book)
         {
 
             book.slug = GenerateSlug(book.title);
             book.rate = 0;
             book.reviewCount = 0;
             ModelState.Remove("slug");
-            
+            ModelState.Remove("soldQuantity");
 
             if (ModelState.IsValid)
             {
+                book.soldQuantity = 0;
                 var f = Request.Files["image"];
                 if (f.ContentLength > 0)
                 {

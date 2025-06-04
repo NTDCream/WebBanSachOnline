@@ -182,11 +182,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BookImages\cho-toi-xin-mot-ve-di-tuoi-tho.jpg" />
+    <Content Include="BookImages\cuoc-doi-cua-pi.jpg" />
     <Content Include="BookImages\dac-nhan-tam.jpg" />
+    <Content Include="BookImages\dan-ong-sao-hoa.jpg" />
+    <Content Include="BookImages\doi-gio-hu.jpg" />
+    <Content Include="BookImages\giet-con-chim-nhai.jpg" />
+    <Content Include="BookImages\hanh-tinh-cua-ke-nghi-nhieu.jpg" />
+    <Content Include="BookImages\hat-hiong-tam-hon.jpg" />
     <Content Include="BookImages\hoa-hoc-dai-cuong.jpg" />
+    <Content Include="BookImages\images.jpg" />
+    <Content Include="BookImages\mat-biec.jpg" />
     <Content Include="BookImages\ngu-phap-tieng-anh.jpg" />
     <Content Include="BookImages\nha-gia-kim.jpg" />
     <Content Include="BookImages\tieng-anh-nang-cao.jpg" />
+    <Content Include="BookImages\tieng-chim-hot.jpg" />
     <Content Include="BookImages\vat-ly-luong-tu.jpg" />
     <Content Include="Content\admin-style.css" />
     <Content Include="Content\bootstrap-grid.css" />
