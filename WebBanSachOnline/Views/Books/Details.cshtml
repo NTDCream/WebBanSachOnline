@@ -148,8 +148,8 @@
                     </div>
 
                     @{
-                        double rate = Model.rate ?? 0; 
-                        int fullStars = (int)Math.Floor(rate);    
+                        double rate = Model.rate ?? 0;
+                        int fullStars = (int)Math.Floor(rate);
                         bool hasHalfStar = (rate - fullStars) >= 0.5;
                         int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
                     }
@@ -177,27 +177,32 @@
                         <div class="quantity-controls">
                             <span class="me-2">Số lượng:</span>
 
-                            <input type="number"
-                                   id="quantity"
-                                   class="form-control mx-1"
-                                   value="1"
-                                   min="1"
-                                   max="9" />
+                            @*<input type="number"
+                                id="quantity"
+                                class="form-control mx-1"
+                                value="1"
+                                min="1"
+                                max="9" />*@
+
+                            <input type="number" id="quantity" min="1" max="99" value="1" class="form-control mx-2" style="width: 80px" />
+
 
                         </div>
                     </div>
 
                     @if (Model.quantity - Model.soldQuantity > 0)
                     {
-                        <a href="@Url.Action("AddToCart", "CartItems", new { bookId = Model.id })" class="AddToCartBtn btn btn-danger">
-                            Thêm vào giỏ
-                        </a>
+                        <a href="#" data-book-id="@Model.id" class="AddToCartBtn btn btn-danger">Thêm vào giỏ</a>
+                        @*<a href="@Url.Action("AddToCart", "CartItems", new { bookId = Model.id })" class="AddToCartBtn btn btn-danger">
+                                Thêm vào giỏ
+                            </a>*@
                     }
                     else
                     {
-                        <a href="@Url.Action("AddToCart", "CartItems", new { bookId = Model.id })" class="AddToCartBtn btn btn-danger disabled">
-                            Thêm vào giỏ
-                        </a>
+                        <a href="#" data-book-id="@Model.id" class="AddToCartBtn btn btn-danger disabled">Thêm vào giỏ</a>
+                        @*<a href="@Url.Action("AddToCart", "CartItems", new { bookId = Model.id })" class="AddToCartBtn btn btn-danger disabled">
+                                Thêm vào giỏ
+                            </a>*@
                     }
                 </div>
             </div>
@@ -372,16 +377,40 @@
         document.querySelectorAll('.AddToCartBtn').forEach(btn => {
             btn.addEventListener('click', function (e) {
                 e.preventDefault(); // Ngăn tải trang
-                fetch(this.href)
+
+                const bookId = this.getAttribute("data-book-id");
+                const quantityInput = document.getElementById("quantity");
+                const quantity = quantityInput ? parseInt(quantityInput.value) || 1 : 1;
+
+                const url = `/CartItems/AddToCart?bookId=${bookId}&quantity=${quantity}`;
+
+                fetch(url)
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) alert('Đã thêm vào giỏ hàng!');
+                        else if (data.redirectUrl) window.location.href = data.redirectUrl;
                         else alert('Lỗi thêm giỏ hàng');
                     })
                     .catch(() => alert('Lỗi kết nối'));
             });
         });
     </script>
+
+
+    @*<script>
+            document.querySelectorAll('.AddToCartBtn').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault(); // Ngăn tải trang
+                    fetch(this.href)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) alert('Đã thêm vào giỏ hàng!');
+                            else alert('Lỗi thêm giỏ hàng');
+                        })
+                        .catch(() => alert('Lỗi kết nối'));
+                });
+            });
+        </script>*@
 
 
 </body>

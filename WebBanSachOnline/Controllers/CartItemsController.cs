@@ -57,8 +57,10 @@ namespace WebBanSachOnline.Controllers
                 var userId = (int)Session["userId"];
 
                 count = db.CartItems
-                          .Where(c => c.userId == userId)
-                          .Sum(c => (int?)c.quantity) ?? 0;
+                  .Count(c => c.userId == userId);
+                //count = db.CartItems
+                //          .Where(c => c.userId == userId)
+                //          .Sum(c => (int?)c.quantity) ?? 0;
 
             }
 
@@ -251,18 +253,20 @@ namespace WebBanSachOnline.Controllers
         }
 
         [HttpGet]
-        public JsonResult AddToCart(int bookId)
+        public JsonResult AddToCart(int bookId, int? quantity)
         {
             if (Session["userId"] == null)
             {
                 return Json(new { success = false, redirectUrl = Url.Action("SignIn", "Users") }, JsonRequestBehavior.AllowGet);
             }
+
             int userId = (int)Session["userId"];
+            int qty = quantity ?? 1;
 
             var cartItem = db.CartItems.FirstOrDefault(x => x.userId == userId && x.bookId == bookId);
             if (cartItem != null)
             {
-                cartItem.quantity += 1;
+                cartItem.quantity += qty;
             }
             else
             {
@@ -270,7 +274,7 @@ namespace WebBanSachOnline.Controllers
                 {
                     userId = userId,
                     bookId = bookId,
-                    quantity = 1
+                    quantity = qty
                 });
             }
 
@@ -278,6 +282,36 @@ namespace WebBanSachOnline.Controllers
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
+
+
+        //[HttpGet]
+        //public JsonResult AddToCart(int bookId)
+        //{
+        //    if (Session["userId"] == null)
+        //    {
+        //        return Json(new { success = false, redirectUrl = Url.Action("SignIn", "Users") }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    int userId = (int)Session["userId"];
+
+        //    var cartItem = db.CartItems.FirstOrDefault(x => x.userId == userId && x.bookId == bookId);
+        //    if (cartItem != null)
+        //    {
+        //        cartItem.quantity += 1;
+        //    }
+        //    else
+        //    {
+        //        db.CartItems.Add(new CartItem
+        //        {
+        //            userId = userId,
+        //            bookId = bookId,
+        //            quantity = 1
+        //        });
+        //    }
+
+        //    db.SaveChanges();
+
+        //    return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+        //}
 
         [HttpPost]
         public JsonResult UpdateQuantity(string slug, int quantity)
