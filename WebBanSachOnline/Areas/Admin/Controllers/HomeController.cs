@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity;
 using WebBanSachOnline.Models;
 
 namespace WebBanSachOnline.Areas.Admin.Controllers
@@ -46,6 +47,26 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
 
         public ActionResult Statistic()
         {
+            //if (Session["role"] == null)
+            //{
+            //    return Redirect("/Admin");
+            //}
+
+            var revenueData = db.Orders
+            .Where(o => o.status.ToLower() == "paid")
+            .GroupBy(o => DbFunctions.TruncateTime(o.createdDate))
+            .Select(g => new
+            {
+                Date = g.Key,
+                Revenue = g.Sum(o => o.totalAmount)
+            })
+            .OrderBy(x => x.Date)
+            .ToList();
+
+            ViewBag.RevenueData = revenueData;
+
+            var last7Days = revenueData.Skip(Math.Max(0, revenueData.Count - 7)).ToList();
+            ViewBag.Last7Days = last7Days;
             return View();
         }
 

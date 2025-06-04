@@ -1,5 +1,9 @@
 ﻿
 @{
+    var revenueData = ViewBag.RevenueData as IEnumerable<dynamic>;
+    var last7DaysData = ViewBag.Last7Days as List<dynamic> ?? new List<dynamic>();
+
+    int stt = 1;
     ViewBag.Title = "Statistic";
 }
 
@@ -50,12 +54,12 @@
                                 Đơn hàng
                             </a>
                         </li>
-                        @*<li class="nav-item">
-                            <a class="nav-link" href="/Admin/Home/Statistic">
-                                <i class="fas fa-chart-bar"></i>
-                                Thống kê
-                            </a>
-                        </li>*@
+                        <li class="nav-item">
+                                <a class="nav-link" href="/Admin/Home/Statistic">
+                                    <i class="fas fa-chart-bar"></i>
+                                    Thống kê
+                                </a>
+                            </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/Admin/Categories/Index">
                                 <i class="fas fa-list"></i>
@@ -139,7 +143,7 @@
 
                                 <!-- Revenue Data Table -->
                                 <div class="table-responsive mt-4">
-                                    <table class="table table-bordered table-sm">
+                                    <table class="table table-bordered table-sm" style="text-align:center">
                                         <thead class="table-light">
                                             <tr>
                                                 <th>STT</th>
@@ -148,21 +152,7 @@
                                             </tr>
                                         </thead>
                                         <tbody id="revenue-data">
-                                            <tr>
-                                                <td>1</td>
-                                                <td>01/04/2023</td>
-                                                <td>5,600,000₫</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>02/04/2023</td>
-                                                <td>3,200,000₫</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>03/04/2023</td>
-                                                <td>1,500,000₫</td>
-                                            </tr>
+                                            
                                         </tbody>
                                     </table>
                                 </div>
@@ -170,7 +160,7 @@
                         </div>
 
                         <!-- Product Statistics -->
-                        <div class="card">
+                        <!--<div class="card">
                             <div class="card-header">
                                 <h5 class="mb-0">Thống kê số lượng bán</h5>
                             </div>
@@ -191,164 +181,69 @@
                                                 <td>1</td>
                                                 <td>
                                                     <div class="d-flex justify-content-center">
-                                                        <div style="
-                                    width: 20px;
-                                    height: 20px;
-                                    background-color: #ddd;
-                                  "></div>
+                                                        <div style="width: 20px; height: 20px; background-color: #ddd;"></div>
                                                     </div>
                                                 </td>
                                                 <td>Nghĩ giàu & làm giàu</td>
                                                 <td>137</td>
                                                 <td>58</td>
                                             </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>
-                                                    <div class="d-flex justify-content-center">
-                                                        <div style="
-                                    width: 20px;
-                                    height: 20px;
-                                    background-color: #ddd;
-                                  "></div>
-                                                    </div>
-                                                </td>
-                                                <td>Nhà giả kim</td>
-                                                <td>85</td>
-                                                <td>103</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>
-                                                    <div class="d-flex justify-content-center">
-                                                        <div style="
-                                    width: 20px;
-                                    height: 20px;
-                                    background-color: #ddd;
-                                  "></div>
-                                                    </div>
-                                                </td>
-                                                <td>Đắc nhân tâm</td>
-                                                <td>92</td>
-                                                <td>44</td>
-                                            </tr>
+
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
         </div>
     </div>
 
     <!-- Bootstrap JS Bundle (includes Popper) -->
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // Sample data for statistics
-        const revenueData = [
-            { date: "01/04/2023", revenue: 5600000 },
-            { date: "02/04/2023", revenue: 3200000 },
-            { date: "03/04/2023", revenue: 1500000 },
-            { date: "04/04/2023", revenue: 2800000 },
-            { date: "05/04/2023", revenue: 3500000 },
-            { date: "06/04/2023", revenue: 2200000 },
-            { date: "07/04/2023", revenue: 4100000 },
-        ];
+    const revenueData = @Html.Raw(Json.Encode(ViewBag.RevenueData));
 
-        // Format currency
-        function formatCurrency(amount) {
-            return new Intl.NumberFormat("vi-VN", {
-                style: "currency",
-                currency: "VND",
-                minimumFractionDigits: 0,
-            }).format(amount);
-        }
+    const labels = revenueData.map(item => {
+        if (!item.Date) return "";
+        const timestamp = parseInt(item.Date.match(/\d+/)[0]);
+        const date = new Date(timestamp);
+        return `${date.getDate().toString().padStart(2,'0')}/${(date.getMonth() + 1).toString().padStart(2,'0')}/${date.getFullYear()}`;
+    });
 
-        // Initialize revenue chart
-        function initRevenueChart() {
-            const ctx = document.getElementById("revenueChart").getContext("2d");
+    const data = revenueData.map(item => item.Revenue);
 
-            const labels = revenueData.map((item) => item.date);
-            const values = revenueData.map((item) => item.revenue);
-
-            const chart = new Chart(ctx, {
-                type: "bar",
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: "Doanh thu (VNĐ)",
-                            data: values,
-                            backgroundColor: "rgba(54, 162, 235, 0.7)",
-                            borderColor: "rgba(54, 162, 235, 1)",
-                            borderWidth: 1,
-                        },
-                    ],
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function (value) {
-                                    return value.toLocaleString("vi-VN") + "đ";
-                                },
-                            },
-                        },
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    return formatCurrency(context.raw);
-                                },
-                            },
-                        },
-                    },
-                },
-            });
-
-            return chart;
-        }
-
-        // Check if admin is logged in
-        document.addEventListener("DOMContentLoaded", function () {
-            const isAdminLoggedIn = localStorage.getItem("adminLoggedIn");
-
-            if (!isAdminLoggedIn) {
-                window.location.href = "/admin/login.html";
-                return;
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    const revenueChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Doanh thu (VNĐ)',
+                data: data,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: '#007bff',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value.toLocaleString('vi-VN') + '₫';
+                        }
+                    }
+                }
             }
+        }
+    });
+    </script>
 
-            // Initialize chart
-            const revenueChart = initRevenueChart();
-
-            // Set admin name
-            const adminUser = JSON.parse(localStorage.getItem("adminUser") || "{}");
-            if (adminUser.name) {
-                document.getElementById("admin-name").textContent = adminUser.name;
-            }
-
-            // Filter button click handler
-            document
-                .getElementById("filter-button")
-                .addEventListener("click", function () {
-                    alert("Đã lọc dữ liệu theo thời gian đã chọn");
-                });
-
-            // Logout functionality
-            document
-                .getElementById("logout-btn")
-                .addEventListener("click", function (e) {
-                    e.preventDefault();
-                    localStorage.removeItem("adminLoggedIn");
-                    localStorage.removeItem("adminUser");
-                    window.location.href = "/admin/login.html";
-                });
-        });
-    </script>-->
 </body>
 </html>
