@@ -172,6 +172,7 @@
     <Compile Include="Models\CartItem.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Model1.cs" />
+    <Compile Include="Models\ModelView\UpdateQuantityModel.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderDetail.cs" />
     <Compile Include="Models\Payments\VnPayConfig.cs" />

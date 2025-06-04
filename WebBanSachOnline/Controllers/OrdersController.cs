@@ -23,11 +23,14 @@ namespace WebBanSachOnline.Controllers
             {
                 return RedirectToAction("SignIn", "Users");
             }
+            int userId = (int)Session["userId"];
             int pageSize = 10;
             int pageNumber = page ?? 1;
 
-            var orders = db.Orders.Include(o => o.User)
-                                  .OrderByDescending(o => o.id);
+            var orders = db.Orders
+                  .Include(o => o.User)
+                  .Where(o => o.userId == userId)
+                  .OrderByDescending(o => o.createdDate);
 
             return View(orders.ToPagedList(pageNumber, pageSize));
         }

@@ -148,8 +148,8 @@
                     </div>
 
                     @{
-                        double rate = Model.rate ?? 0; // Model là Book
-                        int fullStars = (int)Math.Floor(rate);      // Số sao đầy
+                        double rate = Model.rate ?? 0; 
+                        int fullStars = (int)Math.Floor(rate);    
                         bool hasHalfStar = (rate - fullStars) >= 0.5;
                         int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
                     }

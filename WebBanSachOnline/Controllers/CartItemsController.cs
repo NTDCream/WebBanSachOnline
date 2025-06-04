@@ -15,6 +15,10 @@ using System.Security.Cryptography;
 using System.Text;
 using PagedList;
 using System.Web.UI;
+using Newtonsoft.Json;
+using System.IO;
+using System.Web.Script.Serialization;
+using WebBanSachOnline.Models.ModelView;
 
 namespace WebBanSachOnline.Controllers
 {
@@ -23,7 +27,7 @@ namespace WebBanSachOnline.Controllers
         private Model1 db = new Model1();
 
         // GET: CartItems
-        public ActionResult Index(int ?page)
+        public ActionResult Index(int? page)
         {
             if (Session["userId"] == null)
             {
@@ -31,13 +35,13 @@ namespace WebBanSachOnline.Controllers
             }
             int userId = (int)Session["userId"];
 
-            int pageSize = 10;              
-            int pageNumber = page ?? 1;     
+            int pageSize = 10;
+            int pageNumber = page ?? 1;
 
             var cartItems = db.CartItems
                 .Include(c => c.Book.Category)
                 .Where(c => c.userId == userId)
-                .OrderBy(c => c.id)          
+                .OrderBy(c => c.id)
                 .ToPagedList(pageNumber, pageSize);
             int total = cartItems.Sum(ci => ci.Book.price * ci.quantity);
             ViewBag.Total = total;
@@ -47,7 +51,7 @@ namespace WebBanSachOnline.Controllers
         public ActionResult CartSummary()
         {
             int count = 0;
-            
+
             if (Session["userId"] != null)
             {
                 var userId = (int)Session["userId"];
@@ -92,10 +96,12 @@ namespace WebBanSachOnline.Controllers
 
         public ActionResult ThanhToan(string fullName, string phone, string address, string paymentMethod)
         {
+
+            Random random = new Random();
             string slug;
             do
             {
-                slug = "DH" + Guid.NewGuid().ToString("N").Substring(0, 6);
+                slug = "DH" + random.Next(100000, 999999);
             }
             while (db.Orders.Any(o => o.slug == slug));
 
@@ -273,7 +279,45 @@ namespace WebBanSachOnline.Controllers
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
 
-        
+        [HttpPost]
+        public JsonResult UpdateQuantity(string slug, int quantity)
+        {
+            int userId = (int)Session["userId"];
+
+            // Tìm sách theo slug
+            var book = db.Books.FirstOrDefault(b => b.slug == slug);
+            if (book == null)
+            {
+                return Json(new { success = false, message = "Sách không tồn tại." });
+            }
+
+            // Tìm CartItem tương ứng
+            var cartItem = db.CartItems.FirstOrDefault(ci => ci.userId == userId && ci.bookId == book.id);
+            if (cartItem == null)
+            {
+                return Json(new { success = false, message = "Sản phẩm không có trong giỏ hàng." });
+            }
+
+            // Cập nhật số lượng
+            cartItem.quantity = quantity;
+            db.SaveChanges();
+
+            int itemTotal = book.price * quantity;
+            // Tính lại tổng tiền hiện tại trong giỏ để cập nhật lại View nếu cần
+            var cartItems = db.CartItems
+                .Include(ci => ci.Book)
+                .Where(ci => ci.userId == userId)
+                .ToList();
+            int total = cartItems.Sum(ci => ci.Book.price * ci.quantity);
+
+            return Json(new { success = true, totalAmount = total, itemTotal = itemTotal });
+        }
+
+
+
+
+
+
 
         // GET: CartItems/Details/5
         //public ActionResult Details(int? id)

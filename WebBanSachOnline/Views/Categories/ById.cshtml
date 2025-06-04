@@ -157,6 +157,26 @@
                                 <div class="card-body">
                                     <h5 class="card-title">@item.title</h5>
                                     <div class="d-flex align-items-center mb-2">
+                                        @{
+                                            double rate = item.rate ?? 0;
+                                            int fullStars = (int)Math.Floor(rate);
+                                            bool hasHalfStar = (rate - fullStars) >= 0.5;
+                                            int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                                        }
+                                        @for (int i = 0; i < fullStars; i++)
+                                        {
+                                            <i class="fas fa-star text-warning"></i>
+                                        }
+                                        @if (hasHalfStar)
+                                        {
+                                            <i class="fas fa-star-half-alt text-warning"></i>
+                                        }
+                                        @for (int i = 0; i < emptyStars; i++)
+                                        {
+                                            <i class="far fa-star text-warning"></i>
+                                        }
+
+                                        <span class="ms-2">(@item.reviewCount)</span>
                                     </div>
                                     <div>
                                         @if (item.quantity - item.soldQuantity > 0)

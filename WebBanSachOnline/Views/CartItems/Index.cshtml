@@ -77,8 +77,30 @@
                                 <td scope="col">@item.Book.title</td>
                                 <td scope="col">@item.Book.Category.title</td>
                                 <td scope="col">@string.Format("{0:N0} đ", item.Book.price)</td>
-                                <td scope="col">@item.quantity</td>
-                                <td scope="col">@string.Format("{0:N0} đ", price)</td>
+                                @*<td scope="col">@item.quantity</td>*@
+                                <td>
+                                    <div class="quantity-controls">
+
+                                        @*<input type="number"
+                                            id="quantity"
+                                            class="form-control mx-1"
+                                            value="@item.quantity"
+                                            min="1"
+                                            max="99"
+                                            style="width: 60px" />*@
+                                        <input type="number"
+                                               class="form-control mx-1 quantity-input"
+                                               value="@item.quantity"
+                                               min="1"
+                                               max="99"
+                                               data-slug="@item.Book.slug"
+                                               style="width: 60px" />
+
+                                    </div>
+                                </td>
+                                <td class="item-total" data-slug="@item.Book.slug">
+                                    @string.Format("{0:N0} đ", price)
+                                </td>
                                 <td scope="col">
                                     @using (Html.BeginForm("DeleteConfirmed", "CartItems", FormMethod.Post))
                                     {
@@ -112,28 +134,28 @@
                    DisplayLinkToNextPage = PagedListDisplayMode.Never
                })
                 </div>
-                    <div id="empty-cart" class="text-center py-5 d-none">
-                        <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
-                        <h5>Giỏ hàng trống</h5>
-                        <p class="text-muted">Hãy thêm sản phẩm vào giỏ hàng</p>
-                        <a href="/" class="btn btn-primary">Tiếp tục mua sắm</a>
-                    </div>
-                    <div class="d-flex justify-content-end mt-3">
-                        <a href="@Url.Action("DeleteAllItems", "CartItems")" class="btn btn-outline-danger me-2" id="clear-cart-btn">Xóa hết</a>
-                        <a href="/" class="btn btn-outline-primary me-2">Tiếp tục mua sắm</a>
-                        @if (Model == null || !Model.Any())
-                        {
-                            <a href="@Url.Action("Checkout", "CartItems")" class="btn btn-danger me-2 disabled">Đặt hàng</a>
-                        }
-                        else
-                        {
+                <div id="empty-cart" class="text-center py-5 d-none">
+                    <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                    <h5>Giỏ hàng trống</h5>
+                    <p class="text-muted">Hãy thêm sản phẩm vào giỏ hàng</p>
+                    <a href="/" class="btn btn-primary">Tiếp tục mua sắm</a>
+                </div>
+                <div class="d-flex justify-content-end mt-3">
+                    <a href="@Url.Action("DeleteAllItems", "CartItems")" class="btn btn-outline-danger me-2" id="clear-cart-btn">Xóa hết</a>
+                    <a href="/" class="btn btn-outline-primary me-2">Tiếp tục mua sắm</a>
+                    @if (Model == null || !Model.Any())
+                    {
+                        <a href="@Url.Action("Checkout", "CartItems")" class="btn btn-danger me-2 disabled">Đặt hàng</a>
+                    }
+                    else
+                    {
 
-                            <a href="@Url.Action("Checkout", "CartItems")" class="btn btn-danger me-2">Đặt hàng</a>
-                        }
-                        @*<a href="@Url.Action("ThanhToan", "CartItems")" class="btn btn-danger me-2">Đặt hàng</a>*@
-                    </div>
+                        <a href="@Url.Action("Checkout", "CartItems")" class="btn btn-danger me-2">Đặt hàng</a>
+                    }
+                    @*<a href="@Url.Action("ThanhToan", "CartItems")" class="btn btn-danger me-2">Đặt hàng</a>*@
                 </div>
             </div>
+        </div>
     </div>
 
 
@@ -151,6 +173,37 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     @*<script src="~/Content/main.js"></script>*@
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+$(document).ready(function () {
+    $(".quantity-input").on('change', function () {
+        var slug = $(this).data("slug");
+        var quantity = $(this).val();
+
+        $.ajax({
+            url: '@Url.Action("UpdateQuantity", "CartItems")',
+            type: 'POST',
+            data: { slug: slug, quantity: quantity },
+            success: function (response) {
+                if (response.success) {
+                    var formattedItemTotal = response.itemTotal.toLocaleString('en-US') + " đ";
+                    $('.item-total[data-slug="' + slug + '"]').text(formattedItemTotal);
+
+                    var formattedTotal = response.totalAmount.toLocaleString('en-US') + " đ";
+                    $("#cart-total").text(formattedTotal);
+                } else {
+                    alert("Lỗi: " + response.message);
+                }
+            },
+            error: function () {
+                alert("Có lỗi xảy ra khi cập nhật số lượng.");
+            }
+        });
+    });
+});
+    </script>
 
 
 

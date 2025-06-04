@@ -101,53 +101,79 @@
             <!-- Books will be loaded here via JavaScript -->
             @foreach (var item in latestBooks)
             {
+
                 string imagePath = "~/BookImages/" + item.image;
-                <div class="card book-card h-100 shadow-sm">
-                    <div class="book-image-container">
-                        <img src="@Url.Content(imagePath)" class="card-img-top " height="350px" alt=@item.title>
+                <div class="col">
+                    <div class="card book-card h-100 shadow-sm">
+                        <div class="book-image-container">
+                            <img src="@Url.Content(imagePath)" class="card-img-top " height="350px" alt=@item.title>
 
-                    </div>
+                        </div>
 
 
-                    <div class="card-body">
-                        <h5>@item.title</h5>
-                        <div>
+                        <div class="card-body">
+                            <h5>@item.title</h5>
+                            <div class="d-flex align-items-center mb-2">
+                                @{
+                                    double rate = item.rate ?? 0;
+                                    int fullStars = (int)Math.Floor(rate);
+                                    bool hasHalfStar = (rate - fullStars) >= 0.5;
+                                    int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                                }
+                                @for (int i = 0; i < fullStars; i++)
+                                {
+                                    <i class="fas fa-star text-warning"></i>
+                                }
+                                @if (hasHalfStar)
+                                {
+                                    <i class="fas fa-star-half-alt text-warning"></i>
+                                }
+                                @for (int i = 0; i < emptyStars; i++)
+                                {
+                                    <i class="far fa-star text-warning"></i>
+                                }
+
+                                <span class="ms-2">(@item.reviewCount)</span>
+                            </div>
+                            <div>
+                                @if (item.quantity - item.soldQuantity > 0)
+                                {
+                                    <span>
+                                        Còn: @(item.quantity - item.soldQuantity)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>Hết hàng</span>
+                                }
+
+                            </div>
+                            <div>
+                                <span style="text-decoration:line-through; ">
+                                    @string.Format("{0:N0} đ", item.originalPrice)
+                                </span>
+                                <span style="color:red">
+                                    @string.Format("{0:N0} đ", item.price)
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-footer d-grid">
+                            <a href="@Url.Action("Details", "Books", new { slug = item.slug })" class="btn btn-primary w-100">Xem chi tiết</a>
+                            <br />
                             @if (item.quantity - item.soldQuantity > 0)
                             {
-                                <span>
-                                    Còn: @(item.quantity - item.soldQuantity)
-                                </span>
+                                <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" class="AddToCartBtn btn btn-danger w-100">
+                                    Thêm vào giỏ
+                                </a>
                             }
                             else
                             {
-                                <span>Hết hàng</span>
+                                <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" class="AddToCartBtn btn btn-danger w-100 disabled">
+                                    Thêm vào giỏ
+                                </a>
                             }
 
                         </div>
-                        <div>
-                            <span style="text-decoration:line-through; ">
-                                @string.Format("{0:N0} đ", item.originalPrice)
-                            </span>
-                            <span style="color:red">
-                                @string.Format("{0:N0} đ", item.price)
-                            </span>
-                        </div>
-                    </div>
-                    <div class="card-footer d-grid">
-                        <a href="@Url.Action("Details", "Books", new { slug = item.slug })" class="btn btn-primary w-100">Xem chi tiết</a>
-
-                        @if (item.quantity - item.soldQuantity > 0)
-                        {
-                            <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" class="AddToCartBtn btn btn-danger w-100">
-                                Thêm vào giỏ
-                            </a>
-                        }
-                        else
-                        {
-                            <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" class="AddToCartBtn btn btn-danger w-100 disabled">
-                                Thêm vào giỏ
-                            </a>
-                        }
 
                     </div>
                 </div>
@@ -161,57 +187,81 @@
             @foreach (var item in topSellingBooks)
             {
                 string imagePath = "~/BookImages/" + item.image;
-                <div class="card book-card h-100 shadow-sm">
-                    <div class="book-image-container">
-                        <img src="@Url.Content(imagePath)" class="card-img-top " height="350px" alt=@item.title>
+                <div class="col">
+                    <div class="card book-card h-100 shadow-sm">
+                        <div class="book-image-container">
+                            <img src="@Url.Content(imagePath)" class="card-img-top " height="350px"  alt=@item.title>
 
-                    </div>
-                    <div class="card-body">
-                        <h5>@item.title</h5>
-                        <div>
+                        </div>
+                        <div class="card-body">
+                            <h5>@item.title</h5>
+                            <div class="d-flex align-items-center mb-2">
+                                @{
+                                    double rate = item.rate ?? 0;
+                                    int fullStars = (int)Math.Floor(rate);
+                                    bool hasHalfStar = (rate - fullStars) >= 0.5;
+                                    int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                                }
+                                @for (int i = 0; i < fullStars; i++)
+                                {
+                                    <i class="fas fa-star text-warning"></i>
+                                }
+                                @if (hasHalfStar)
+                                {
+                                    <i class="fas fa-star-half-alt text-warning"></i>
+                                }
+                                @for (int i = 0; i < emptyStars; i++)
+                                {
+                                    <i class="far fa-star text-warning"></i>
+                                }
+
+                                <span class="ms-2">(@item.reviewCount)</span>
+                            </div>
+                            <div>
+                                @if (item.quantity - item.soldQuantity > 0)
+                                {
+                                    <span>
+                                        Còn: @(item.quantity - item.soldQuantity)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>Hết hàng</span>
+                                }
+
+                            </div>
+                            <div>
+                                <span style="text-decoration:line-through; ">
+                                    @string.Format("{0:N0} đ", item.originalPrice)
+                                </span>
+                                <span style="color:red">
+                                    @string.Format("{0:N0} đ", item.price)
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-footer d-grid">
+                            <a href="@Url.Action("Details", "Books", new { slug = item.slug })" class="btn btn-primary w-100">Xem chi tiết</a>
+
                             @if (item.quantity - item.soldQuantity > 0)
                             {
-                                <span>
-                                    Còn: @(item.quantity - item.soldQuantity)
-                                </span>
+                                <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" class="AddToCartBtn btn btn-danger w-100">
+                                    Thêm vào giỏ
+                                </a>
                             }
                             else
                             {
-                                <span>Hết hàng</span>
+                                <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" class="AddToCartBtn btn btn-danger w-100 disabled">
+                                    Thêm vào giỏ
+                                </a>
                             }
 
                         </div>
-                        <div>
-                            <span style="text-decoration:line-through; ">
-                                @string.Format("{0:N0} đ", item.originalPrice)
-                            </span>
-                            <span style="color:red">
-                                @string.Format("{0:N0} đ", item.price)
-                            </span>
-                        </div>
                     </div>
-                    <div class="card-footer d-grid">
-                        <a href="@Url.Action("Details", "Books", new { slug = item.slug })" class="btn btn-primary w-100">Xem chi tiết</a>
-
-                        @if (item.quantity - item.soldQuantity > 0)
-                        {
-                            <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" class="AddToCartBtn btn btn-danger w-100">
-                                Thêm vào giỏ
-                            </a>
-                        }
-                        else
-                        {
-                            <a href="@Url.Action("AddToCart", "CartItems", new { bookId = item.id })" class="AddToCartBtn btn btn-danger w-100 disabled">
-                                Thêm vào giỏ
-                            </a>
-                        }
-
                     </div>
+                    }
+
                 </div>
-            }
-
-        </div>
-    </div>
+            </div>
 
 
 
