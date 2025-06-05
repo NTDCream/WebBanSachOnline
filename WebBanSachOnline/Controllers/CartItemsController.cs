@@ -162,7 +162,7 @@ namespace WebBanSachOnline.Controllers
                 }
             }
             //Xóa sách trong giỏ hàng
-            db.CartItems.RemoveRange(cartItems);
+            //db.CartItems.RemoveRange(cartItems);
             db.SaveChanges();
 
             if (paymentMethod == "BANK")
@@ -237,18 +237,45 @@ namespace WebBanSachOnline.Controllers
                 db.SaveChanges();
                 return RedirectToAction("OrderSuccess", new { slug = slug });
             }
-            return RedirectToAction("OrderFail");
+            return RedirectToAction("OrderFail", new {slug = slug});
         }
 
         public ActionResult OrderSuccess(string slug)
         {
+            int userId = (int)Session["userId"];
+            var cartItems = db.CartItems
+                              .Include(ci => ci.Book)
+                              .Where(ci => ci.userId == userId)
+                              .ToList();
+            db.CartItems.RemoveRange(cartItems);
+            db.SaveChanges();
+
             ViewBag.OrderSlug = slug;
             return View();
 
         }
 
-        public ActionResult OrderFail()
+        public ActionResult OrderFail(string slug)
         {
+            int userId = (int)Session["userId"];
+            var cartItems = db.CartItems
+                              .Include(ci => ci.Book)
+                              .Where(ci => ci.userId == userId)
+                              .ToList();
+            foreach (var item in cartItems)
+            {
+                var book = db.Books.FirstOrDefault(b => b.id == item.bookId);
+                if (book != null)
+                {
+                    // Cập nhật số lượng đã bán
+                    book.soldQuantity -= item.quantity;
+                }
+            }
+            var order = db.Orders.Include("OrderDetails").FirstOrDefault(o => o.slug == slug);
+            db.OrderDetails.RemoveRange(order.OrderDetails);
+            db.Orders.Remove(order);
+
+            db.SaveChanges();
             return View();
         }
 

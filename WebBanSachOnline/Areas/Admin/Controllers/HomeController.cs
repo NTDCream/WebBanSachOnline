@@ -28,6 +28,13 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
             ViewBag.TotalOrders = totalOrders;
             ViewBag.TotalBooks = totalBooks;
             ViewBag.TotalRevenue = totalRevenue;
+
+            var recentOrders = db.Orders
+                     .OrderByDescending(o => o.createdDate)
+                     .Take(10)
+                     .ToList();
+            ViewBag.RecentOrders = recentOrders;
+
             return View();
         }
 
@@ -47,10 +54,10 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
 
         public ActionResult Statistic()
         {
-            //if (Session["role"] == null)
-            //{
-            //    return Redirect("/Admin");
-            //}
+            if (Session["role"] == null)
+            {
+                return Redirect("/Admin");
+            }
 
             var revenueData = db.Orders
             .Where(o => o.status.ToLower() == "paid")
