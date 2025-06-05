@@ -1,19 +1,273 @@
 ﻿@{
     ViewBag.Title = "Contact";
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>@ViewBag.Message</h3>
 
-    <address>
-        One Microsoft Way<br />
-        Redmond, WA 98052-6399<br />
-        <abbr title="Phone">P:</abbr>
-        425.555.0100
-    </address>
+<!DOCTYPE html>
 
-    <address>
-        <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-        <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-    </address>
-</main>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Liên Hệ - Nhà Sách Online</title>
+    <!-- Bootstrap CSS -->
+
+    <link - href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet" />
+    <!-- Font Awesome for icons -->
+
+    <link - href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet" />
+    <!-- Custom CSS -->
+
+    <link href="~/Content/style.css" rel="stylesheet" />
+
+</head>
+
+<body>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <nav aria-label="breadcrumb" class="bg-light p-2 rounded mb-4 shadow-sm">
+            <ol class="breadcrumb mb-0">
+
+                <li class="breadcrumb-item">
+                    <a href="/">Trang chủ</a>
+
+                </li>
+
+                <li class="breadcrumb-item active" aria-current="page">Liên hệ</li>
+
+            </ol>
+
+        </nav>
+
+        <div class="row">
+            <!-- Contact Form -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0">Gửi tin nhắn cho chúng tôi</h5>
+
+                    </div>
+                    <div class="card-body">
+                        <form - id="contact-form"
+                              onsubmit="return handleContactSubmit(event)">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label">Họ và tên</label>
+                                    <input - type="text"
+                                           class="form-control"
+                                           id="name"
+                                           required />
+
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input - type="email"
+                                           class="form-control"
+                                           id="email"
+                                           required />
+
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Số điện thoại</label>
+                                    <input type="tel" class="form-control" id="phone" />
+
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="subject" class="form-label">Chủ đề</label>
+                                    <select class="form-select" id="subject" required>
+
+                                        <option value="">Chọn chủ đề</option>
+
+                                        <option value="order">Đơn hàng</option>
+
+                                        <option value="product">Sản phẩm</option>
+
+                                        <option value="shipping">Vận chuyển</option>
+
+                                        <option value="payment">Thanh toán</option>
+
+                                        <option value="other">Khác</option>
+
+                                    </select>
+
+                                </div>
+                                <div class="col-12">
+                                    <label for="message" class="form-label">Nội dung tin nhắn</label>
+                                    <textarea - class="form-control"
+                                              id="message"
+                                              rows="5"
+                                              required></textarea>
+
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane me-2"></i>Gửi tin nhắn
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Store Information -->
+            <div class="col-lg-4">
+                <!-- Store Hours -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0">Giờ làm việc</h5>
+
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+
+                            <li class="d-flex justify-content-between mb-2">
+                                <span>Thứ 2 - Thứ 6:</span>
+                                <span>8:00 - 21:00</span>
+
+                            </li>
+
+                            <li class="d-flex justify-content-between mb-2">
+                                <span>Thứ 7:</span>
+                                <span>8:00 - 22:00</span>
+
+                            </li>
+
+                            <li class="d-flex justify-content-between">
+                                <span>Chủ nhật:</span>
+                                <span>9:00 - 21:00</span>
+
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+                <!-- Contact Information -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0">Thông tin liên hệ</h5>
+
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+
+
+                            <li class="mb-3">
+                                <i class="fas fa-phone me-2 text-primary"></i>
+                                <a href="tel:+84123456789" class="text-decoration-none">+84 123 456 789</a>
+
+                            </li>
+
+                            <li class="mb-3">
+                                <i class="fas fa-envelope me-2 text-primary"></i>
+                                <a - href="mailto:info@nhasachonline.vn"
+                                   class="text-decoration-none">info@nhasachonline.vn</a>
+
+                            </li>
+
+                            <li>
+                                <i class="fas fa-globe me-2 text-primary"></i>
+                                <a - href="https://nhasachonline.vn"
+                                   class="text-decoration-none">nhasachonline.vn</a>
+
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+                <!-- Social Media -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0">Kết nối với chúng tôi</h5>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-around">
+                            <a href="#" class="text-decoration-none">
+                                <i class="fab fa-facebook fa-2x text-primary"></i>
+
+                            </a>
+                            <a href="#" class="text-decoration-none">
+                                <i class="fab fa-instagram fa-2x text-danger"></i>
+
+                            </a>
+                            <a href="#" class="text-decoration-none">
+                                <i class="fab fa-youtube fa-2x text-danger"></i>
+
+                            </a>
+                            <a href="#" class="text-decoration-none">
+                                <i class="fab fa-tiktok fa-2x text-dark"></i>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Map -->
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Bản đồ</h5>
+
+            </div>
+            <div class="card-body p-0">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.177743274682!2d105.95797381533284!3d21.12169368594948!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313507ec24b5a5e9%3A0x3f86e28a64cccf1f!2zVMawIFPGoW4sIELhuq9jIE5pbmg!5e0!3m2!1svi!2s!4v1717561234567!5m2!1svi!2s"
+                        width="100%"
+                        height="450"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Toast Container -->
+    <div - id="toast-container"
+         class="position-fixed bottom-0 end-0 p-3"
+         style="z-index: 1100">
+        <!-- Toasts will be appended here -->
+
+    </div>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    </script>
+
+</body>
+
+</html>
+
+
+
+
