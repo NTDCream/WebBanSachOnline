@@ -31,7 +31,7 @@ namespace WebBanSachOnline.Areas.Admin.Controllers
 
             var recentOrders = db.Orders
                      .OrderByDescending(o => o.createdDate)
-                     .Take(10)
+                     .Take(5)
                      .ToList();
             ViewBag.RecentOrders = recentOrders;
 
